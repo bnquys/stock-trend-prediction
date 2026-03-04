@@ -1,0 +1,9 @@
+              precision    recall  f1-score   support
+
+    Giảm (↓)       0.25      0.11      0.15         9
+Đi ngang (→)       0.40      0.62      0.48        13
+    Tăng (↑)       0.38      0.30      0.33        10
+
+    accuracy                           0.38        32
+   macro avg       0.34      0.34      0.32        32
+weighted avg       0.35      0.38      0.34        32
