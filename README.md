@@ -1,12 +1,12 @@
 # xLSTM – Dự báo xu hướng cổ phiếu VNM
 
 Triển khai mô hình **xLSTM (Extended Long Short-Term Memory)** theo paper  
-*"xLSTM: Extended Long Short-Term Memory"* (Beck et al., arXiv:2405.04517v2)  
+_"xLSTM: Extended Long Short-Term Memory"_ (Beck et al., arXiv:2405.04517v2)  
 để dự báo xu hướng giá cổ phiếu VNM trên thị trường chứng khoán Việt Nam.
 
 ---
 
-## 📁 Cấu trúc dự án
+## Cấu trúc dự án
 
 ```
 xlstm_vnm/
@@ -40,7 +40,7 @@ xlstm_vnm/
 
 ---
 
-## 🏗️ Kiến trúc mô hình
+## Kiến trúc mô hình
 
 ```
 Input (B, T=30, F=33)
@@ -73,33 +73,33 @@ Input (B, T=30, F=33)
 
 ### Thành phần chính
 
-| Module | Mô tả | Theo paper |
-|--------|-------|-----------|
-| `sLSTMCell` | Scalar memory + Exponential gate + Memory mixing | Eq. 8–17 |
-| `mLSTMCell` | Matrix memory C∈R^(d×d) + Covariance update | Eq. 19–27 |
-| `sLSTMBlock` | Post up-projection residual block | Figure 10 |
-| `mLSTMBlock` | Pre up-projection residual block | Figure 11 |
-| `xLSTM` | Stacked blocks + Classifier | Figure 1 |
+| Module       | Mô tả                                            | Theo paper |
+| ------------ | ------------------------------------------------ | ---------- |
+| `sLSTMCell`  | Scalar memory + Exponential gate + Memory mixing | Eq. 8–17   |
+| `mLSTMCell`  | Matrix memory C∈R^(d×d) + Covariance update      | Eq. 19–27  |
+| `sLSTMBlock` | Post up-projection residual block                | Figure 10  |
+| `mLSTMBlock` | Pre up-projection residual block                 | Figure 11  |
+| `xLSTM`      | Stacked blocks + Classifier                      | Figure 1   |
 
 ---
 
-## ⚙️ Cấu hình mặc định (`config.py`)
+## Cấu hình mặc định (`config.py`)
 
-| Tham số | Giá trị | Mô tả |
-|---------|---------|-------|
-| `SEQUENCE_LENGTH` | 30 | Số phiên lịch sử mỗi mẫu |
-| `TREND_THRESHOLD` | 0.5% | Ngưỡng phân loại Tăng/Giảm |
-| `hidden_size` | 128 | Chiều ẩn |
-| `num_heads` | 4 | Số attention heads |
-| `num_mlstm_layers` | 3 | Số mLSTM blocks |
-| `num_slstm_layers` | 1 | Số sLSTM blocks |
-| `learning_rate` | 1e-3 | Learning rate ban đầu |
-| `epochs` | 100 | Số epoch tối đa |
-| `patience` | 15 | Early stopping patience |
+| Tham số            | Giá trị | Mô tả                      |
+| ------------------ | ------- | -------------------------- |
+| `SEQUENCE_LENGTH`  | 30      | Số phiên lịch sử mỗi mẫu   |
+| `TREND_THRESHOLD`  | 0.5%    | Ngưỡng phân loại Tăng/Giảm |
+| `hidden_size`      | 128     | Chiều ẩn                   |
+| `num_heads`        | 4       | Số attention heads         |
+| `num_mlstm_layers` | 3       | Số mLSTM blocks            |
+| `num_slstm_layers` | 1       | Số sLSTM blocks            |
+| `learning_rate`    | 1e-3    | Learning rate ban đầu      |
+| `epochs`           | 100     | Số epoch tối đa            |
+| `patience`         | 15      | Early stopping patience    |
 
 ---
 
-## 🚀 Cách chạy
+## Cách chạy
 
 ### 1. Cài đặt thư viện
 
@@ -137,17 +137,17 @@ python predict.py backtest       # Chạy backtest toàn bộ
 
 ---
 
-## 📊 Nhãn xu hướng
+## Nhãn xu hướng
 
-| Nhãn | Ký hiệu | Điều kiện |
-|------|---------|-----------|
-| 0    | GIẢM ↓  | log_return < -0.5% |
+| Nhãn | Ký hiệu | Điều kiện                 |
+| ---- | ------- | ------------------------- |
+| 0    | GIẢM ↓  | log_return < -0.5%        |
 | 1    | NGANG → | -0.5% ≤ log_return ≤ 0.5% |
-| 2    | TĂNG ↑  | log_return > 0.5% |
+| 2    | TĂNG ↑  | log_return > 0.5%         |
 
 ---
 
-## 📈 Features sử dụng (33 features)
+## Features sử dụng (33 features)
 
 - **Giá & khối lượng**: open, high, low, close, volume
 - **Trung bình động**: sma_10, sma_20, ema_20
@@ -161,7 +161,7 @@ python predict.py backtest       # Chạy backtest toàn bộ
 
 ---
 
-## 💡 Điều chỉnh hyperparameters
+## Điều chỉnh hyperparameters
 
 Mở `config.py` để thay đổi:
 
@@ -186,6 +186,6 @@ SEQUENCE_LENGTH = 60     # 30 → 60 phiên
 
 ## 📚 Tham khảo
 
-- Beck et al. (2024). *xLSTM: Extended Long Short-Term Memory*. arXiv:2405.04517v2
-- Hochreiter & Schmidhuber (1997). *Long Short-Term Memory*. Neural Computation.
+- Beck et al. (2024). _xLSTM: Extended Long Short-Term Memory_. arXiv:2405.04517v2
+- Hochreiter & Schmidhuber (1997). _Long Short-Term Memory_. Neural Computation.
 - Code gốc: https://github.com/NX-AI/xlstm

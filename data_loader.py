@@ -1,6 +1,4 @@
 """
-data_loader.py
-==============
 Module xử lý dữ liệu:
   - Đọc & làm sạch CSV
   - Chuẩn hóa features (StandardScaler)
@@ -136,7 +134,7 @@ class VNMDataProcessor:
         df     = self.engineer_features(df)
         labels = self.create_trend_labels(df)
 
-        # Ghép nhãn, bỏ dòng NaN cuối (do shift)
+        # Ghép nhãn 
         df["trend_label"] = labels
         df = df.dropna(subset=["trend_label"] + self.feature_cols).reset_index(drop=True)
 

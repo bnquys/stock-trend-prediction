@@ -1,13 +1,6 @@
-"""
-config.py
-=========
-Tập trung toàn bộ siêu tham số (hyperparameters) và cấu hình cho dự án
-dự báo xu hướng cổ phiếu VNM bằng mô hình xLSTM.
-"""
-
 import os
 
-# ─── Đường dẫn ────────────────────────────────────────────────────────────────
+# Đường dẫn ────────────────────────────────────────────────────────────────
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH  = os.path.join(BASE_DIR, "data/VNM_2225.csv")
 MODEL_DIR  = os.path.join(BASE_DIR, "saved_models")
@@ -18,7 +11,6 @@ os.makedirs(MODEL_DIR,  exist_ok=True)
 os.makedirs(LOG_DIR,    exist_ok=True)
 os.makedirs(RESULT_DIR, exist_ok=True)
 
-# ─── Cấu hình dữ liệu ─────────────────────────────────────────────────────────
 # Các features được sử dụng làm đầu vào mô hình
 FEATURE_COLUMNS = [
     # Giá & khối lượng cơ bản
@@ -46,16 +38,16 @@ TARGET_COLUMN = "close"
 SEQUENCE_LENGTH = 60       # Số phiên lịch sử mỗi mẫu (window size)
 FORECAST_HORIZON = 1       # Dự báo 1 phiên tiếp theo
 
-# ─── Nhãn phân loại xu hướng ──────────────────────────────────────────────────
+# Nhãn phân loại xu hướng ──────────────────────────────────────────────────
 # 0 = Giảm   (return < -THRESHOLD)
 # 1 = Đi ngang (-THRESHOLD <= return <= THRESHOLD)
 # 2 = Tăng   (return > THRESHOLD)
 TREND_THRESHOLD = 0.005     # 0.5%
 NUM_CLASSES = 3
 
-# Tỷ lệ chia train / validation / test
-TRAIN_RATIO = 0.80
-VAL_RATIO   = 0.10
+# chia train / validation / test
+TRAIN_RATIO = 0.70
+VAL_RATIO   = 0.20
 # TEST_RATIO  = 1 - TRAIN_RATIO - VAL_RATIO 
 
 # ─── Cấu hình mô hình xLSTM ───────────────────────────────────────────────────
@@ -90,7 +82,7 @@ MODEL_CONFIG = {
     "num_classes":   NUM_CLASSES,
 }
 
-# ─── Cấu hình huấn luyện ──────────────────────────────────────────────────────
+# Cấu hình huấn luyện ──────────────────────────────────────────────────────
 TRAIN_CONFIG = {
     "epochs":           100,
     "batch_size":       32,
