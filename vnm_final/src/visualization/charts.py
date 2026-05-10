@@ -270,7 +270,7 @@ def plot_training(history, out_path=None):
         ax3.plot(eps, _smooth(vl_wr), color=C["sell"], lw=1.8, label="Val")
         ax3.axhline(50, color=C["muted"], lw=1.0, ls="--", label="50% baseline")
         ax3.set_ylim(0, 100)
-    _ax(ax3, "3. Win Rate (%)", ">50% = thắng nhiều hơn thua  |  Mục tiêu >55%", "Win %")
+    _ax(ax3, "3. Win Rate (%)", ">50% = thắng nhiều hơn thua ", "Win %")
     ax3.set_xlabel("Episode", color=C["muted"]); ax3.legend(fontsize=8)
 
     # 4. Epsilon + Val Sharpe
@@ -360,7 +360,7 @@ def plot_trades(trades, out_path=None):
         for bar,a in zip(bars,avgs):
             ax4.text(bar.get_x()+bar.get_width()/2,bar.get_height()+0.1,
                      f"{a:+.2f}%",ha="center",va="bottom",fontsize=9,fontweight="bold",color=C["text"])
-    _ax(ax4,"4. Lý do Thoát Lệnh","Số trên cột=PnL trung bình  |  Xanh>0, Đỏ<0","Số lệnh")
+    _ax(ax4,"4. Lý do Thoát Lệnh","Số trên cột=PnL trung bình |  Xanh>0, Đỏ<0","Số lệnh")
 
     plt.tight_layout(rect=[0,0,1,0.97])
     if out_path: plt.savefig(out_path, dpi=150, bbox_inches="tight"); print(f"[Chart] 4 → {out_path}")
@@ -373,7 +373,7 @@ def plot_trades(trades, out_path=None):
 def plot_elliott(df, patterns, pivots, out_path=None):
     fig,axes=plt.subplots(2,1,figsize=(16,11),facecolor=C["bg"],
                            gridspec_kw={"height_ratios":[3,1]})
-    fig.suptitle("Elliott Wave Analysis — VNM (ElliottAgents Paper arXiv:2507.03435)",
+    fig.suptitle("Elliott Wave Analysis — VNM ",
                  fontsize=13, fontweight="bold", color=C["text"], y=0.98)
     x=np.arange(len(df))
 
@@ -583,8 +583,7 @@ def plot_dashboard(df, metrics, history, trades, patterns, pivots,
             except: vc=C["text"]
             ax7.text(xo+0.22,y,val,transform=ax7.transAxes,color=vc,fontsize=11,fontweight="bold")
     ax7.text(0.68,0.92,"Model Architecture",transform=ax7.transAxes,color=C["blue"],fontsize=9,fontweight="bold")
-    cfg=["Paper: ElliottAgents (arXiv:2507.03435)",
-         "Model: Double Dueling DQN + N-step(3)",
+    cfg=[ "Model: Double Dueling DQN + N-step(3)",
          f"Obs: 20-bar × {m.get('n_feat',36)} features + 5 portfolio state",
          "Optim: Adam lr=1e-4 | Soft target τ=0.01",
          "VN: T+2 | ±7% HOSE | Phí 0.15% | Slippage 0.03%"]
@@ -609,4 +608,4 @@ def generate_all(result_df, metrics, trades, history,
     plot_elliott(result_df, patterns, pivots,           f"{out_dir}/5_elliott_waves.png")
     plot_dashboard(result_df, metrics, history, trades, patterns, pivots,
                    initial_cap,                         f"{out_dir}/0_dashboard.png")
-    print(f"[Charts] ✅ 6 biểu đồ → {out_dir}/")
+    print(f"[Charts] 6 biểu đồ → {out_dir}/")

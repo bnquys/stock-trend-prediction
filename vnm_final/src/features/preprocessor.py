@@ -13,26 +13,15 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 
-# 27 features kỹ thuật (đã có sẵn trong VNM_2225.csv)
 FEAT_COLS = [
-    # Trend
-    "sma_10", "sma_20", "ema_20",
-    # Momentum
-    "macd_histogram", "rsi_14", "momentum_10", "roc_12",
+    # Trend & Momentum
+    "sma_20", "ema_20", "macd_histogram", "rsi_14",
     # Volatility
-    "atr_14", "cci_14", "rolling_std_20", "historical_volatility_20",
-    # Price pattern
-    "log_return", "body_size", "daily_range", "upper_shadow", "lower_shadow",
-    # Position in range
-    "distance_from_high_20", "distance_from_low_20",
-    # Volume
-    "volume_ratio", "volume_change",
-    # Lag returns
-    "return_lag_1", "return_lag_2", "return_lag_3",
-    # Market
-    "vnindex_return", "correlation_market_20", "beta_20",
-    # Time
-    "day_of_week",
+    "atr_14", "rolling_std_20",
+    # Price pattern & Range
+    "log_return", "body_size", "distance_from_high_20", "distance_from_low_20",
+    # Volume & Market
+    "volume_ratio", "vnindex_return",
 ]
 
 
@@ -42,7 +31,7 @@ def load_csv(path: str) -> pd.DataFrame:
     if not p.exists():
         raise FileNotFoundError(f"Data file not found: {p}")
     df = pd.read_csv(p)
-    # Parse date (VNM_2225.csv có format M/D/YYYY)
+
     df["date"] = pd.to_datetime(df["date"], dayfirst=False)
     df = df.sort_values("date").reset_index(drop=True)
     df = df.dropna(subset=["open", "high", "low", "close", "volume"])
@@ -94,8 +83,8 @@ class RobustScaler:
 
 def get_obs(df_norm: pd.DataFrame, step: int, window: int) -> np.ndarray:
     """
-    Observation vector tại bước `step`.
-    Dùng df ĐÃ NORMALIZE.
+    Observation vector tại bước step.
+
     Shape: (window * n_features,) flattened.
     """
     cols  = [c for c in FEAT_COLS if c in df_norm.columns]

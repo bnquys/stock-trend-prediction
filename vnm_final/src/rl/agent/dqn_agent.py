@@ -1,7 +1,6 @@
 """
 src/rl/agent/dqn_agent.py
 ════════════════════════════════════════════════════════════════════════════
-DQN Agent — đơn giản, đúng, không có Dueling để tránh bug gradient.
 
 Architecture: Linear (vanilla Q-net, đã test kỹ)
   Input → FC(128,ReLU) → FC(64,ReLU) → Q(3)
@@ -58,6 +57,10 @@ class FC:
         g_W  = self._x.T @ g_out / B       # (in_d, out_d)
         g_b  = g_out.mean(axis=0)           # (out_d,)
         g_in = g_out @ self.W.T             # (B, in_d)
+
+        # L2 Regularization (Weight Decay) to prevent overfitting
+        l2_lambda = 1e-4
+        g_W += l2_lambda * self.W
 
         # Global grad norm clip
         norm = float(np.sqrt(np.sum(g_W**2) + np.sum(g_b**2))) + 1e-8
@@ -215,10 +218,20 @@ class DQNAgent:
         self.losses: list[float] = []
 
     # ─── Act ─────────────────────────────────────────────────────
-    def act(self, obs: np.ndarray, greedy: bool = False) -> int:
+    def act(self, obs: np.ndarray, valid_actions: list[int] | None = None, greedy: bool = False) -> int:
+        if valid_actions is None:
+            valid_actions = list(range(self.n_actions))
+            
         if not greedy and np.random.rand() < self.eps:
-            return np.random.randint(self.n_actions)
+            return int(np.random.choice(valid_actions))
+            
         q = self.q.forward(obs)
+        if q.ndim == 1:
+            mask = np.ones(self.n_actions, dtype=bool)
+            mask[valid_actions] = False
+            q_masked = q.copy()
+            q_masked[mask] = -np.inf
+            return int(np.argmax(q_masked))
         return int(np.argmax(q))
 
     # ─── Store & Learn ────────────────────────────────────────────

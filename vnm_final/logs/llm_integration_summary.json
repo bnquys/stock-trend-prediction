@@ -1,0 +1,22 @@
+{
+    "report_date": "2025-06-30",
+    "ticker": "VNM",
+    "latest_close_price": 55.4,
+    "rl_recommendation": "MUA (BUY)",
+    "technical_context": {
+        "rsi_14": 70.74,
+        "macd_histogram": 0.2041,
+        "sma_20_trend": "TĂNG"
+    },
+    "elliott_wave": {
+        "pattern": "abc",
+        "confidence": 0.6,
+        "support": 47.97,
+        "resistance": 54.26
+    },
+    "rl_performance_history": {
+        "win_rate_pct": 66.7,
+        "sharpe_ratio": -1.8992,
+        "profit_factor": 0.47
+    }
+}

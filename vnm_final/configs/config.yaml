@@ -1,5 +1,5 @@
 # ================================================================
-# VNM RL Trading v6.0 — Cấu hình huấn luyện
+# VNM RL Trading — Cấu hình huấn luyện
 # ================================================================
 project:
   seed: 42
@@ -25,7 +25,6 @@ env:
   t_plus:       2             # T+2 HOSE
   lot_size:     100           # 1 lô = 100 cp (HOSE)
   price_limit:  0.07          # ±7% trần/sàn HOSE
-  trade_penalty: 0.3          # phạt 0.3 reward mỗi lần trade (giảm overtrade)
 
 agent:
   hidden:       [128, 64]

@@ -4,7 +4,7 @@ train.py  —  VNM RL Trading Pipeline v6.0
 
   Tuân thủ HOSE: T+2, lot 100cp, thuế bán 0.1%, giới hạn ±7%
   Double DQN với per-episode epsilon decay
-  Reward = PnL % khi SELL, clip [-10, 10]
+  Reward = PnL % khi Ư, clip [-10, 10]
   Observation = 20 bar × 27 features (normalized) + 4 portfolio state
 
 Chạy:
@@ -72,8 +72,6 @@ def run_episode(agent: DQNAgent,
         t_plus       = env_cfg.get("t_plus", 2),
         lot_size     = env_cfg.get("lot_size", 100),
         price_limit  = env_cfg.get("price_limit", 0.07),
-        cooldown     = env_cfg.get("cooldown", 5),
-        trade_penalty = env_cfg.get("trade_penalty", 0.3),
     )
 
     obs  = env.reset()
@@ -81,7 +79,7 @@ def run_episode(agent: DQNAgent,
     step_count = 0
 
     while not done:
-        action = agent.act(obs, greedy=not train_mode)
+        action = agent.act(obs, valid_actions=env.valid_actions(), greedy=not train_mode)
         next_obs, reward, done, info = env.step(action)
 
         if train_mode:
@@ -263,13 +261,13 @@ def train(cfg: dict, n_ep_override: int | None = None):
         if ep % ckpt_every == 0:
             agent.save(f"{model_dir}/ckpt_ep{ep}.pkl")
 
-        # Early stopping (chỉ sau warmup VÀ đã khám phá đủ)
+        # Early stopping 
         if learned_at_least_once and pat_cnt >= patience and agent.eps < 0.3:
             log.info(f"\nEarly stop @ ep {ep} — {patience} ep không cải thiện")
             break
         elif learned_at_least_once and pat_cnt >= patience and agent.eps >= 0.3:
             log.debug(f"  Ep {ep}: patience hết nhưng eps={agent.eps:.3f} > 0.3, tiếp tục")
-            pat_cnt = patience // 2  # Reset 1 nửa patience
+            pat_cnt = patience // 2  
 
     agent.save(f"{model_dir}/last_model.pkl")
     with open(f"{log_dir}/training_log.json", "w", encoding="utf-8") as f:
@@ -302,13 +300,11 @@ def train(cfg: dict, n_ep_override: int | None = None):
         t_plus       = env_cfg.get("t_plus", 2),
         lot_size     = env_cfg.get("lot_size", 100),
         price_limit  = env_cfg.get("price_limit", 0.07),
-        cooldown     = env_cfg.get("cooldown", 5),
-        trade_penalty = env_cfg.get("trade_penalty", 0.3),
     )
     obs = test_env.reset(); done = False
     acts: list[int] = []; eqs: list[float] = []
     while not done:
-        a = agent.act(obs, greedy=True)
+        a = agent.act(obs, valid_actions=test_env.valid_actions(), greedy=True)
         obs, _, done, info = test_env.step(a)
         acts.append(a); eqs.append(info["equity"])
 
@@ -327,19 +323,38 @@ def train(cfg: dict, n_ep_override: int | None = None):
     result_df["buy_signal"]  = [a == TradingEnv.BUY  for a in acts[:n_valid]]
     result_df["sell_signal"] = [a == TradingEnv.SELL for a in acts[:n_valid]]
 
+    # ── Run Elliott Wave Pipeline ─────────────────────────────────────
+    log.info("\n[Elliott Wave] Running detection on test set...")
+    try:
+        from src.features.elliott import run_pipeline
+        result_df, patterns, pivots = run_pipeline(result_df, pivot_order=5)
+    except Exception as e:
+        log.warning(f"Lỗi tính toán Elliott: {e}")
+        patterns, pivots = [], []
+
     # Save pkl
     res = {
         "result_df":    result_df,
         "test_metrics": test_m,
         "test_trades":  test_env.trades,
         "history":      history,
+        "patterns":     patterns,
+        "pivots":       pivots,
     }
     with open(f"{log_dir}/test_results.pkl", "wb") as f: pickle.dump(res, f)
     log.info(f"Results → {log_dir}/test_results.pkl")
 
-    # ── 6. Charts ─────────────────────────────────────────────────────
+    # ── 6. Export ROI Table ───────────────────────────────────────────
+    log.info("\n[ROI Table] Generating ...")
+    _export_roi_table(res, cfg)
+
+    # ── 7. Charts ─────────────────────────────────────────────────────
     log.info("\n[Charts] Generating ...")
     _make_charts(res, cfg)
+
+    # ── 8. LLM Integration Report ─────────────────────────────────────
+    log.info("\n[LLM Report] Generating LLM Integration Summary ...")
+    _export_llm_integration_report(res, cfg)
 
 
 def _make_charts(res: dict, cfg: dict):
@@ -360,6 +375,159 @@ def _make_charts(res: dict, cfg: dict):
         log.warning("[Charts] Bỏ qua chart, kết quả training vẫn OK.")
 
 
+def _export_roi_table(res: dict, cfg: dict):
+    trades = res.get("test_trades", [])
+    if not trades:
+        log.info("Không có giao dịch nào trong test_trades để tạo bảng ROI.")
+        return
+    
+    # Lọc ra các giao dịch đã đóng (SELL hoặc AUTO_EXIT)
+    closed_trades = [t for t in trades if t["type"] in ["SELL", "AUTO_EXIT"]]
+    
+    if not closed_trades:
+        log.info("Chưa có giao dịch đóng nào để tính ROI.")
+        return
+
+    # Lọc ra các lệnh mua
+    buy_trades = [t for t in trades if t["type"] == "BUY"]
+    
+    roi_data = []
+    buy_idx = 0
+    for ct in closed_trades:
+        buy_date = "N/A"
+        shares = 0
+        # Cố gắng match với lệnh mua gần nhất trước khi đóng
+        while buy_idx < len(buy_trades) and buy_trades[buy_idx]["step"] <= ct["step"]:
+            b_trade = buy_trades[buy_idx]
+            buy_date = b_trade["date"]
+            shares = b_trade.get("shares", 0)
+            buy_idx += 1
+            break
+            
+        entry_price = ct["entry_price"]
+        exit_price = ct["price"]
+        pnl_pct = ct["pnl_pct"]
+        hold_days = ct.get("hold_days", 0)
+        reason = ct.get("reason", "manual")
+        
+        capital_invested = shares * entry_price
+        profit = capital_invested * (pnl_pct / 100)
+        
+        roi_data.append({
+            "Buy Date": buy_date,
+            "Sell Date": ct["date"],
+            "Shares": shares,
+            "Entry (VND)": entry_price,
+            "Exit (VND)": exit_price,
+            "Hold Days": hold_days,
+            "Exit Reason": reason.upper(),
+            "Invested (VND)": f"{capital_invested:,.0f}",
+            "P/L (VND)": f"{profit:,.0f}",
+            "ROI (%)": pnl_pct
+        })
+        
+    df_roi = pd.DataFrame(roi_data)
+    
+    out_dir = cfg["output"].get("log_dir", "logs")
+    out_path = f"{out_dir}/roi_table.csv"
+    df_roi.to_csv(out_path, index=False)
+    
+    log.info(f"Đã xuất bảng ROI tại: {out_path}")
+    
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', 1000)
+    log.info(f"Bảng tổng hợp ROI (Return On Investment):\n{df_roi.to_string(index=False)}")
+
+
+def _export_llm_integration_report(res: dict, cfg: dict):
+    df = res.get("result_df")
+    if df is None or df.empty:
+        return
+        
+    last_row = df.iloc[-1]
+    prev_row = df.iloc[-2] if len(df) > 1 else last_row
+    
+    # Xác định khuyến nghị từ RL
+    rl_action_code = last_row.get("rl_action", 0)
+    if rl_action_code == TradingEnv.BUY:
+        rl_rec = "MUA (BUY)"
+    elif rl_action_code == TradingEnv.SELL:
+        rl_rec = "BÁN (SELL)"
+    else:
+        rl_rec = "NẮM GIỮ / ĐỨNG NGOÀI (HOLD)"
+        
+    # Technical Indicators
+    rsi = last_row.get("rsi_14", 0)
+    macd = last_row.get("macd_histogram", 0)
+    sma20 = last_row.get("sma_20", 0)
+    trend_sma20 = "TĂNG" if sma20 > prev_row.get("sma_20", 0) else "GIẢM"
+    
+    # Elliott Wave
+    patterns = res.get("patterns", [])
+    ew_info = {"pattern": "N/A", "confidence": 0, "support": 0, "resistance": 0}
+    if patterns:
+        # Lấy pattern có độ tự tin cao nhất
+        best_pat = sorted(patterns, key=lambda p: p.confidence, reverse=True)[0]
+        ew_info = {
+            "pattern": best_pat.pattern,
+            "confidence": round(best_pat.confidence, 2),
+            "support": round(best_pat.support, 2),
+            "resistance": round(best_pat.resistance, 2)
+        }
+        
+    # Metrics
+    m = res.get("test_metrics", {})
+    
+    llm_data = {
+        "report_date": str(last_row.get("date", "N/A"))[:10],
+        "ticker": "VNM",
+        "latest_close_price": float(last_row.get("close", 0)),
+        "rl_recommendation": rl_rec,
+        "technical_context": {
+            "rsi_14": round(float(rsi), 2),
+            "macd_histogram": round(float(macd), 4),
+            "sma_20_trend": trend_sma20
+        },
+        "elliott_wave": ew_info,
+        "rl_performance_history": {
+            "win_rate_pct": float(m.get("win_rate", 0)),
+            "sharpe_ratio": float(m.get("sharpe", 0)),
+            "profit_factor": float(m.get("pf", 0))
+        }
+    }
+    
+    out_dir = cfg["output"].get("log_dir", "logs")
+    out_json = f"{out_dir}/llm_integration_summary.json"
+    with open(out_json, "w", encoding="utf-8") as f:
+        json.dump(llm_data, f, ensure_ascii=False, indent=4)
+        
+    log.info(f"\nĐã xuất file JSON cho LLM tại: {out_json}")
+    
+    # In ra dạng bảng Markdown cho User copy
+    md_table = f"""
+### BẢNG TÓM TẮT KỸ THUẬT VÀ TÍN HIỆU RL (DÀNH CHO LLM)
+**Ngày cập nhật:** {llm_data['report_date']} | **Mã CP:** {llm_data['ticker']} | **Giá đóng cửa:** {llm_data['latest_close_price']:,.0f} VND
+
+| Phân loại | Chỉ tiêu | Giá trị hiện tại | Ý nghĩa đối với LLM (Gợi ý) |
+| :--- | :--- | :--- | :--- |
+| **TÍN HIỆU RL** | **Khuyến nghị Agent** | **{llm_data['rl_recommendation']}** | Quyết định giao dịch ngắn hạn dựa trên AI. |
+| | Lịch sử Win Rate | {llm_data['rl_performance_history']['win_rate_pct']}% | Độ tin cậy của Agent trong quá khứ. |
+| | Sharpe Ratio | {llm_data['rl_performance_history']['sharpe_ratio']} | Mức độ rủi ro trên lợi nhuận của Agent. |
+| **KỸ THUẬT** | RSI (14 ngày) | {llm_data['technical_context']['rsi_14']} | >70: Quá mua, <30: Quá bán. |
+| | MACD Histogram | {llm_data['technical_context']['macd_histogram']} | >0: Động lượng tăng, <0: Động lượng giảm. |
+| | Xu hướng SMA 20 | {llm_data['technical_context']['sma_20_trend']} | Xu hướng giá trung hạn (20 phiên). |
+| **ELLIOTT WAVE**| Mẫu hình đang chạy | {llm_data['elliott_wave']['pattern']} | Pha sóng hiện tại (Impulse/ABC...). |
+| | Hỗ trợ (Support) | {llm_data['elliott_wave']['support']:,.0f} | Mức giá rớt xuống có thể nảy lên. |
+| | Kháng cự (Resist) | {llm_data['elliott_wave']['resistance']:,.0f} | Mức giá tăng lên có thể bị chốt lời. |
+| | Độ tự tin (Conf) | {llm_data['elliott_wave']['confidence'] * 100}% | Xác suất mẫu hình Elliott này chính xác. |
+
+*Lưu ý cho LLM: Hãy kết hợp tín hiệu MUA/BÁN của RL Agent ở trên với sức khỏe tài chính doanh nghiệp từ BCTC để đưa ra kết luận đầu tư cuối cùng.*
+"""
+    print(md_table)
+    with open(f"{out_dir}/llm_summary.md", "w", encoding="utf-8") as f:
+        f.write(md_table)
+
+
 def charts_only(cfg: dict):
     pkl_path = f"{cfg['output']['log_dir']}/test_results.pkl"
     log_path = f"{cfg['output']['log_dir']}/training_log.json"
@@ -368,7 +536,19 @@ def charts_only(cfg: dict):
         return
     with open(pkl_path, "rb") as f:   res = pickle.load(f)
     with open(log_path, encoding="utf-8") as f: res["history"] = json.load(f)
+    
+    if "patterns" not in res or not res["patterns"]:
+        print("\n[Elliott Wave] Adding Elliott Wave analysis to old results...")
+        try:
+            from src.features.elliott import run_pipeline
+            res["result_df"], res["patterns"], res["pivots"] = run_pipeline(res["result_df"], pivot_order=5)
+            with open(pkl_path, "wb") as f: pickle.dump(res, f)
+        except Exception as e:
+            print(f"Lỗi tính toán Elliott: {e}")
+
+    _export_roi_table(res, cfg)
     _make_charts(res, cfg)
+    _export_llm_integration_report(res, cfg)
 
 
 if __name__ == "__main__":
