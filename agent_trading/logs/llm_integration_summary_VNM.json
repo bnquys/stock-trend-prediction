@@ -1,0 +1,16 @@
+{
+    "report_date": "2025-12-31",
+    "ticker": "VNM",
+    "latest_close_price": 61.2,
+    "rl_recommendation": "NẮM GIỮ / ĐỨNG NGOÀI (HOLD)",
+    "technical_context": {
+        "rsi": 0.0,
+        "macd": 0.0,
+        "sma_20_trend": "GIẢM"
+    },
+    "rl_performance_history": {
+        "win_rate_pct": 64.7,
+        "sharpe_ratio": -0.276,
+        "profit_factor": 2.02
+    }
+}

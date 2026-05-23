@@ -1,0 +1,16 @@
+{
+    "report_date": "2025-12-31",
+    "ticker": "VIC",
+    "latest_close_price": 169.6,
+    "rl_recommendation": "NẮM GIỮ / ĐỨNG NGOÀI (HOLD)",
+    "technical_context": {
+        "rsi": 0.0,
+        "macd": 0.0,
+        "sma_20_trend": "TĂNG"
+    },
+    "rl_performance_history": {
+        "win_rate_pct": 70.6,
+        "sharpe_ratio": 2.1194,
+        "profit_factor": 2.59
+    }
+}

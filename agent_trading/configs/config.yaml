@@ -1,0 +1,65 @@
+# ================================================================
+# RL Trading — Cấu hình huấn luyện v7.0
+# Chiến lược: ATR-based Dynamic SL/TP + Reward Shaping
+# ================================================================
+project:
+  seed: 42
+
+data:
+  paths:
+    - "data/VNM.csv"
+    - "data/FPT.csv"
+    - "data/VIC.csv"
+    - "data/HPG.csv"
+  source: "VCI"
+
+split:
+  train_ratio: 0.8   
+  val_ratio:   0.1  
+
+env:
+  window:       20
+  initial_cap:  1_000_000_000   # 1 tỷ VND
+  tx_cost:      0.0015          # 0.15% phí mua/bán
+  sell_tax:     0.001           # 0.1% thuế bán (HOSE)
+  slippage:     0.001           # 0.1% slippage thực tế
+
+  # ── ATR-based Dynamic SL/TP ──────────────────────────────────
+  # SL = entry_price - atr_sl_mult × ATR(14)
+  # TP = entry_price + atr_tp_mult × ATR(14)
+  # R:R ratio = atr_tp_mult / atr_sl_mult = 3.0 / 1.5 = 2.0
+  atr_sl_mult:  1.5             # Cắt lỗ = 1.5 × ATR
+  atr_tp_mult:  3.0             # Chốt lời = 3.0 × ATR → R:R = 1:2
+  risk_per_trade: 0.02          # Rủi ro tối đa 2% tổng vốn mỗi lệnh (Position Sizing)
+
+  # Fallback cố định (khi ATR không khả dụng hoặc quá nhỏ)
+  stop_loss:    0.07            # Cắt lỗ tối đa 7% (= 1 phiên sàn HOSE)
+  take_profit:  0.15            # Chốt lời tối đa 15%
+
+  max_hold:     30              # Tối đa 30 phiên (6 tuần giao dịch)
+  t_plus:       2               # T+2 HOSE
+  lot_size:     100             # 1 lô = 100 cp (HOSE)
+  price_limit:  0.07            # ±7% trần/sàn HOSE
+
+agent:
+  hidden:       [256, 128, 64]  # 3 lớp ẩn — tăng capacity cho multi-stock
+  lr:           0.0005          # Learning rate cao hơn → hội tụ nhanh hơn
+  lr_decay:     0.995           # Exponential decay mỗi episode
+  lr_min:       0.00005         # Sàn LR — không giảm quá thấp
+  gamma:        0.97            # Coi trọng reward dài hạn hơn
+  tau:          0.005           # Soft target update chậm hơn → ổn định hơn
+  eps_start:    1.0
+  eps_end:      0.03            # Epsilon cuối thấp hơn → khai thác tốt hơn
+  eps_decay:    0.997           # Giảm chậm hơn → khám phá lâu hơn
+  buffer_cap:   20000           # Buffer vừa đủ (~27 episodes) — tiết kiệm RAM
+  batch_size:   256             # Batch lớn → gradient ổn định hơn với obs_size=547
+  warmup:       1000            # Đợi buffer đầy hơn trước khi học
+  n_episodes:   500
+  patience:     80              # Kiên nhẫn hơn trước khi early stop
+  checkpoint_every: 50
+
+output:
+  model_dir:  "models"
+  log_dir:    "logs"
+  chart_dir:  "outputs"
+  dpi:        150
