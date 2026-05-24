@@ -7,6 +7,7 @@ import hashlib
 import logging
 from pathlib import Path
 from datetime import datetime
+from random import randint
 
 import requests
 from dotenv import load_dotenv
@@ -42,14 +43,17 @@ class LLMClient:
         }
 
         max_retries = 5
+        response = None
         for attempt in range(1, max_retries + 1):
+            time.sleep(randint(1, 20))
             response = requests.post(self.url, headers=headers, json=data)
             if response.status_code == 200:
                 result = response.json()
                 return result.get("choices", [{}])[0].get("message", {}).get("content", "")
             if attempt < max_retries:
-                time.sleep(2)
+                time.sleep(randint(1, 20))
 
+        assert response is not None
         raise RuntimeError(
             f"API call failed after {max_retries} retries. "
             f"Last status: {response.status_code}, Body: {response.text}"

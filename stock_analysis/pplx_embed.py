@@ -1,3 +1,4 @@
+import logging
 import torch
 from transformers import AutoModel, AutoTokenizer
 
@@ -6,7 +7,7 @@ class PerplexityEmbeddingService:
         """
         Khởi tạo và nạp mô hình vào GPU T4 một lần duy nhất.
         """
-        print(f"Đang nạp mô hình {model_id} vào GPU... Vui lòng đợi...")
+        logging.info(f"Đang nạp mô hình {model_id} vào GPU... Vui lòng đợi...")
         
         # 1. Load Tokenizer & Model tối ưu cho GPU T4
         self.tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
@@ -17,7 +18,7 @@ class PerplexityEmbeddingService:
             device_map="auto",           # Tự động đẩy lên GPU có sẵn (T4)
             low_cpu_mem_usage=True       # Tránh tràn RAM hệ thống khi nạp
         )
-        print("Nạp mô hình thành công! Sẵn sàng trích xuất embedding.")
+        logging.info("Nạp mô hình thành công! Sẵn sàng trích xuất embedding.")
 
     def get_embedding(self, text: str):
         """

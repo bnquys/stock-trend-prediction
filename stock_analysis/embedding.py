@@ -1,22 +1,22 @@
 """Module Embedding: tạo và cache embedding vectors."""
 
 import json
-import random
-import hashlib
 import logging
 from pathlib import Path
-from stock_analysis.pplx_embed import PerplexityEmbeddingService
+# from stock_analysis.pplx_embed import PerplexityEmbeddingService
 
 import numpy as np
+from gradio_client import Client
 
-embed_service = PerplexityEmbeddingService()
+# embed_service = PerplexityEmbeddingService()
+client = Client("https://efad471d56fb61051d.gradio.live")
 
 def get_embedding(text: str) -> np.ndarray:
-    """Gọi API tạo embedding (thay thế bằng API thực tế). Trả về numpy array."""
-    hash_string = hashlib.sha256(text.encode("utf-8")).hexdigest()
-    rng = random.Random(hash_string)
-    return np.array([rng.random() for _ in range(2560)])
-
+    result = client.predict(
+        text=text,
+        api_name="/get_embedding",
+    )
+    return np.array(result)
 
 def embed_response(responses_dir: Path, response_hash_id: str, response_text: str, overwrite: bool = False) -> np.ndarray:
     """
@@ -38,7 +38,8 @@ def embed_response(responses_dir: Path, response_hash_id: str, response_text: st
         return existing[response_hash_id]
 
     # Gọi API embedding
-    vector = embed_service.get_embedding(response_text)
+    # vector = embed_service.get_embedding(response_text)
+    vector = get_embedding(response_text)
     existing[response_hash_id] = vector
     np.savez(npz_path, **existing)
 

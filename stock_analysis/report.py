@@ -34,8 +34,9 @@ class Report:
 
     def _filter_by_quarter(self, df: pd.DataFrame, period_col: str, q_start: pd.Period, q_end: pd.Period) -> pd.DataFrame:
         """Lọc DataFrame theo khoảng quý dựa trên cột period."""
-        periods = df[period_col].apply(lambda x: pd.Period(x, freq="Q"))
-        return df[periods.between(q_start, q_end)]
+        periods = pd.PeriodIndex(df[period_col], freq="Q")
+        mask = (periods >= q_start) & (periods <= q_end)
+        return df[mask]
 
     @staticmethod
     def get_hash_id(stock_id: str, date_start: datetime, date_end: datetime) -> str:
@@ -139,8 +140,9 @@ class Report:
         notes_df = self._read_csv("financial_notes.csv").copy()
         period_clean = notes_df["report_period"].astype(str) \
             .str.replace(r"^\d{4}$", lambda m: m.group(0) + "-Q4", regex=True)
-        period_col = period_clean.apply(lambda x: pd.Period(x, freq="Q"))
-        df_tmp = notes_df[period_col.between(q_start, q_end)]
+        periods = pd.PeriodIndex(period_clean, freq="Q")
+        mask = (periods >= q_start) & (periods <= q_end)
+        df_tmp = notes_df[mask]
         sections.append(self._df_to_section(df_tmp))
 
         # 12. Sức khỏe tài chính

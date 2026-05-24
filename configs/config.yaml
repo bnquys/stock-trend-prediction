@@ -61,7 +61,7 @@ agent:
 # ── Analysis Embedding (phân tích cơ bản từ LLM) ──────────────────
 analysis:
   enabled:    true                          # true/false để switch on/off
-  model:      "mistral-small-4-119b-2603"   # LLM model cho pipeline
+  model:      "mistral-medium-3.5-128b"   # LLM model cho pipeline
   embed_dim:  2560                          # Chiều embedding từ pipeline
   projection: [1024, 512, 128]              # Giảm chiều từ từ: 2560→1024→512→128
 
