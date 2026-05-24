@@ -19,9 +19,13 @@ Actions:  0 = HOLD   1 = BUY   2 = SELL
 ══════════════════════════════════════════════════════════════════════════
 """
 from __future__ import annotations
+import logging
 import numpy as np
 import pandas as pd
+from datetime import datetime, timedelta
 from src.features.preprocessor import get_obs, FEAT_COLS
+
+log = logging.getLogger(__name__)
 
 
 class TradingEnv:
@@ -50,6 +54,9 @@ class TradingEnv:
         lot_size:    int   = 100,        # 1 lô = 100 cp (HOSE)
         price_limit: float = 0.07,       # ±7% trần/sàn HOSE
         advance_fee_rate: float = 0.0004,# Phí ứng trước tiền bán
+        # ── Analysis Embedding (phân tích cơ bản) ──────────────
+        stock_id:        str | None = None,   # Mã cổ phiếu (VNM, FPT, ...)
+        analysis_model:  str | None = None,   # LLM model cho pipeline
     ):
         assert len(df_raw) == len(df_norm), "df_raw và df_norm phải cùng length"
         assert len(df_raw) > window + 2, f"Data quá ngắn: {len(df_raw)}"
@@ -75,6 +82,11 @@ class TradingEnv:
 
         self._feat_cols = [c for c in FEAT_COLS if c in df_norm.columns]
         self.obs_size   = window * len(self._feat_cols) + 7  # 7 portfolio state dims
+
+        # ── Analysis Embedding ─────────────────────────────────
+        self.stock_id       = stock_id
+        self.analysis_model = analysis_model
+        self._analysis_enabled = (stock_id is not None and analysis_model is not None)
 
         # ── Precompute ATR(14) cho df_raw ──────────────────────
         self._atr = self._compute_atr(df_raw, period=14)
@@ -113,13 +125,13 @@ class TradingEnv:
             atr[i] = np.mean(tr[start:i+1])
         return atr
 
-    def _get_atr(self, step: int = None) -> float:
+    def _get_atr(self, step: int | None = None) -> float:
         """Lấy ATR(14) tại bước hiện tại."""
         idx = step if step is not None else self._step
         idx = int(np.clip(idx, 0, self.n - 1))
         return float(self._atr[idx])
 
-    def _get_atr_pct(self, step: int = None) -> float:
+    def _get_atr_pct(self, step: int | None = None) -> float:
         """ATR(14) / close — biến động tương đối."""
         price = self._price(step)
         atr = self._get_atr(step)
@@ -421,6 +433,42 @@ class TradingEnv:
                 acts.append(self.SELL)
                 
         return acts
+
+    def get_analysis_embed(self) -> np.ndarray | None:
+        """
+        Lấy analysis embedding cho cửa sổ 20 ngày hiện tại.
+        Gọi stock_analysis.pipeline() với date_start/date_end tương ứng window.
+        Pipeline tự cache nên gọi lại cùng tham số → 0 API calls.
+
+        Returns:
+            numpy array (2560,) hoặc None nếu analysis không enabled.
+        """
+        if not self._analysis_enabled:
+            return None
+        # Guard: đã check _analysis_enabled nhưng Pylance cần assert
+        assert self.analysis_model is not None and self.stock_id is not None
+
+        try:
+            from stock_analysis import pipeline
+
+            # Xác định date_start và date_end cho window hiện tại
+            safe = min(self._step, self.n - 1)
+            start_idx = max(0, safe - self.window + 1)
+
+            date_end = pd.Timestamp(self.df_raw["date"].iloc[safe])
+            date_start = pd.Timestamp(self.df_raw["date"].iloc[start_idx])
+
+            result = pipeline(
+                model=self.analysis_model,
+                stock_id=self.stock_id,
+                date_start=date_start.to_pydatetime(),
+                date_end=date_end.to_pydatetime(),
+            )
+            return result["vector"].astype(np.float32)
+
+        except Exception as e:
+            log.warning(f"[Analysis] Failed to get embedding at step {self._step}: {e}")
+            return None
 
     def _date(self) -> str:
         i = min(self._step, self.n - 1)

@@ -52,13 +52,16 @@ def run_episode(agent: DQNAgent,
                 df_norm: pd.DataFrame,
                 env_cfg: dict,
                 train_mode: bool,
-                episode_num: int = 1) -> tuple[dict, list]:
+                episode_num: int = 1,
+                stock_id: str | None = None,
+                analysis_model: str | None = None) -> tuple[dict, list]:
     """
     Chạy 1 episode hoàn chỉnh với error handling.
     Đảm bảo:
       - env.reset() → obs hợp lệ
       - loop chạy cho đến khi done=True
       - nếu train_mode: store + learn mỗi bước
+      - Nếu analysis enabled: lấy embedding mỗi step và truyền vào agent
       - try-catch bảo vệ từng step và toàn bộ episode
     """
     try:
@@ -79,6 +82,9 @@ def run_episode(agent: DQNAgent,
             t_plus       = env_cfg.get("t_plus", 2),
             lot_size     = env_cfg.get("lot_size", 100),
             price_limit  = env_cfg.get("price_limit", 0.07),
+            # Analysis embedding
+            stock_id     = stock_id,
+            analysis_model = analysis_model,
         )
 
         obs  = env.reset()
@@ -87,11 +93,16 @@ def run_episode(agent: DQNAgent,
 
         while not done:
             try:
-                action = agent.act(obs, valid_actions=env.valid_actions(), greedy=not train_mode)
+                # Lấy analysis embedding cho window hiện tại (None nếu disabled)
+                analysis_embed = env.get_analysis_embed()
+
+                action = agent.act(obs, valid_actions=env.valid_actions(),
+                                   greedy=not train_mode, analysis_embed=analysis_embed)
                 next_obs, reward, done, info = env.step(action)
 
                 if train_mode:
-                    agent.store(obs, action, reward, next_obs, done)
+                    agent.store(obs, action, reward, next_obs, done,
+                                analysis_embed=analysis_embed)
                     agent.learn()   # learn() nội bộ đã có warmup guard
 
                 obs = next_obs
@@ -197,7 +208,18 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
     ac      = cfg["agent"]
     env_cfg = cfg["env"]
 
+    # ── Analysis Embedding config ─────────────────────────────────
+    analysis_cfg = cfg.get("analysis", {})
+    analysis_enabled = analysis_cfg.get("enabled", False)
+    analysis_model   = analysis_cfg.get("model", "mistral-small-4-119b-2603")
+    analysis_embed_dim = analysis_cfg.get("embed_dim", 2560) if analysis_enabled else None
+    analysis_proj_layers = analysis_cfg.get("projection", [1024, 512, 128]) if analysis_enabled else None
+
     log.info(f"[Agent] obs_size={obs_sz} | window={window}")
+    if analysis_enabled:
+        log.info(f"[Analysis] Enabled: model={analysis_model}, dim={analysis_embed_dim}, proj={analysis_proj_layers}")
+    else:
+        log.info("[Analysis] Disabled — agent chỉ dùng technical features")
 
     # Validate: episode_len phải > 0 cho tất cả splits
     for stock_idx, p in enumerate(paths):
@@ -222,6 +244,9 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
         buffer_cap = ac["buffer_cap"],
         batch_size = ac["batch_size"],
         warmup     = ac["warmup"],
+        # Analysis embedding
+        analysis_embed_dim   = analysis_embed_dim,
+        analysis_proj_layers = analysis_proj_layers,
     )
     log.info(f"[Agent] Network: {obs_sz} → {ac['hidden']} → Q(3)")
     log.info(f"[Agent] Warmup={ac['warmup']} steps before learning starts")
@@ -276,12 +301,19 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
             stock_idx = np.random.randint(len(train_raws))
         
         # ── Train episode ───────────────────────────────────────────
-        tr_m, _  = run_episode(agent, train_raws[stock_idx], train_norms[stock_idx], env_cfg, train_mode=True, episode_num=ep)
+        train_symbol = Path(paths[stock_idx]).stem if analysis_enabled else None
+        tr_m, _  = run_episode(agent, train_raws[stock_idx], train_norms[stock_idx], env_cfg,
+                               train_mode=True, episode_num=ep,
+                               stock_id=train_symbol,
+                               analysis_model=analysis_model if analysis_enabled else None)
         
         # ── Val episode (no learning) trên tất cả cổ phiếu ──────────
         vl_metrics_list = []
-        for v_raw, v_norm in zip(val_raws, va_norms):
-            vl_m, _ = run_episode(agent, v_raw, v_norm, env_cfg, train_mode=False)
+        for v_idx, (v_raw, v_norm) in enumerate(zip(val_raws, va_norms)):
+            val_symbol = Path(paths[v_idx]).stem if analysis_enabled else None
+            vl_m, _ = run_episode(agent, v_raw, v_norm, env_cfg, train_mode=False,
+                                  stock_id=val_symbol,
+                                  analysis_model=analysis_model if analysis_enabled else None)
             vl_metrics_list.append(vl_m)
             
         vl_m = {
@@ -428,11 +460,16 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
             t_plus       = env_cfg.get("t_plus", 2),
             lot_size     = env_cfg.get("lot_size", 100),
             price_limit  = env_cfg.get("price_limit", 0.07),
+            # Analysis embedding
+            stock_id       = symbol if analysis_enabled else None,
+            analysis_model = analysis_model if analysis_enabled else None,
         )
         obs = test_env.reset(); done = False
         acts: list[int] = []; eqs: list[float] = []
         while not done:
-            a = agent.act(obs, valid_actions=test_env.valid_actions(), greedy=True)
+            analysis_embed = test_env.get_analysis_embed()
+            a = agent.act(obs, valid_actions=test_env.valid_actions(),
+                          greedy=True, analysis_embed=analysis_embed)
             obs, _, done, info = test_env.step(a)
             acts.append(a); eqs.append(info["equity"])
 
