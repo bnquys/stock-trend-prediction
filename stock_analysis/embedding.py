@@ -5,7 +5,7 @@ import random
 import hashlib
 import logging
 from pathlib import Path
-from pplx_embed import PerplexityEmbeddingService
+from stock_analysis.pplx_embed import PerplexityEmbeddingService
 
 import numpy as np
 
