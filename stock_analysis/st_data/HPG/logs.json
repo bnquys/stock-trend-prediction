@@ -1,0 +1,86 @@
+{
+    "company_info": {
+        "name": "Thông tin công ty HPG (Company Info)",
+        "file": "company_info.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:26:18.001661"
+    },
+    "shareholders": {
+        "name": "Danh sách cổ đông lớn của HPG (Major Shareholders)",
+        "file": "shareholders.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:26:18.241161"
+    },
+    "officers": {
+        "name": "Ban lãnh đạo / Quản lý cấp cao của HPG (Officers)",
+        "file": "officers.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:26:18.463573"
+    },
+    "subsidiaries": {
+        "name": "Các công ty con của HPG (Subsidiaries)",
+        "file": "subsidiaries.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:26:18.662340"
+    },
+    "news": {
+        "name": "Các tin tức liên quan đến HPG (News)",
+        "file": "news.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:26:19.639876"
+    },
+    "events": {
+        "name": "Các sự kiện liên quan đến HPG (Events)",
+        "file": "events.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:26:19.849264"
+    },
+    "income_statement": {
+        "name": "Báo cáo kết quả kinh doanh của HPG (Income Statement)",
+        "file": "income_statement.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:26:21.782995"
+    },
+    "balance_sheet": {
+        "name": "Bảng cân đối kế toán của HPG (Balance Sheet)",
+        "file": "balance_sheet.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:26:23.220392"
+    },
+    "cash_flow": {
+        "name": "Báo cáo lưu chuyển tiền tệ của HPG (Cash Flow)",
+        "file": "cash_flow.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:26:24.396779"
+    },
+    "financial_ratios": {
+        "name": "Các chỉ số tài chính của HPG (Financial Ratios)",
+        "file": "financial_ratios.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:26:25.507495"
+    },
+    "financial_notes": {
+        "name": "Trích thuyết minh báo cáo tài chính của HPG (Financial Disclosures/Notes)",
+        "file": "financial_notes.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:26:26.148380"
+    },
+    "financial_health": {
+        "name": "Điểm đánh giá sức khỏe tài chính của HPG (Financial Health Score)",
+        "file": "financial_health.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:26:32.229342"
+    }
+}

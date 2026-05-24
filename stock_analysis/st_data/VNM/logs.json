@@ -1,0 +1,86 @@
+{
+    "company_info": {
+        "name": "Thông tin công ty VNM (Company Info)",
+        "file": "company_info.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:24:27.679678"
+    },
+    "shareholders": {
+        "name": "Danh sách cổ đông lớn của VNM (Major Shareholders)",
+        "file": "shareholders.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:24:27.903338"
+    },
+    "officers": {
+        "name": "Ban lãnh đạo / Quản lý cấp cao của VNM (Officers)",
+        "file": "officers.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:24:28.287226"
+    },
+    "subsidiaries": {
+        "name": "Các công ty con của VNM (Subsidiaries)",
+        "file": "subsidiaries.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:24:28.436207"
+    },
+    "news": {
+        "name": "Các tin tức liên quan đến VNM (News)",
+        "file": "news.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:24:28.667939"
+    },
+    "events": {
+        "name": "Các sự kiện liên quan đến VNM (Events)",
+        "file": "events.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:24:28.821635"
+    },
+    "income_statement": {
+        "name": "Báo cáo kết quả kinh doanh của VNM (Income Statement)",
+        "file": "income_statement.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:24:30.961183"
+    },
+    "balance_sheet": {
+        "name": "Bảng cân đối kế toán của VNM (Balance Sheet)",
+        "file": "balance_sheet.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:24:32.342344"
+    },
+    "cash_flow": {
+        "name": "Báo cáo lưu chuyển tiền tệ của VNM (Cash Flow)",
+        "file": "cash_flow.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:24:34.249582"
+    },
+    "financial_ratios": {
+        "name": "Các chỉ số tài chính của VNM (Financial Ratios)",
+        "file": "financial_ratios.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:24:35.708722"
+    },
+    "financial_notes": {
+        "name": "Trích thuyết minh báo cáo tài chính của VNM (Financial Disclosures/Notes)",
+        "file": "financial_notes.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:24:36.862294"
+    },
+    "financial_health": {
+        "name": "Điểm đánh giá sức khỏe tài chính của VNM (Financial Health Score)",
+        "file": "financial_health.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:24:43.548297"
+    }
+}

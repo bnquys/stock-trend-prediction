@@ -1,0 +1,86 @@
+{
+    "company_info": {
+        "name": "Thông tin công ty VIC (Company Info)",
+        "file": "company_info.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:27:04.212971"
+    },
+    "shareholders": {
+        "name": "Danh sách cổ đông lớn của VIC (Major Shareholders)",
+        "file": "shareholders.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:27:04.440571"
+    },
+    "officers": {
+        "name": "Ban lãnh đạo / Quản lý cấp cao của VIC (Officers)",
+        "file": "officers.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:27:04.746833"
+    },
+    "subsidiaries": {
+        "name": "Các công ty con của VIC (Subsidiaries)",
+        "file": "subsidiaries.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:27:04.984693"
+    },
+    "news": {
+        "name": "Các tin tức liên quan đến VIC (News)",
+        "file": "news.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:27:05.707045"
+    },
+    "events": {
+        "name": "Các sự kiện liên quan đến VIC (Events)",
+        "file": "events.csv",
+        "status": "success",
+        "domain": "reference",
+        "date": "2026-05-24T13:27:05.963632"
+    },
+    "income_statement": {
+        "name": "Báo cáo kết quả kinh doanh của VIC (Income Statement)",
+        "file": "income_statement.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:27:08.049319"
+    },
+    "balance_sheet": {
+        "name": "Bảng cân đối kế toán của VIC (Balance Sheet)",
+        "file": "balance_sheet.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:27:10.038025"
+    },
+    "cash_flow": {
+        "name": "Báo cáo lưu chuyển tiền tệ của VIC (Cash Flow)",
+        "file": "cash_flow.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:27:11.354139"
+    },
+    "financial_ratios": {
+        "name": "Các chỉ số tài chính của VIC (Financial Ratios)",
+        "file": "financial_ratios.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:27:13.211568"
+    },
+    "financial_notes": {
+        "name": "Trích thuyết minh báo cáo tài chính của VIC (Financial Disclosures/Notes)",
+        "file": "financial_notes.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:27:13.822717"
+    },
+    "financial_health": {
+        "name": "Điểm đánh giá sức khỏe tài chính của VIC (Financial Health Score)",
+        "file": "financial_health.csv",
+        "status": "success",
+        "domain": "fundamental",
+        "date": "2026-05-24T13:27:21.420210"
+    }
+}
