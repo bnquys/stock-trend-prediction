@@ -5,9 +5,11 @@ import random
 import hashlib
 import logging
 from pathlib import Path
+from stock_analysis.pplx_embed import PerplexityEmbeddingService
 
 import numpy as np
 
+embed_service = PerplexityEmbeddingService()
 
 def get_embedding(text: str) -> np.ndarray:
     """Gọi API tạo embedding (thay thế bằng API thực tế). Trả về numpy array."""
@@ -36,7 +38,7 @@ def embed_response(responses_dir: Path, response_hash_id: str, response_text: st
         return existing[response_hash_id]
 
     # Gọi API embedding
-    vector = get_embedding(response_text)
+    vector = embed_service.get_embedding(response_text)
     existing[response_hash_id] = vector
     np.savez(npz_path, **existing)
 
