@@ -20,6 +20,7 @@ import pandas as pd
 import yaml
 from pathlib import Path
 from collections import deque
+from tqdm.auto import tqdm
 
 logging.basicConfig(
     level=logging.WARNING,
@@ -37,6 +38,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from src.features.preprocessor import load_csv, time_split, RobustScaler, obs_size_of
 from src.rl.env.trading_env import TradingEnv
 from src.rl.agent.dqn_agent import DQNAgent
+from stock_analysis.cache import EmbeddingCache
 
 
 def load_cfg(path="configs/config.yaml"):
@@ -55,7 +57,9 @@ def run_episode(agent: DQNAgent,
                 train_mode: bool,
                 episode_num: int = 1,
                 stock_id: str | None = None,
-                analysis_model: str | None = None) -> tuple[dict, list]:
+                analysis_model: str | None = None,
+                embedding_cache=None,
+                learn_every: int = 1) -> tuple[dict, list]:
     """
     Chạy 1 episode hoàn chỉnh với error handling.
     Đảm bảo:
@@ -86,11 +90,20 @@ def run_episode(agent: DQNAgent,
             # Analysis embedding
             stock_id     = stock_id,
             analysis_model = analysis_model,
+            embedding_cache = embedding_cache,
         )
 
         obs  = env.reset()
         done = False
         step_count = 0
+        total_steps = env.n - env.window  # Số steps tối đa trong episode
+        cum_reward = 0.0
+
+        ep_label = f"Ep{episode_num}"
+        if stock_id:
+            ep_label += f" ({stock_id})"
+        step_bar = tqdm(total=total_steps, desc=f"  {ep_label}",
+                        unit="step", leave=False, dynamic_ncols=True)
 
         while not done:
             try:
@@ -100,19 +113,27 @@ def run_episode(agent: DQNAgent,
                 action = agent.act(obs, valid_actions=env.valid_actions(),
                                    greedy=not train_mode, analysis_embed=analysis_embed)
                 next_obs, reward, done, info = env.step(action)
+                cum_reward += reward
 
                 if train_mode:
                     agent.store(obs, action, reward, next_obs, done,
                                 analysis_embed=analysis_embed)
-                    agent.learn()   # learn() nội bộ đã có warmup guard
+                    # Learn every N steps (giảm gradient updates, tăng tốc)
+                    if step_count % learn_every == 0:
+                        agent.learn()
 
                 obs = next_obs
                 step_count += 1
+                step_bar.update(1)
+                if step_count % 50 == 0:
+                    step_bar.set_postfix_str(f"R={cum_reward:+.1f}")
 
             except Exception as e:
                 log.error(f"Step error at ep {episode_num}, step {step_count}: {e}")
                 done = True
                 break
+
+        step_bar.close()
 
         m = env.metrics()
         m["episode_steps"] = step_count
@@ -216,11 +237,25 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
     analysis_embed_dim = analysis_cfg.get("embed_dim", 2560) if analysis_enabled else None
     analysis_proj_layers = analysis_cfg.get("projection", [1024, 512, 128]) if analysis_enabled else None
 
+    # ── Training optimization config ─────────────────────────────
+    training_cfg = cfg.get("training", {})
+    val_every    = training_cfg.get("val_every", 5)
+    learn_every  = training_cfg.get("learn_every", 4)
+    preload_embeddings = training_cfg.get("preload_embeddings", True)
+
     log.info(f"[Agent] obs_size={obs_sz} | window={window}")
+    log.info(f"[Optim] val_every={val_every} | learn_every={learn_every} | preload={preload_embeddings}")
     if analysis_enabled:
         log.info(f"[Analysis] Enabled: model={analysis_model}, dim={analysis_embed_dim}, proj={analysis_proj_layers}")
     else:
         log.info("[Analysis] Disabled — agent chỉ dùng technical features")
+
+    # ── Pre-load embeddings vào RAM (zero I/O during training) ────
+    embedding_cache = None
+    if analysis_enabled and preload_embeddings:
+        stock_ids = [Path(p).stem for p in paths]
+        embedding_cache = EmbeddingCache(stock_ids)
+        log.info(f"[EmbeddingCache] Stats: {embedding_cache.stats}")
 
     # Validate: episode_len phải > 0 cho tất cả splits
     for stock_idx, p in enumerate(paths):
@@ -272,13 +307,17 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
     start_t   = time.time()
     learned_at_least_once = False
     val_history: deque = deque(maxlen=10)  # Validation smoothing
+    vl_m = {"return_pct": 0.0, "sharpe": 0.0, "max_dd_pct": 0.0,
+            "n_trades": 0, "win_rate": 0.0, "episode_steps": 0}
 
     log.info(f"\n{'─'*65}")
     log.info(f"Training: {n_ep} episodes | patience={patience}")
     log.info(f"HOSE rules: T+{env_cfg.get('t_plus',2)} | Lot={env_cfg.get('lot_size',100)} | Tax={env_cfg.get('sell_tax',0.001)}")
     log.info(f"{'─'*65}")
 
-    for ep in range(start_ep, n_ep + 1):
+    pbar = tqdm(range(start_ep, n_ep + 1), desc="Training", unit="ep",
+                dynamic_ncols=True, initial=start_ep - 1, total=n_ep)
+    for ep in pbar:
         # ── 4.1 Curriculum Learning: Chọn cổ phiếu theo tiến độ ──────
         # Quy tắc: 
         # - 0-20% episodes: Chỉ VNM (Stable)
@@ -306,25 +345,29 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
         tr_m, _  = run_episode(agent, train_raws[stock_idx], train_norms[stock_idx], env_cfg,
                                train_mode=True, episode_num=ep,
                                stock_id=train_symbol,
-                               analysis_model=analysis_model if analysis_enabled else None)
+                               analysis_model=analysis_model if analysis_enabled else None,
+                               embedding_cache=embedding_cache,
+                               learn_every=learn_every)
         
-        # ── Val episode (no learning) trên tất cả cổ phiếu ──────────
-        vl_metrics_list = []
-        for v_idx, (v_raw, v_norm) in enumerate(zip(val_raws, va_norms)):
-            val_symbol = Path(paths[v_idx]).stem if analysis_enabled else None
-            vl_m, _ = run_episode(agent, v_raw, v_norm, env_cfg, train_mode=False,
-                                  stock_id=val_symbol,
-                                  analysis_model=analysis_model if analysis_enabled else None)
-            vl_metrics_list.append(vl_m)
-            
-        vl_m = {
-            "return_pct": np.mean([m["return_pct"] for m in vl_metrics_list]),
-            "sharpe": np.mean([m["sharpe"] for m in vl_metrics_list]),
-            "max_dd_pct": np.mean([m["max_dd_pct"] for m in vl_metrics_list]),
-            "n_trades": int(np.mean([m["n_trades"] for m in vl_metrics_list])),
-            "win_rate": np.mean([m.get("win_rate", 0) for m in vl_metrics_list]),
-            "episode_steps": int(np.mean([m.get("episode_steps", 0) for m in vl_metrics_list])),
-        }
+        # ── Val episode (mỗi val_every episodes) ────────────────────
+        if ep % val_every == 0 or ep == start_ep or ep == n_ep:
+            vl_metrics_list = []
+            for v_idx, (v_raw, v_norm) in enumerate(zip(val_raws, va_norms)):
+                val_symbol = Path(paths[v_idx]).stem if analysis_enabled else None
+                vl_m, _ = run_episode(agent, v_raw, v_norm, env_cfg, train_mode=False,
+                                      stock_id=val_symbol,
+                                      analysis_model=analysis_model if analysis_enabled else None,
+                                      embedding_cache=embedding_cache)
+                vl_metrics_list.append(vl_m)
+                
+            vl_m = {
+                "return_pct": np.mean([m["return_pct"] for m in vl_metrics_list]),
+                "sharpe": np.mean([m["sharpe"] for m in vl_metrics_list]),
+                "max_dd_pct": np.mean([m["max_dd_pct"] for m in vl_metrics_list]),
+                "n_trades": int(np.mean([m["n_trades"] for m in vl_metrics_list])),
+                "win_rate": np.mean([m.get("win_rate", 0) for m in vl_metrics_list]),
+                "episode_steps": int(np.mean([m.get("episode_steps", 0) for m in vl_metrics_list])),
+            }
 
         # ── Decay epsilon + LR sau mỗi episode ────────────────────
         agent.decay_epsilon()
@@ -356,7 +399,14 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
         }
         history.append(rec)
 
-        # Log mỗi N episodes
+        # ── Update tqdm postfix ────────────────────────────────────
+        pbar.set_postfix_str(
+            f"TR={rec['train_return']:+.1f}% VR={rec['val_return']:+.1f}% "
+            f"Sh={rec['val_sharpe']:.2f} WR={rec['val_winrate']:.0f}% "
+            f"ε={agent.eps:.3f} loss={avg_loss:.4f}"
+        )
+
+        # Log mỗi N episodes (chi tiết hơn)
         log_n = max(1, n_ep // 60)
         if ep % log_n == 0 or ep <= 5:
             warmup_status = (f"[WARMUP {len(agent.buf)}/{agent.warmup}]"
@@ -464,6 +514,7 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
             # Analysis embedding
             stock_id       = symbol if analysis_enabled else None,
             analysis_model = analysis_model if analysis_enabled else None,
+            embedding_cache = embedding_cache,
         )
         obs = test_env.reset(); done = False
         acts: list[int] = []; eqs: list[float] = []

@@ -65,6 +65,12 @@ analysis:
   embed_dim:  2560                          # Chiều embedding từ pipeline
   projection: [1024, 512, 128]              # Giảm chiều từ từ: 2560→1024→512→128
 
+# ── Training Optimization ─────────────────────────────────────────
+training:
+  val_every:           5        # Validate mỗi N episodes (giảm 80% thời gian val)
+  learn_every:         4        # Learn mỗi N steps (giảm 75% gradient updates)
+  preload_embeddings:  true     # Pre-load tất cả embeddings vào RAM (zero I/O)
+
 output:
   model_dir:  "models"
   log_dir:    "logs"

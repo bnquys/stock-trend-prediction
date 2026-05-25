@@ -57,6 +57,7 @@ class TradingEnv:
         # ── Analysis Embedding (phân tích cơ bản) ──────────────
         stock_id:        str | None = None,   # Mã cổ phiếu (VNM, FPT, ...)
         analysis_model:  str | None = None,   # LLM model cho pipeline
+        embedding_cache = None,               # EmbeddingCache instance (pre-loaded, zero I/O)
     ):
         assert len(df_raw) == len(df_norm), "df_raw và df_norm phải cùng length"
         assert len(df_raw) > window + 2, f"Data quá ngắn: {len(df_raw)}"
@@ -86,6 +87,7 @@ class TradingEnv:
         # ── Analysis Embedding ─────────────────────────────────
         self.stock_id       = stock_id
         self.analysis_model = analysis_model
+        self._embedding_cache = embedding_cache
         self._analysis_enabled = (stock_id is not None and analysis_model is not None)
 
         # ── Precompute ATR(14) cho df_raw ──────────────────────
@@ -437,26 +439,39 @@ class TradingEnv:
     def get_analysis_embed(self) -> np.ndarray | None:
         """
         Lấy analysis embedding cho cửa sổ 20 ngày hiện tại.
-        Gọi stock_analysis.pipeline() với date_start/date_end tương ứng window.
-        Pipeline tự cache nên gọi lại cùng tham số → 0 API calls.
+
+        Ưu tiên:
+        1. EmbeddingCache (pre-loaded in RAM) → O(1) dict lookup, zero I/O
+        2. Fallback: gọi pipeline() (disk I/O mỗi step)
 
         Returns:
             numpy array (2560,) hoặc None nếu analysis không enabled.
         """
         if not self._analysis_enabled:
             return None
-        # Guard: đã check _analysis_enabled nhưng Pylance cần assert
         assert self.analysis_model is not None and self.stock_id is not None
 
+        # Xác định date_start và date_end cho window hiện tại
+        safe = min(self._step, self.n - 1)
+        start_idx = max(0, safe - self.window + 1)
+
+        date_end = pd.Timestamp(self.df_raw["date"].iloc[safe])
+        date_start = pd.Timestamp(self.df_raw["date"].iloc[start_idx])
+
+        # ── Fast path: EmbeddingCache (zero I/O) ──────────────────
+        if self._embedding_cache is not None:
+            vector = self._embedding_cache.get(
+                stock_id=self.stock_id,
+                date_start=date_start.to_pydatetime(),
+                date_end=date_end.to_pydatetime(),
+            )
+            if vector is not None:
+                return vector.astype(np.float32)
+            # Cache miss — fall through to pipeline
+
+        # ── Slow path: pipeline() (disk I/O) ─────────────────────
         try:
             from stock_analysis import pipeline
-
-            # Xác định date_start và date_end cho window hiện tại
-            safe = min(self._step, self.n - 1)
-            start_idx = max(0, safe - self.window + 1)
-
-            date_end = pd.Timestamp(self.df_raw["date"].iloc[safe])
-            date_start = pd.Timestamp(self.df_raw["date"].iloc[start_idx])
 
             result = pipeline(
                 model=self.analysis_model,
