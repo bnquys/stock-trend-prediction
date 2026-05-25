@@ -72,7 +72,7 @@ training:
   preload_embeddings:  true     # Pre-load tất cả embeddings vào RAM (zero I/O)
 
 output:
-  model_dir:  "models"
+  model_dir:  "weights"
   log_dir:    "logs"
   chart_dir:  "outputs"
   dpi:        150

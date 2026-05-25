@@ -4,7 +4,7 @@ scripts/infer.py — Entry point for inference.
 Usage:
     python scripts/infer.py --stock data/VNM.csv
     python scripts/infer.py --all
-    python scripts/infer.py --model models/best_model.pkl --stock data/FPT.csv
+    python scripts/infer.py --model weights/best_model.pkl --stock data/FPT.csv
 """
 from __future__ import annotations
 import argparse, logging, os, sys
@@ -21,9 +21,9 @@ def main():
     parser = argparse.ArgumentParser(description="RL Trading — Inference")
     parser.add_argument("--config", default="configs/",
                         help="Path to config dir or single YAML file")
-    parser.add_argument("--model", default="models/best_model.pkl",
+    parser.add_argument("--model", default="weights/best_model.pkl",
                         help="Path to trained model")
-    parser.add_argument("--scaler", default="models/scaler.pkl",
+    parser.add_argument("--scaler", default="weights/scaler.pkl",
                         help="Path to fitted scaler")
     parser.add_argument("--stock", type=str, default=None,
                         help="Path to single stock CSV")

@@ -758,7 +758,7 @@ if __name__ == "__main__":
             log.info("\n[!] Training interrupted by user. Last checkpoint saved.")
         except Exception as e:
             log.error(f"\n[!] Training crashed: {e}")
-            log.error("[!] Check latest checkpoint in models/ to resume.")
+            log.error("[!] Check latest checkpoint in weights/ to resume.")
             raise
     else:
         charts_only(cfg)

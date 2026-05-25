@@ -17,7 +17,7 @@ split:
   val_ratio:   0.1
 
 output:
-  model_dir:  "models"
+  model_dir:  "weights"
   log_dir:    "logs"
   chart_dir:  "outputs"
   dpi:        150

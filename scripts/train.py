@@ -5,7 +5,7 @@ Usage:
     python scripts/train.py
     python scripts/train.py --episodes 500
     python scripts/train.py --config configs/
-    python scripts/train.py --resume models/ckpt_ep200.pkl
+    python scripts/train.py --resume weights/ckpt_ep200.pkl
 """
 from __future__ import annotations
 import argparse, logging, os, sys

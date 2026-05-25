@@ -8,7 +8,7 @@ Usage:
     from src.inference import Inferencer
 
     cfg = Config.load("configs/")
-    infer = Inferencer(cfg, model_path="models/best_model.pkl")
+    infer = Inferencer(cfg, model_path="weights/best_model.pkl")
     result = infer.predict("data/VNM.csv", last_n=20)
     print(result)
     # {"action": "BUY", "confidence": 0.85, "q_values": [0.1, 0.85, 0.3]}
@@ -42,8 +42,8 @@ class Inferencer:
         cfg: Config object
     """
 
-    def __init__(self, cfg: Config, model_path: str = "models/best_model.pkl",
-                 scaler_path: str = "models/scaler.pkl"):
+    def __init__(self, cfg: Config, model_path: str = "weights/best_model.pkl",
+                 scaler_path: str = "weights/scaler.pkl"):
         self.cfg = cfg
         self.scaler = self._load_scaler(scaler_path)
         self.agent = self._load_agent(model_path)
