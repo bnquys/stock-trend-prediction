@@ -17,7 +17,7 @@ load_dotenv(_PACKAGE_DIR / ".env")
 
 from gradio_client import Client
 
-client = Client("https://f90ec5432818e43077.gradio.live")
+client = Client("https://312d1aa09f82f49d49.gradio.live")
 
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # seconds

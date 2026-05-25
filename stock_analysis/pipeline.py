@@ -38,9 +38,13 @@ def pipeline(
     report_file, report_hash_id = Report(data).create(date_start, date_end)
     logging.info(f"[✓] Report: {report_file}")
 
-    # 2. Gọi LLM để phân tích report
+    # 2. Gọi LLM để phân tích report (chỉ gửi body, bỏ tiêu đề placeholder)
+    report_content = report_file.read_text(encoding="utf-8")
+    # Bỏ dòng tiêu đề template (dòng đầu tiên bắt đầu bằng "# ")
+    body_lines = report_content.split("\n")
+    body = "\n".join(line for line in body_lines if not line.startswith("# Tổng hợp thông tin của {stock_id}"))
     prompt = (_PACKAGE_DIR / "prompt.txt").read_text(encoding="utf-8")
-    prompt += "\n\n" + report_file.read_text(encoding="utf-8")
+    prompt += "\n\n" + body
 
     responses_dir = data.get_directory() / "responses"
     llm = LLMClient(model=model)

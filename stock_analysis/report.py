@@ -44,15 +44,28 @@ class Report:
         content = f"{stock_id}::{date_start.isoformat()}::{date_end.isoformat()}"
         return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
+    @staticmethod
+    def get_content_hash(stock_id: str, body: str) -> str:
+        """Tạo hash_id từ stock_id + nội dung body (template có placeholder)."""
+        content = f"{stock_id}::{body}"
+        return hashlib.sha256(content.encode("utf-8")).hexdigest()
+
     def create(self, date_start: datetime, date_end: datetime) -> tuple[Path, str]:
-        """Tạo báo cáo tổng hợp. Trả về (đường dẫn file .md, hash_id)."""
+        """
+        Tạo báo cáo tổng hợp. Trả về (đường dẫn file .md, content_hash_id).
+
+        - File report lưu dạng template (tiêu đề có placeholder {stock_id}, {date_start}, {date_end}).
+        - Tên file = content_hash → nhiều windows cùng nội dung chỉ lưu 1 file.
+        - content_hash dùng làm cache key cho LLM và embedding.
+        - Logs map date_hash → content_hash + metadata.
+        """
         if date_start > date_end:
             raise ValueError("Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.")
         if date_end > datetime.now():
             raise ValueError("Ngày kết thúc không được lớn hơn ngày hiện tại.")
 
         stock_id = self.data.id
-        hash_id = self.get_hash_id(stock_id, date_start, date_end)
+        date_hash = self.get_hash_id(stock_id, date_start, date_end)
 
         # Kiểm tra cache trong reports/
         reports_dir = self.data_dir / "reports"
@@ -65,18 +78,19 @@ class Report:
             except json.JSONDecodeError:
                 logs = {}
 
-        # Nếu đã có report với hash_id này, trả về file cũ
-        if hash_id in logs:
-            cached_path = Path(logs[hash_id]["file_path"])
+        # Nếu đã xử lý date_hash này trước đó → trả về file + content_hash từ cache
+        if date_hash in logs:
+            content_hash = logs[date_hash]["content_hash"]
+            cached_path = reports_dir / f"{content_hash}.md"
             if cached_path.exists():
-                logging.info(f"Report đã tồn tại: {cached_path}")
-                return cached_path, hash_id
+                logging.info(f"Report cache hit: {cached_path}")
+                return cached_path, content_hash
 
+        # ── Tạo body sections ──────────────────────────────────────────
         q_start = pd.Period(date_start, freq="Q")
         q_end = pd.Period(date_end, freq="Q")
 
         sections = []
-        sections.append(f"# Tổng hợp thông tin của {stock_id} từ ngày {date_start} đến {date_end}.\n\n")
 
         # 1. Thông tin công ty
         sections.append("\n\n## 1. Thông tin công ty (Company Info)\n\n")
@@ -151,18 +165,27 @@ class Report:
         df_tmp = self._filter_by_quarter(health_df, "period", q_start, q_end)
         sections.append(self._df_to_section(df_tmp))
 
-        # Ghi file báo cáo vào reports/
-        context = "".join(sections)
-        file_report = reports_dir / f"{hash_id}.md"
-        file_report.write_text(context, encoding="utf-8")
+        # ── Tính content_hash và lưu file ─────────────────────────────
+        body = "".join(sections)
+        content_hash = self.get_content_hash(stock_id, body)
 
-        # Cập nhật logs
-        logs[hash_id] = {
+        # File report = template với placeholder tiêu đề + body
+        # Lưu theo content_hash → dedup: nhiều windows cùng body chỉ 1 file
+        file_report = reports_dir / f"{content_hash}.md"
+        if not file_report.exists():
+            header = "# Tổng hợp thông tin của {stock_id} từ ngày {date_start} đến {date_end}.\n\n"
+            template = header + body
+            file_report.write_text(template, encoding="utf-8")
+            logging.info(f"Report mới: {file_report}")
+
+        # Cập nhật logs: map date_hash → content_hash + metadata
+        logs[date_hash] = {
             "date_start": date_start.isoformat(),
             "date_end": date_end.isoformat(),
+            "content_hash": content_hash,
             "file_path": str(file_report),
             "created_date": datetime.now().isoformat(),
         }
         log_file.write_text(json.dumps(logs, indent=4, ensure_ascii=False), encoding="utf-8")
 
-        return file_report, hash_id
+        return file_report, content_hash

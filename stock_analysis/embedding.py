@@ -10,7 +10,7 @@ import numpy as np
 from gradio_client import Client
 
 # embed_service = PerplexityEmbeddingService()
-client = Client("https://bd9302340272b38b66.gradio.live")
+client = Client("https://cf4a4cd119eb8adcac.gradio.live/")
 
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # seconds
@@ -25,12 +25,13 @@ def get_embedding(text: str) -> np.ndarray:
                 text=text,
                 api_name="/get_embedding",
             )
-            return np.array(result)
+            return np.array(result, dtype=np.float32)
         except Exception as e:
             last_error = e
             logging.warning(f"[Embedding] Attempt {attempt}/{MAX_RETRIES} failed: {e}")
             if attempt < MAX_RETRIES:
                 time.sleep(RETRY_DELAY * attempt)
+    logging.error(last_error)
     raise RuntimeError(f"Embedding API failed after {MAX_RETRIES} attempts: {last_error}") from last_error
 
 def embed_response(responses_dir: Path, response_hash_id: str, response_text: str, overwrite: bool = False) -> np.ndarray:
