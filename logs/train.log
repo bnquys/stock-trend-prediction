@@ -1,0 +1,39 @@
+2026-05-25 18:58:46 INFO     __main__ │ =================================================================
+2026-05-25 18:58:46 INFO     __main__ │   VNM RL Trading v6.0 — Double DQN (HOSE compliant)
+2026-05-25 18:58:46 INFO     __main__ │   T+2 | Lot 100cp | Thuế 0.1% | ±7% price limit
+2026-05-25 18:58:46 INFO     __main__ │ =================================================================
+2026-05-25 18:58:46 DEBUG    __main__ │ [Scale] RobustScaler (fit on all train sets)...
+2026-05-25 18:58:46 DEBUG    __main__ │ [Agent] obs_size=447 | window=20
+2026-05-25 18:58:46 DEBUG    __main__ │ [Optim] val_every=5 | learn_every=4 | preload=True
+2026-05-25 18:58:46 INFO     __main__ │ [Analysis] Enabled: model=unsloth/Qwen2.5-14B-Instruct-bnb-4bit, dim=2560
+2026-05-25 18:58:47 DEBUG    stock_analysis.cache │ [EmbeddingCache] Loaded 437 vectors for 4 stocks into RAM
+2026-05-25 18:58:47 DEBUG    __main__ │ [EmbeddingCache] Stats: {'VNM': 117, 'FPT': 98, 'VIC': 107, 'HPG': 115}
+2026-05-25 18:58:47 DEBUG    __main__ │ [VNM] train: 1028 rows, episode_len=1008
+2026-05-25 18:58:47 DEBUG    __main__ │ [VNM] val: 129 rows, episode_len=109
+2026-05-25 18:58:47 DEBUG    __main__ │ [VNM] test: 129 rows, episode_len=109
+2026-05-25 18:58:47 DEBUG    __main__ │ [FPT] train: 1028 rows, episode_len=1008
+2026-05-25 18:58:47 DEBUG    __main__ │ [FPT] val: 129 rows, episode_len=109
+2026-05-25 18:58:47 DEBUG    __main__ │ [FPT] test: 129 rows, episode_len=109
+2026-05-25 18:58:47 DEBUG    __main__ │ [VIC] train: 1028 rows, episode_len=1008
+2026-05-25 18:58:47 DEBUG    __main__ │ [VIC] val: 129 rows, episode_len=109
+2026-05-25 18:58:47 DEBUG    __main__ │ [VIC] test: 129 rows, episode_len=109
+2026-05-25 18:58:47 DEBUG    __main__ │ [HPG] train: 1028 rows, episode_len=1008
+2026-05-25 18:58:47 DEBUG    __main__ │ [HPG] val: 129 rows, episode_len=109
+2026-05-25 18:58:47 DEBUG    __main__ │ [HPG] test: 129 rows, episode_len=109
+2026-05-25 18:58:47 DEBUG    src.rl.agent.dqn_agent │ [Net] Analysis projection: 2560 → [1024, 512, 128]
+2026-05-25 18:58:47 DEBUG    src.rl.agent.dqn_agent │ [Net] Analysis projection: 2560 → [1024, 512, 128]
+2026-05-25 18:58:52 DEBUG    src.rl.agent.dqn_agent │ [Agent] PyTorch initialized on cpu
+2026-05-25 18:58:52 DEBUG    src.rl.agent.dqn_agent │ [Agent] Analysis embedding enabled: dim=2560, proj=[1024, 512, 128]
+2026-05-25 18:58:52 DEBUG    __main__ │ [Agent] Network: 447 → [256, 128, 64] → Q(3)
+2026-05-25 18:58:52 DEBUG    __main__ │ [Agent] Warmup=1000 steps before learning starts
+2026-05-25 18:58:52 DEBUG    __main__ │ [Agent] LR=0.0005, decay=0.995, min=5e-05
+2026-05-25 18:58:52 INFO     __main__ │ 
+─────────────────────────────────────────────────────────────────
+2026-05-25 18:58:52 INFO     __main__ │ Training: 5 episodes | patience=80
+2026-05-25 18:58:52 INFO     __main__ │ HOSE rules: T+2 | Lot=100 | Tax=0.001
+2026-05-25 18:58:52 INFO     __main__ │ ─────────────────────────────────────────────────────────────────
+2026-05-25 18:58:58 INFO     __main__ │ Ep   1/5 [LEARNING] TR= -63.78% VR=  +0.74% Sh=-0.547 WR=  36% T=  8 ε=0.9970 loss=0.80750 steps=1008 ETA=0m
+2026-05-25 18:58:58 DEBUG    src.rl.agent.dqn_agent │ [Agent] Saved → weights/best_model.pkl
+2026-05-25 18:58:58 INFO     __main__ │   → New best (score=0.2554): val_return=+0.74% sharpe=-0.548 trades=8 WR=36% lr=0.000498 (ep 1)
+2026-05-25 18:59:01 INFO     __main__ │ 
+[!] Training interrupted by user. Last checkpoint saved.

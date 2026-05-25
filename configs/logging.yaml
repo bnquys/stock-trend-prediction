@@ -1,0 +1,33 @@
+# ════════════════════════════════════════════════════════════════
+# Logging Config — Per-component level control
+# ════════════════════════════════════════════════════════════════
+
+# File handler: ghi vào logs/train_<timestamp>/all_NNN.log
+# Chia file khi đạt max_bytes, KHÔNG xóa file cũ
+file:
+  level: DEBUG
+  max_bytes: 5_000_000     # 5MB mỗi file, Notepad mở thoải mái
+
+# Console handler: mặc định WARNING (ít output trong notebook)
+console:
+  level: WARNING
+
+# Per-component override
+# Key = logger name prefix, value = {file: <level>, console: <level>}
+# Nếu không khai báo → dùng mức mặc định ở trên
+loggers:
+  src.rl:
+    file: DEBUG
+    console: WARNING
+
+  src.training:
+    file: DEBUG
+    console: WARNING
+
+  stock_analysis:
+    file: WARNING
+    console: WARNING
+
+  src.rl.env:
+    file: DEBUG
+    console: WARNING

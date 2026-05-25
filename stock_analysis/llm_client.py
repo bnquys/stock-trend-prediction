@@ -18,8 +18,6 @@ from dotenv import load_dotenv
 _PACKAGE_DIR = Path(__file__).parent
 load_dotenv(_PACKAGE_DIR / ".env")
 
-from gradio_client import Client
-
 # Load URL từ stock_analysis/config.yaml
 def _load_analysis_cfg() -> dict:
     cfg_path = _PACKAGE_DIR / "config.yaml"
@@ -27,7 +25,17 @@ def _load_analysis_cfg() -> dict:
         return yaml.safe_load(f)
 
 _analysis_cfg = _load_analysis_cfg()
-client = Client(_analysis_cfg["llm"]["gradio_url"])
+
+# Lazy-init: chỉ tạo Gradio client khi thực sự cần gọi API (cache miss)
+_client = None
+
+def _get_client():
+    """Lazy initialization of Gradio client — chỉ kết nối khi cache miss."""
+    global _client
+    if _client is None:
+        from gradio_client import Client
+        _client = Client(_analysis_cfg["llm"]["gradio_url"])
+    return _client
 
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # seconds
@@ -49,6 +57,7 @@ class LLMClient:
 
     def _call_api(self, prompt: str) -> str:
         """Gọi LLM API với retry khi server lỗi, trả về nội dung text response."""
+        client = _get_client()
         last_error: Exception | None = None
         for attempt in range(1, MAX_RETRIES + 1):
             try:

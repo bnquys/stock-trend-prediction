@@ -87,48 +87,67 @@ class DuelingQNet(nn.Module):
 
 
 class ReplayBuffer:
-    """Replay buffer hỗ trợ lưu thêm analysis_embed (optional)."""
-    def __init__(self, cap: int = 20_000, has_analysis: bool = False):
-        self._buf: deque = deque(maxlen=cap)
+    """
+    Numpy-backed Replay Buffer — tối ưu cho CPU training.
+    Pre-allocate numpy arrays, tránh tạo list/tuple mỗi step.
+    Sample trực tiếp từ numpy → torch (1 copy thay vì N copies).
+    """
+    def __init__(self, cap: int = 20_000, obs_size: int = 0,
+                 has_analysis: bool = False, embed_dim: int = 0):
+        self._cap = cap
+        self._size = 0
+        self._ptr = 0
         self.has_analysis = has_analysis
 
+        # Pre-allocate numpy arrays
+        self._obs = np.zeros((cap, obs_size), dtype=np.float32)
+        self._next_obs = np.zeros((cap, obs_size), dtype=np.float32)
+        self._actions = np.zeros(cap, dtype=np.int64)
+        self._rewards = np.zeros(cap, dtype=np.float32)
+        self._dones = np.zeros(cap, dtype=np.float32)
+
+        if has_analysis and embed_dim > 0:
+            self._embeds = np.zeros((cap, embed_dim), dtype=np.float32)
+            self._embed_mask = np.zeros(cap, dtype=np.bool_)
+        else:
+            self._embeds = None
+            self._embed_mask = None
+
     def push(self, obs, action, reward, next_obs, done, analysis_embed=None):
-        entry = (
-            obs.astype(np.float32),
-            int(action),
-            float(reward),
-            next_obs.astype(np.float32),
-            float(done),
-        )
-        if self.has_analysis:
-            embed = analysis_embed.astype(np.float32) if analysis_embed is not None else None
-            entry = entry + (embed,)
-        self._buf.append(entry)
+        i = self._ptr
+        self._obs[i] = obs
+        self._next_obs[i] = next_obs
+        self._actions[i] = action
+        self._rewards[i] = reward
+        self._dones[i] = float(done)
+
+        if self.has_analysis and self._embeds is not None:
+            if analysis_embed is not None:
+                self._embeds[i] = analysis_embed
+                self._embed_mask[i] = True
+            else:
+                self._embed_mask[i] = False
+
+        self._ptr = (self._ptr + 1) % self._cap
+        self._size = min(self._size + 1, self._cap)
 
     def sample(self, bs: int):
-        idx = np.random.choice(len(self._buf), bs, replace=False)
-        batch = [self._buf[i] for i in idx]
+        idx = np.random.randint(0, self._size, size=bs)
 
-        if self.has_analysis:
-            obs_b, act_b, rew_b, nobs_b, done_b, embed_b = zip(*batch)
-            # analysis_embed batch
-            embed_tensor = None
-            if embed_b[0] is not None:
-                embed_tensor = torch.tensor(np.array(embed_b), dtype=torch.float32, device=DEVICE)
-        else:
-            obs_b, act_b, rew_b, nobs_b, done_b = zip(*batch)
-            embed_tensor = None
+        obs_t = torch.from_numpy(self._obs[idx]).to(DEVICE)
+        act_t = torch.from_numpy(self._actions[idx]).to(DEVICE)
+        rew_t = torch.from_numpy(self._rewards[idx]).to(DEVICE)
+        nobs_t = torch.from_numpy(self._next_obs[idx]).to(DEVICE)
+        done_t = torch.from_numpy(self._dones[idx]).to(DEVICE)
 
-        return (
-            torch.tensor(np.array(obs_b), dtype=torch.float32, device=DEVICE),
-            torch.tensor(np.array(act_b), dtype=torch.long, device=DEVICE),
-            torch.tensor(np.array(rew_b), dtype=torch.float32, device=DEVICE),
-            torch.tensor(np.array(nobs_b), dtype=torch.float32, device=DEVICE),
-            torch.tensor(np.array(done_b), dtype=torch.float32, device=DEVICE),
-            embed_tensor,
-        )
+        embed_t = None
+        if self.has_analysis and self._embeds is not None:
+            if self._embed_mask[idx].any():
+                embed_t = torch.from_numpy(self._embeds[idx]).to(DEVICE)
 
-    def __len__(self): return len(self._buf)
+        return obs_t, act_t, rew_t, nobs_t, done_t, embed_t
+
+    def __len__(self): return self._size
 
 
 class DQNAgent:
@@ -183,7 +202,12 @@ class DQNAgent:
         self.q_tgt.eval()
 
         self.optimizer = optim.Adam(self.q.parameters(), lr=lr, weight_decay=1e-4)
-        self.buf    = ReplayBuffer(buffer_cap, has_analysis=self.has_analysis)
+        self.buf    = ReplayBuffer(
+            cap=buffer_cap,
+            obs_size=obs_size,
+            has_analysis=self.has_analysis,
+            embed_dim=analysis_embed_dim or 0,
+        )
 
         self.steps  = 0
         self.learn_count = 0
@@ -202,22 +226,26 @@ class DQNAgent:
         if not greedy and np.random.rand() < self.eps:
             return int(np.random.choice(valid_actions))
 
-        obs_t = torch.tensor(obs, dtype=torch.float32, device=DEVICE).unsqueeze(0)
+        # as_tensor avoids copy for contiguous float32 numpy arrays on CPU
+        obs_t = torch.as_tensor(obs, dtype=torch.float32, device=DEVICE).unsqueeze(0)
 
         embed_t = None
         if self.has_analysis and analysis_embed is not None:
-            embed_t = torch.tensor(analysis_embed, dtype=torch.float32, device=DEVICE).unsqueeze(0)
+            embed_t = torch.as_tensor(analysis_embed, dtype=torch.float32, device=DEVICE).unsqueeze(0)
 
         with torch.no_grad():
-            q_values = self.q(obs_t, analysis_embed=embed_t).cpu().numpy()[0]
+            q_values = self.q(obs_t, analysis_embed=embed_t).squeeze(0)
 
-        # Action Masking
-        mask = np.ones(self.n_actions, dtype=bool)
-        mask[valid_actions] = False
-        q_masked = q_values.copy()
-        q_masked[mask] = -np.inf
+        # Action Masking — stay on tensor to avoid .cpu().numpy() overhead
+        best_action = -1
+        best_q = -float("inf")
+        for a in valid_actions:
+            qv = q_values[a].item()
+            if qv > best_q:
+                best_q = qv
+                best_action = a
 
-        return int(np.argmax(q_masked))
+        return best_action
 
     def store(self, obs, action, reward, next_obs, done, analysis_embed=None):
         self.buf.push(obs, action, reward, next_obs, done, analysis_embed=analysis_embed)

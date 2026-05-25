@@ -9,3 +9,6 @@ checkpoint_every:   50
 val_every:          5         # Validate mỗi N episodes
 learn_every:        4         # Learn mỗi N steps
 preload_embeddings: true      # Pre-load embeddings vào RAM
+
+# Display
+show_step_progress: false     # Inner step progress bar (true để debug từng step)

@@ -1,0 +1,1 @@
+2026-05-25 21:47:21 DEBUG    src.logging_config │ Logging initialized: dir=logs\train_20260525_214719, console=WARNING, file=DEBUG, max_bytes=5000000

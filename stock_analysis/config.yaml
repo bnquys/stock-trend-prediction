@@ -7,12 +7,12 @@ enabled:    true
 # ── LLM (phân tích cơ bản/ báo cáo tài chính) ──────────────────────────────────
 llm:
   model:    "unsloth/Qwen2.5-14B-Instruct-bnb-4bit"
-  gradio_url: "https://312d1aa09f82f49d49.gradio.live"
+  gradio_url: "https://0cd1a98b5128649e8e.gradio.live/"
 
 # ── Embedding (vector hóa tóm tắt báo cáo tài chính từ LLM) ───────────────────────────
 embedding:
   model:    "perplexity-ai/pplx-embed-context-v1-4b"
-  gradio_url: "https://cf4a4cd119eb8adcac.gradio.live"
+  gradio_url: "https://c54163ebbc09d662b7.gradio.live/"
   dim:      2560              # Chiều embedding output
 
 # ── Projection (giảm chiều cho agent) ─────────────────────────

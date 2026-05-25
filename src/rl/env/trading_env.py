@@ -84,6 +84,11 @@ class TradingEnv:
         self._feat_cols = [c for c in FEAT_COLS if c in df_norm.columns]
         self.obs_size   = window * len(self._feat_cols) + 7  # 7 portfolio state dims
 
+        # ── Precompute obs matrix (zero DataFrame overhead per step) ──
+        self._obs_matrix = df_norm[self._feat_cols].fillna(0.0).values.astype(np.float32)
+        # Precompute raw close prices as numpy array
+        self._close_arr = df_raw["close"].values.astype(np.float64)
+
         # ── Analysis Embedding ─────────────────────────────────
         self.stock_id       = stock_id
         self.analysis_model = analysis_model
@@ -111,20 +116,25 @@ class TradingEnv:
 
     @staticmethod
     def _compute_atr(df: pd.DataFrame, period: int = 14) -> np.ndarray:
-        """Tính ATR(14) cho toàn bộ dataframe."""
+        """Tính ATR(14) vectorized — không dùng Python loop."""
         c = df["close"].values.astype(np.float64)
         h = df["high"].values.astype(np.float64)
         l = df["low"].values.astype(np.float64)
         n = len(c)
-        tr = np.zeros(n)
-        for i in range(1, n):
-            tr[i] = max(h[i] - l[i], abs(h[i] - c[i-1]), abs(l[i] - c[i-1]))
+        # True Range vectorized
+        tr = np.empty(n)
         tr[0] = h[0] - l[0]
-        # Simple moving average ATR
-        atr = np.zeros(n)
-        for i in range(n):
-            start = max(0, i - period + 1)
-            atr[i] = np.mean(tr[start:i+1])
+        hl = h[1:] - l[1:]
+        hc = np.abs(h[1:] - c[:-1])
+        lc = np.abs(l[1:] - c[:-1])
+        tr[1:] = np.maximum(hl, np.maximum(hc, lc))
+        # Cumulative sum for rolling mean ATR
+        cs = np.cumsum(tr)
+        atr = np.empty(n)
+        for i in range(min(period, n)):
+            atr[i] = cs[i] / (i + 1)
+        if n > period:
+            atr[period:] = (cs[period:] - cs[:-period]) / period
         return atr
 
     def _get_atr(self, step: int | None = None) -> float:
@@ -392,15 +402,15 @@ class TradingEnv:
 
     # ── Helpers ────────────────────────────────────────────────────
     def _price(self, step: int | None = None) -> float:
-        """Lấy giá close, enforce price limit ±7%."""
+        """Lấy giá close, enforce price limit ±7%. Dùng precomputed numpy array."""
         idx = step if step is not None else self._step
         idx = int(np.clip(idx, 0, self.n - 1))
-        raw = float(self.df_raw["close"].iloc[idx])
+        raw = float(self._close_arr[idx])
         # Apply price limit ±7% so với phiên trước
         if idx > 0 and self.price_limit > 0:
-            prev = float(self.df_raw["close"].iloc[idx - 1])
-            raw  = np.clip(raw, prev * (1 - self.price_limit),
-                                prev * (1 + self.price_limit))
+            prev = float(self._close_arr[idx - 1])
+            raw  = float(np.clip(raw, prev * (1 - self.price_limit),
+                                      prev * (1 + self.price_limit)))
         return raw
 
     def _round_tick(self, price: float) -> float:
@@ -489,9 +499,18 @@ class TradingEnv:
         i = min(self._step, self.n - 1)
         return str(self.df_raw["date"].iloc[i])[:10]
 
+    def _get_obs_fast(self, step: int) -> np.ndarray:
+        """Fast observation: numpy slice from precomputed matrix (zero-copy view)."""
+        start = max(0, step - self.window + 1)
+        mat = self._obs_matrix[start:step + 1]
+        if mat.shape[0] < self.window:
+            pad = np.zeros((self.window - mat.shape[0], mat.shape[1]), dtype=np.float32)
+            mat = np.vstack([pad, mat])
+        return mat.ravel()
+
     def _obs(self) -> np.ndarray:
         safe = min(self._step, self.n - 1)
-        feat = get_obs(self.df_norm, safe, self.window)
+        feat = self._get_obs_fast(safe)
 
         price  = self._price()
         unreal = (price - self._entry_price) / self._entry_price if self._in_pos else 0.0

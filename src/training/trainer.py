@@ -41,6 +41,11 @@ class Trainer:
 
     def __init__(self, cfg: Config):
         self.cfg = cfg
+        # Idempotent logging setup — nếu entry point (notebook/script) chưa
+        # gọi setup_logging() thì tự bật (đọc configs/logging.yaml).
+        if not logging.getLogger().handlers:
+            from src.logging_config import setup_logging
+            setup_logging()
         self._setup_dirs()
         self._setup_data()
         self._setup_agent()
@@ -170,8 +175,12 @@ class Trainer:
             ep_label = f"Ep{episode_num}"
             if stock_id:
                 ep_label += f" ({stock_id})"
+            # Inner step progress bar mặc định OFF để tránh nổ output
+            # trong notebook. Bật bằng training.show_step_progress: true.
+            show_step_pb = self.cfg.training.get("show_step_progress", False)
             step_bar = tqdm(total=total_steps, desc=f"  {ep_label}",
-                            unit="step", leave=False, dynamic_ncols=True)
+                            unit="step", leave=False, dynamic_ncols=True,
+                            disable=not show_step_pb)
 
             while not done:
                 try:
@@ -194,7 +203,11 @@ class Trainer:
                         step_bar.set_postfix_str(f"R={cum_reward:+.1f}")
 
                 except Exception as e:
-                    log.error(f"Step error at ep {episode_num}, step {step_count}: {e}")
+                    # exc_info=True ghi full traceback vào logs/train.log
+                    log.error(
+                        f"Step error at ep {episode_num}, step {step_count}: {e}",
+                        exc_info=True,
+                    )
                     done = True
                     break
 
@@ -204,7 +217,7 @@ class Trainer:
             return m, env.trades
 
         except Exception as e:
-            log.error(f"Episode {episode_num} failed: {e}")
+            log.error(f"Episode {episode_num} failed: {e}", exc_info=True)
             return self._empty_metrics(), []
 
     @staticmethod

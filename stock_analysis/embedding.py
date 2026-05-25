@@ -9,7 +9,6 @@ log = logging.getLogger(__name__)
 
 import yaml
 import numpy as np
-from gradio_client import Client
 
 _PACKAGE_DIR = Path(__file__).parent
 
@@ -20,7 +19,17 @@ def _load_analysis_cfg() -> dict:
         return yaml.safe_load(f)
 
 _analysis_cfg = _load_analysis_cfg()
-client = Client(_analysis_cfg["embedding"]["gradio_url"])
+
+# Lazy-init: chỉ tạo Gradio client khi thực sự cần gọi API (cache miss)
+_client = None
+
+def _get_client():
+    """Lazy initialization of Gradio client — chỉ kết nối khi cache miss."""
+    global _client
+    if _client is None:
+        from gradio_client import Client
+        _client = Client(_analysis_cfg["embedding"]["gradio_url"])
+    return _client
 
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # seconds
@@ -28,6 +37,7 @@ RETRY_DELAY = 5  # seconds
 
 def get_embedding(text: str) -> np.ndarray:
     """Gọi Gradio API để lấy embedding, có retry khi server lỗi."""
+    client = _get_client()
     last_error: Exception | None = None
     for attempt in range(1, MAX_RETRIES + 1):
         try:
