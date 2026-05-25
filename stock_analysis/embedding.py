@@ -5,6 +5,8 @@ import logging
 import time
 from pathlib import Path
 
+log = logging.getLogger(__name__)
+
 import yaml
 import numpy as np
 from gradio_client import Client
@@ -36,10 +38,10 @@ def get_embedding(text: str) -> np.ndarray:
             return np.array(result, dtype=np.float32)
         except Exception as e:
             last_error = e
-            logging.warning(f"[Embedding] Attempt {attempt}/{MAX_RETRIES} failed: {e}")
+            log.warning(f"Attempt {attempt}/{MAX_RETRIES} failed: {e}")
             if attempt < MAX_RETRIES:
                 time.sleep(RETRY_DELAY * attempt)
-    logging.error(last_error)
+    log.error(f"Embedding API failed: {last_error}")
     raise RuntimeError(f"Embedding API failed after {MAX_RETRIES} attempts: {last_error}") from last_error
 
 def embed_response(responses_dir: Path, response_hash_id: str, response_text: str, overwrite: bool = False) -> np.ndarray:
@@ -58,7 +60,7 @@ def embed_response(responses_dir: Path, response_hash_id: str, response_text: st
 
     # Check cache: nếu vector đã tồn tại và không overwrite
     if not overwrite and response_hash_id in existing:
-        logging.info(f"Embedding đã tồn tại cho {response_hash_id}")
+        log.debug(f"Embedding cache hit: {response_hash_id}")
         return existing[response_hash_id]
 
     # Gọi API embedding

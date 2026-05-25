@@ -48,7 +48,7 @@ class EmbeddingCache:
             n = self._load_stock(sid)
             total_vectors += n
 
-        log.info(f"[EmbeddingCache] Loaded {total_vectors} vectors for {len(stock_ids)} stocks into RAM")
+        log.debug(f"[EmbeddingCache] Loaded {total_vectors} vectors for {len(stock_ids)} stocks into RAM")
 
     def _load_stock(self, stock_id: str) -> int:
         """Load tất cả embeddings + logs cho 1 stock. Trả về số vectors loaded."""
@@ -59,7 +59,7 @@ class EmbeddingCache:
         # Load embeddings.npz
         npz_path = responses_dir / "embeddings.npz"
         if not npz_path.exists():
-            log.warning(f"[EmbeddingCache] {stock_id}: embeddings.npz not found")
+            log.warning(f"[EmbeddingCache] {stock_id}: embeddings.npz not found — no cached vectors")
             self._vectors[stock_id] = {}
             return 0
 

@@ -4,6 +4,8 @@ import logging
 from pathlib import Path
 from datetime import datetime
 
+log = logging.getLogger(__name__)
+
 from stock_analysis.data import Data
 from stock_analysis.report import Report
 from stock_analysis.llm_client import LLMClient
@@ -36,7 +38,7 @@ def pipeline(
 
     # 1. Tạo report từ dữ liệu CSV có sẵn
     report_file, report_hash_id = Report(data).create(date_start, date_end)
-    logging.info(f"[✓] Report: {report_file}")
+    log.debug(f"Report: {report_file}")
 
     # 2. Gọi LLM để phân tích report (chỉ gửi body, bỏ tiêu đề placeholder)
     report_content = report_file.read_text(encoding="utf-8")
@@ -54,12 +56,12 @@ def pipeline(
         prompt=prompt,
         overwrite=overwrite,
     )
-    logging.info(f"[✓] LLM Response: {response_file}")
+    log.debug(f"LLM Response: {response_file}")
 
     # 3. Tạo embedding từ nội dung response
     response_text = response_file.read_text(encoding="utf-8")
     vector = embed_response(responses_dir, response_hash_id, response_text, overwrite=overwrite)
-    logging.info(f"[✓] Embedding vector length: {len(vector)}")
+    log.debug(f"Embedding vector length: {len(vector)}")
 
     return {
         "report_file": report_file,

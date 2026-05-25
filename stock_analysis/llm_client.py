@@ -9,6 +9,8 @@ from pathlib import Path
 from datetime import datetime
 from random import randint
 
+log = logging.getLogger(__name__)
+
 import yaml
 import requests
 from dotenv import load_dotenv
@@ -57,7 +59,7 @@ class LLMClient:
                 return result
             except Exception as e:
                 last_error = e
-                logging.warning(f"[LLM] Attempt {attempt}/{MAX_RETRIES} failed: {e}")
+                log.warning(f"Attempt {attempt}/{MAX_RETRIES} failed: {e}")
                 if attempt < MAX_RETRIES:
                     time.sleep(RETRY_DELAY * attempt)
         raise RuntimeError(f"LLM API failed after {MAX_RETRIES} attempts: {last_error}") from last_error
@@ -83,7 +85,7 @@ class LLMClient:
         if not overwrite and hash_id in logs and logs[hash_id].get("respond_status") == "success":
             cached_file = responses_dir / f"{hash_id}.md"
             if cached_file.exists():
-                logging.info(f"Response đã tồn tại: {cached_file}")
+                log.debug(f"Response cache hit: {cached_file}")
                 return cached_file, hash_id
 
         # Gọi API
@@ -93,7 +95,7 @@ class LLMClient:
             response_file.write_text(text, encoding="utf-8")
             respond_status = "success"
         except Exception as e:
-            logging.error(f"LLM API failed: {e}")
+            log.error(f"LLM API failed: {e}")
             respond_status = "failed"
 
         # Cập nhật logs

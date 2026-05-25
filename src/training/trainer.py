@@ -86,7 +86,7 @@ class Trainer:
         with open(f"{self.model_dir}/scaler.pkl", "wb") as f:
             pickle.dump(self.scaler, f)
 
-        log.info(f"[Data] {len(paths)} stocks loaded: {self.stock_ids}")
+        log.debug(f"[Data] {len(paths)} stocks loaded: {self.stock_ids}")
 
     def _setup_agent(self):
         """Create DQNAgent from config."""
@@ -119,7 +119,7 @@ class Trainer:
             analysis_embed_dim=analysis_cfg.get("embed_dim") if analysis_enabled else None,
             analysis_proj_layers=analysis_cfg.get("projection") if analysis_enabled else None,
         )
-        log.info(f"[Agent] obs_size={obs_sz} | window={window} | type={ac.get('type', 'dqn')}")
+        log.debug(f"[Agent] obs_size={obs_sz} | window={window} | type={ac.get('type', 'dqn')}")
 
     def _setup_cache(self):
         """Pre-load embedding cache if enabled."""
@@ -127,7 +127,7 @@ class Trainer:
         training_cfg = self.cfg.training
         if self.analysis_enabled and training_cfg.get("preload_embeddings", True):
             self.embedding_cache = EmbeddingCache(self.stock_ids)
-            log.info(f"[EmbeddingCache] {self.embedding_cache.stats}")
+            log.debug(f"[EmbeddingCache] {self.embedding_cache.stats}")
 
     # ─────────────────────────────────────────────────────────────────
     # Episode runners

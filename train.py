@@ -22,18 +22,10 @@ from pathlib import Path
 from collections import deque
 from tqdm.auto import tqdm
 
-logging.basicConfig(
-    level=logging.WARNING,
-    format="%(asctime)s %(levelname)s %(message)s",
-    datefmt="%H:%M:%S",
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler("logs/train.log", mode="w", encoding="utf-8"),
-    ]
-)
-log = logging.getLogger(__name__)
-log.setLevel(logging.INFO)
 sys.path.insert(0, os.path.dirname(__file__))
+from src.logging_config import setup_logging
+setup_logging(level="INFO", log_file="logs/train.log")
+log = logging.getLogger(__name__)
 
 from src.features.preprocessor import load_csv, time_split, RobustScaler, obs_size_of
 from src.rl.env.trading_env import TradingEnv
@@ -212,7 +204,7 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
         test_raws.append(te)
 
     # ── 2. Scale features ────────────────────────────────────────────
-    log.info("\n[Scale] RobustScaler (fit on all train sets)...")
+    log.debug("[Scale] RobustScaler (fit on all train sets)...")
     combined_tr = pd.concat(train_raws, ignore_index=True)
     scaler = RobustScaler().fit(combined_tr)
     
@@ -243,10 +235,10 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
     learn_every  = training_cfg.get("learn_every", 4)
     preload_embeddings = training_cfg.get("preload_embeddings", True)
 
-    log.info(f"[Agent] obs_size={obs_sz} | window={window}")
-    log.info(f"[Optim] val_every={val_every} | learn_every={learn_every} | preload={preload_embeddings}")
+    log.debug(f"[Agent] obs_size={obs_sz} | window={window}")
+    log.debug(f"[Optim] val_every={val_every} | learn_every={learn_every} | preload={preload_embeddings}")
     if analysis_enabled:
-        log.info(f"[Analysis] Enabled: model={analysis_model}, dim={analysis_embed_dim}, proj={analysis_proj_layers}")
+        log.info(f"[Analysis] Enabled: model={analysis_model}, dim={analysis_embed_dim}")
     else:
         log.info("[Analysis] Disabled — agent chỉ dùng technical features")
 
@@ -255,7 +247,7 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
     if analysis_enabled and preload_embeddings:
         stock_ids = [Path(p).stem for p in paths]
         embedding_cache = EmbeddingCache(stock_ids)
-        log.info(f"[EmbeddingCache] Stats: {embedding_cache.stats}")
+        log.debug(f"[EmbeddingCache] Stats: {embedding_cache.stats}")
 
     # Validate: episode_len phải > 0 cho tất cả splits
     for stock_idx, p in enumerate(paths):
@@ -263,7 +255,7 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
         for name, df_ in [("train", train_raws[stock_idx]), ("val", val_raws[stock_idx]), ("test", test_raws[stock_idx])]:
             ep_len = len(df_) - window
             assert ep_len > 0, f"[{symbol}] {name} df quá ngắn: {len(df_)} rows, window={window}"
-            log.info(f"[{symbol}] {name}: {len(df_)} rows, episode_len={ep_len}")
+            log.debug(f"[{symbol}] {name}: {len(df_)} rows, episode_len={ep_len}")
 
     agent = DQNAgent(
         obs_size   = obs_sz,
@@ -284,9 +276,9 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
         analysis_embed_dim   = analysis_embed_dim,
         analysis_proj_layers = analysis_proj_layers,
     )
-    log.info(f"[Agent] Network: {obs_sz} → {ac['hidden']} → Q(3)")
-    log.info(f"[Agent] Warmup={ac['warmup']} steps before learning starts")
-    log.info(f"[Agent] LR={ac['lr']}, decay={ac.get('lr_decay', 0.995)}, min={ac.get('lr_min', 5e-5)}")
+    log.debug(f"[Agent] Network: {obs_sz} → {ac['hidden']} → Q(3)")
+    log.debug(f"[Agent] Warmup={ac['warmup']} steps before learning starts")
+    log.debug(f"[Agent] LR={ac['lr']}, decay={ac.get('lr_decay', 0.995)}, min={ac.get('lr_min', 5e-5)}")
 
     # ── Resume from checkpoint ────────────────────────────────────
     start_ep = 1
@@ -561,18 +553,18 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
             "history":      history,
         }
         with open(f"{log_dir}/test_results_{symbol}.pkl", "wb") as f: pickle.dump(res, f)
-        log.info(f"Results → {log_dir}/test_results_{symbol}.pkl")
+        log.debug(f"Results → {log_dir}/test_results_{symbol}.pkl")
 
         # ── 6. Export ROI Table ───────────────────────────────────────────
-        log.info(f"\n[ROI Table] Generating for {symbol}...")
+        log.debug(f"[ROI Table] Generating for {symbol}...")
         _export_roi_table(res, cfg, symbol=symbol)
 
         # ── 7. Charts ─────────────────────────────────────────────────────
-        log.info(f"\n[Charts] Generating for {symbol}...")
+        log.debug(f"[Charts] Generating for {symbol}...")
         _make_charts(res, cfg, symbol=symbol)
 
         # ── 8. LLM Integration Report ─────────────────────────────────────
-        log.info(f"\n[LLM Report] Generating LLM Integration Summary for {symbol}...")
+        log.debug(f"[LLM Report] Generating LLM Integration Summary for {symbol}...")
         _export_llm_integration_report(res, cfg, symbol=symbol)
 
 
@@ -596,14 +588,14 @@ def _make_charts(res: dict, cfg: dict, symbol: str = "VNM"):
 def _export_roi_table(res: dict, cfg: dict, symbol: str = "VNM"):
     trades = res.get("test_trades", [])
     if not trades:
-        log.info("Không có giao dịch nào trong test_trades để tạo bảng ROI.")
+        log.debug("Không có giao dịch nào trong test_trades để tạo bảng ROI.")
         return
     
     # Lọc ra các giao dịch đã đóng (SELL hoặc AUTO_EXIT)
     closed_trades = [t for t in trades if t["type"] in ["SELL", "AUTO_EXIT"]]
     
     if not closed_trades:
-        log.info("Chưa có giao dịch đóng nào để tính ROI.")
+        log.debug("Chưa có giao dịch đóng nào để tính ROI.")
         return
 
     # Lọc ra các lệnh mua
@@ -650,11 +642,11 @@ def _export_roi_table(res: dict, cfg: dict, symbol: str = "VNM"):
     out_path = f"{out_dir}/roi_table_{symbol}.csv"
     df_roi.to_csv(out_path, index=False)
     
-    log.info(f"Đã xuất bảng ROI tại: {out_path}")
+    log.debug(f"Đã xuất bảng ROI tại: {out_path}")
     
     pd.set_option('display.max_columns', None)
     pd.set_option('display.width', 1000)
-    log.info(f"Bảng tổng hợp ROI (Return On Investment):\n{df_roi.to_string(index=False)}")
+    log.debug(f"Bảng ROI:\n{df_roi.to_string(index=False)}")
 
 
 def _export_llm_integration_report(res: dict, cfg: dict, symbol: str = "VNM"):
@@ -705,7 +697,7 @@ def _export_llm_integration_report(res: dict, cfg: dict, symbol: str = "VNM"):
     with open(out_json, "w", encoding="utf-8") as f:
         json.dump(llm_data, f, ensure_ascii=False, indent=4)
         
-    log.info(f"\nĐã xuất file JSON cho LLM tại: {out_json}")
+    log.debug(f"Đã xuất file JSON cho LLM tại: {out_json}")
     
     # In ra dạng bảng Markdown cho User copy
     md_table = f"""

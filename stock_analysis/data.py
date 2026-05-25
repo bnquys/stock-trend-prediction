@@ -5,6 +5,8 @@ import shutil
 import logging
 from pathlib import Path
 
+log = logging.getLogger(__name__)
+
 
 _PACKAGE_DIR = Path(__file__).parent
 
@@ -54,4 +56,4 @@ class Data:
             sub_dir = dir / sub
             if sub_dir.exists():
                 shutil.rmtree(sub_dir)
-                logging.info(f"Đã xoá thư mục {sub_dir}.")
+                log.debug(f"Invalidated cache: {sub_dir}")

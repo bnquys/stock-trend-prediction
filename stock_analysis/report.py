@@ -7,6 +7,8 @@ import pandas as pd
 from pathlib import Path
 from datetime import datetime
 
+log = logging.getLogger(__name__)
+
 from stock_analysis.data import Data
 
 
@@ -83,7 +85,7 @@ class Report:
             content_hash = logs[date_hash]["content_hash"]
             cached_path = reports_dir / f"{content_hash}.md"
             if cached_path.exists():
-                logging.info(f"Report cache hit: {cached_path}")
+                log.debug(f"Report cache hit: {cached_path}")
                 return cached_path, content_hash
 
         # ── Tạo body sections ──────────────────────────────────────────
@@ -176,7 +178,7 @@ class Report:
             header = "# Tổng hợp thông tin của {stock_id} từ ngày {date_start} đến {date_end}.\n\n"
             template = header + body
             file_report.write_text(template, encoding="utf-8")
-            logging.info(f"Report mới: {file_report}")
+            log.debug(f"Report created: {file_report}")
 
         # Cập nhật logs: map date_hash → content_hash + metadata
         logs[date_hash] = {

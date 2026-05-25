@@ -55,7 +55,7 @@ class DuelingQNet(nn.Module):
                 proj_layers.append(nn.LayerNorm(out_dim))
                 in_dim = out_dim
             self.analysis_proj = nn.Sequential(*proj_layers)
-            log.info(f"[Net] Analysis projection: {analysis_embed_dim} → {proj_dims}")
+            log.debug(f"[Net] Analysis projection: {analysis_embed_dim} → {proj_dims}")
 
         # Value Stream (V)
         self.value_stream = nn.Sequential(
@@ -190,9 +190,9 @@ class DQNAgent:
         self.losses = deque(maxlen=10_000)
         self.episode_num = 0
 
-        log.info(f"[Agent] PyTorch initialized on {DEVICE}")
+        log.debug(f"[Agent] PyTorch initialized on {DEVICE}")
         if self.has_analysis:
-            log.info(f"[Agent] Analysis embedding enabled: dim={analysis_embed_dim}, proj={analysis_proj_layers}")
+            log.debug(f"[Agent] Analysis embedding enabled: dim={analysis_embed_dim}, proj={analysis_proj_layers}")
 
     def act(self, obs: np.ndarray, valid_actions: list[int] | None = None,
             greedy: bool = False, analysis_embed: np.ndarray | None = None) -> int:
@@ -283,7 +283,7 @@ class DQNAgent:
             "has_analysis": self.has_analysis,
         }
         torch.save(data, path)
-        log.info(f"[Agent] Saved PyTorch model → {path}")
+        log.debug(f"[Agent] Saved → {path}")
 
     def load(self, path: str) -> None:
         checkpoint = torch.load(path, map_location=DEVICE)
@@ -295,4 +295,4 @@ class DQNAgent:
         self.learn_count = checkpoint.get("learn_count", 0)
         self.episode_num = checkpoint.get("episode_num", 0)
         self.current_lr = checkpoint.get("current_lr", self.lr)
-        log.info(f"[Agent] Loaded PyTorch model ← {path} (ep={self.episode_num})")
+        log.info(f"[Agent] Loaded ← {path} (ep={self.episode_num})")
