@@ -4,13 +4,21 @@ import json
 import logging
 import time
 from pathlib import Path
-# from stock_analysis.pplx_embed import PerplexityEmbeddingService
 
+import yaml
 import numpy as np
 from gradio_client import Client
 
-# embed_service = PerplexityEmbeddingService()
-client = Client("https://cf4a4cd119eb8adcac.gradio.live/")
+_PACKAGE_DIR = Path(__file__).parent
+
+# Load URL từ stock_analysis/config.yaml
+def _load_analysis_cfg() -> dict:
+    cfg_path = _PACKAGE_DIR / "config.yaml"
+    with open(cfg_path, encoding="utf-8") as f:
+        return yaml.safe_load(f)
+
+_analysis_cfg = _load_analysis_cfg()
+client = Client(_analysis_cfg["embedding"]["gradio_url"])
 
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # seconds

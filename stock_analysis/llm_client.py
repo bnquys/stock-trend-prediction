@@ -9,6 +9,7 @@ from pathlib import Path
 from datetime import datetime
 from random import randint
 
+import yaml
 import requests
 from dotenv import load_dotenv
 
@@ -17,7 +18,14 @@ load_dotenv(_PACKAGE_DIR / ".env")
 
 from gradio_client import Client
 
-client = Client("https://312d1aa09f82f49d49.gradio.live")
+# Load URL từ stock_analysis/config.yaml
+def _load_analysis_cfg() -> dict:
+    cfg_path = _PACKAGE_DIR / "config.yaml"
+    with open(cfg_path, encoding="utf-8") as f:
+        return yaml.safe_load(f)
+
+_analysis_cfg = _load_analysis_cfg()
+client = Client(_analysis_cfg["llm"]["gradio_url"])
 
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # seconds

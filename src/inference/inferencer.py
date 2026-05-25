@@ -19,6 +19,7 @@ import logging
 import pickle
 import numpy as np
 import pandas as pd
+import torch
 from pathlib import Path
 
 from src.config import Config
@@ -139,7 +140,9 @@ class Inferencer:
                 obs = next_obs
 
         # Get Q-values for the last observation
-        q_values = self.agent.get_q_values(obs)
+        obs_t = torch.tensor(obs, dtype=torch.float32).unsqueeze(0)
+        with torch.no_grad():
+            q_values = self.agent.q(obs_t).cpu().numpy()[0]
         valid = env.valid_actions()
         best_action = int(np.argmax([q_values[a] if a in valid else -np.inf for a in range(3)]))
 

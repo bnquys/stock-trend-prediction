@@ -1,0 +1,19 @@
+# ════════════════════════════════════════════════════════════════
+# Analysis Config — LLM & Embedding Pipeline
+# Đặt trong package stock_analysis/ để dễ quản lý
+# ════════════════════════════════════════════════════════════════
+enabled:    true
+
+# ── LLM (phân tích cơ bản/ báo cáo tài chính) ──────────────────────────────────
+llm:
+  model:    "unsloth/Qwen2.5-14B-Instruct-bnb-4bit"
+  gradio_url: "https://312d1aa09f82f49d49.gradio.live"
+
+# ── Embedding (vector hóa tóm tắt báo cáo tài chính từ LLM) ───────────────────────────
+embedding:
+  model:    "perplexity-ai/pplx-embed-context-v1-4b"
+  gradio_url: "https://cf4a4cd119eb8adcac.gradio.live"
+  dim:      2560              # Chiều embedding output
+
+# ── Projection (giảm chiều cho agent) ─────────────────────────
+projection: [1024, 512, 128]  # 2560→1024→512→128
