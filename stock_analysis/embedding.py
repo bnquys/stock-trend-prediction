@@ -2,6 +2,7 @@
 
 import json
 import logging
+import time
 from pathlib import Path
 # from stock_analysis.pplx_embed import PerplexityEmbeddingService
 
@@ -9,14 +10,28 @@ import numpy as np
 from gradio_client import Client
 
 # embed_service = PerplexityEmbeddingService()
-client = Client("https://efad471d56fb61051d.gradio.live")
+client = Client("https://bd9302340272b38b66.gradio.live")
+
+MAX_RETRIES = 3
+RETRY_DELAY = 5  # seconds
+
 
 def get_embedding(text: str) -> np.ndarray:
-    result = client.predict(
-        text=text,
-        api_name="/get_embedding",
-    )
-    return np.array(result)
+    """Gọi Gradio API để lấy embedding, có retry khi server lỗi."""
+    last_error: Exception | None = None
+    for attempt in range(1, MAX_RETRIES + 1):
+        try:
+            result = client.predict(
+                text=text,
+                api_name="/get_embedding",
+            )
+            return np.array(result)
+        except Exception as e:
+            last_error = e
+            logging.warning(f"[Embedding] Attempt {attempt}/{MAX_RETRIES} failed: {e}")
+            if attempt < MAX_RETRIES:
+                time.sleep(RETRY_DELAY * attempt)
+    raise RuntimeError(f"Embedding API failed after {MAX_RETRIES} attempts: {last_error}") from last_error
 
 def embed_response(responses_dir: Path, response_hash_id: str, response_text: str, overwrite: bool = False) -> np.ndarray:
     """

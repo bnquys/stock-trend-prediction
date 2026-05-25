@@ -15,6 +15,12 @@ from dotenv import load_dotenv
 _PACKAGE_DIR = Path(__file__).parent
 load_dotenv(_PACKAGE_DIR / ".env")
 
+from gradio_client import Client
+
+client = Client("https://f90ec5432818e43077.gradio.live")
+
+MAX_RETRIES = 3
+RETRY_DELAY = 5  # seconds
 
 class LLMClient:
     def __init__(
@@ -32,32 +38,22 @@ class LLMClient:
         return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
     def _call_api(self, prompt: str) -> str:
-        """Gọi LLM API, trả về nội dung text response."""
-        headers = {
-            "Authorization": f"Bearer {os.getenv('API_KEY')}",
-            "Content-Type": "application/json",
-        }
-        data = {
-            "model": self.model,
-            "messages": [{"role": "user", "content": prompt}],
-        }
-
-        max_retries = 5
-        response = None
-        for attempt in range(1, max_retries + 1):
-            time.sleep(randint(1, 20))
-            response = requests.post(self.url, headers=headers, json=data)
-            if response.status_code == 200:
-                result = response.json()
-                return result.get("choices", [{}])[0].get("message", {}).get("content", "")
-            if attempt < max_retries:
-                time.sleep(randint(1, 20))
-
-        assert response is not None
-        raise RuntimeError(
-            f"API call failed after {max_retries} retries. "
-            f"Last status: {response.status_code}, Body: {response.text}"
-        )
+        """Gọi LLM API với retry khi server lỗi, trả về nội dung text response."""
+        last_error: Exception | None = None
+        for attempt in range(1, MAX_RETRIES + 1):
+            try:
+                result = client.predict(
+                    single_prompt_input=prompt,
+                    api_name="/process_api",
+                )
+                return result
+            except Exception as e:
+                last_error = e
+                logging.warning(f"[LLM] Attempt {attempt}/{MAX_RETRIES} failed: {e}")
+                if attempt < MAX_RETRIES:
+                    time.sleep(RETRY_DELAY * attempt)
+        raise RuntimeError(f"LLM API failed after {MAX_RETRIES} attempts: {last_error}") from last_error
+        
 
     def respond(self, responses_dir: Path, report_hash_id: str, prompt: str, overwrite: bool = False) -> tuple[Path, str]:
         """
