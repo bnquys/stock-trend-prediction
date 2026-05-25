@@ -1,1 +1,24 @@
 2026-05-25 21:47:21 DEBUG    src.logging_config │ Logging initialized: dir=logs\train_20260525_214719, console=WARNING, file=DEBUG, max_bytes=5000000
+2026-05-25 21:47:25 DEBUG    src.training.trainer │ [Data] 4 stocks loaded: ['VNM', 'FPT', 'VIC', 'HPG']
+2026-05-25 21:47:25 DEBUG    src.rl.agent.dqn_agent │ [Net] Analysis projection: 2560 → [1024, 512, 128]
+2026-05-25 21:47:26 DEBUG    src.rl.agent.dqn_agent │ [Net] Analysis projection: 2560 → [1024, 512, 128]
+2026-05-25 21:47:26 DEBUG    src.rl.agent.dqn_agent │ [Agent] PyTorch initialized on cpu
+2026-05-25 21:47:26 DEBUG    src.rl.agent.dqn_agent │ [Agent] Analysis embedding enabled: dim=2560, proj=[1024, 512, 128]
+2026-05-25 21:47:26 DEBUG    src.training.trainer │ [Agent] obs_size=447 | window=20 | type=dqn
+2026-05-25 21:47:27 DEBUG    src.training.trainer │ [EmbeddingCache] {'VNM': 117, 'FPT': 98, 'VIC': 107, 'HPG': 115}
+2026-05-25 21:47:29 INFO     src.training.trainer │ Training: 500 episodes | patience=80 | val_every=5
+2026-05-25 21:47:32 DEBUG    src.rl.agent.dqn_agent │ [Agent] Saved → weights/best_model.pkl
+2026-05-25 21:47:32 INFO     src.training.trainer │   → New best (score=0.1705) @ ep 1
+2026-05-25 21:48:47 DEBUG    src.rl.agent.dqn_agent │ [Agent] Saved → weights/best_model.pkl
+2026-05-25 21:48:47 INFO     src.training.trainer │   → New best (score=0.2060) @ ep 5
+2026-05-25 21:50:05 DEBUG    src.rl.agent.dqn_agent │ [Agent] Saved → weights/best_model.pkl
+2026-05-25 21:50:05 INFO     src.training.trainer │   → New best (score=0.2524) @ ep 10
+2026-05-25 21:51:28 DEBUG    src.rl.agent.dqn_agent │ [Agent] Saved → weights/best_model.pkl
+2026-05-25 21:51:28 INFO     src.training.trainer │   → New best (score=0.2864) @ ep 15
+2026-05-25 21:54:20 DEBUG    src.rl.agent.dqn_agent │ [Agent] Saved → weights/best_model.pkl
+2026-05-25 21:54:20 INFO     src.training.trainer │   → New best (score=0.3188) @ ep 25
+2026-05-25 22:00:25 DEBUG    src.rl.agent.dqn_agent │ [Agent] Saved → weights/best_model.pkl
+2026-05-25 22:00:25 INFO     src.training.trainer │   → New best (score=0.3217) @ ep 45
+2026-05-25 22:01:56 DEBUG    src.rl.agent.dqn_agent │ [Agent] Saved → weights/ckpt_ep50.pkl
+2026-05-25 22:03:14 DEBUG    src.rl.agent.dqn_agent │ [Agent] Saved → weights/best_model.pkl
+2026-05-25 22:03:14 INFO     src.training.trainer │   → New best (score=0.3454) @ ep 55
