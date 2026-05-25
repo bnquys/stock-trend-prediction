@@ -22,7 +22,7 @@ from pathlib import Path
 from collections import deque
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.WARNING,
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%H:%M:%S",
     handlers=[
@@ -31,6 +31,7 @@ logging.basicConfig(
     ]
 )
 log = logging.getLogger(__name__)
+log.setLevel(logging.INFO)
 sys.path.insert(0, os.path.dirname(__file__))
 
 from src.features.preprocessor import load_csv, time_split, RobustScaler, obs_size_of
