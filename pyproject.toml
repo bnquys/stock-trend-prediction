@@ -18,5 +18,13 @@ dependencies = [
     "sentence-transformers>=5.5.1",
     "tabulate>=0.10.0",
     "torch>=2.0.0",
+    "tqdm>=4.60.0",
     "transformers>=5.9.0",
 ]
+
+[tool.setuptools.packages.find]
+include = ["src*", "stock_analysis*"]
+
+[project.scripts]
+train = "scripts.train:main"
+infer = "scripts.infer:main"

@@ -1,0 +1,11 @@
+# ════════════════════════════════════════════════════════════════
+# Training Config — Loop & Optimization
+# ════════════════════════════════════════════════════════════════
+n_episodes:         500
+patience:           80        # Early stop patience
+checkpoint_every:   50
+
+# Performance optimization
+val_every:          5         # Validate mỗi N episodes
+learn_every:        4         # Learn mỗi N steps
+preload_embeddings: true      # Pre-load embeddings vào RAM

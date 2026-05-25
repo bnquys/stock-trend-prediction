@@ -1,0 +1,16 @@
+# ════════════════════════════════════════════════════════════════
+# Agent Config — DQN Hyperparameters
+# ════════════════════════════════════════════════════════════════
+type:         "dqn"           # Extensible: future PPO, A2C, etc.
+hidden:       [256, 128, 64]  # 3 lớp ẩn
+lr:           0.0005          # Learning rate
+lr_decay:     0.995           # Exponential decay mỗi episode
+lr_min:       0.00005         # Sàn LR
+gamma:        0.97            # Discount factor
+tau:          0.005           # Soft target update
+eps_start:    1.0
+eps_end:      0.03
+eps_decay:    0.997
+buffer_cap:   20000
+batch_size:   256
+warmup:       1000            # Steps trước khi bắt đầu học

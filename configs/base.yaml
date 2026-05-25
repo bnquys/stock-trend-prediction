@@ -1,0 +1,23 @@
+# ════════════════════════════════════════════════════════════════
+# Base Config — Shared defaults
+# ════════════════════════════════════════════════════════════════
+project:
+  seed: 42
+
+data:
+  paths:
+    - "data/VNM.csv"
+    - "data/FPT.csv"
+    - "data/VIC.csv"
+    - "data/HPG.csv"
+  source: "VCI"
+
+split:
+  train_ratio: 0.8
+  val_ratio:   0.1
+
+output:
+  model_dir:  "models"
+  log_dir:    "logs"
+  chart_dir:  "outputs"
+  dpi:        150
