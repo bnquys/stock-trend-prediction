@@ -13,7 +13,7 @@ Usage:
 ════════════════════════════════════════════════════════════════════════════
 """
 from __future__ import annotations
-import json, logging, os, pickle, time
+import json, logging, pickle, time
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -21,10 +21,10 @@ from collections import deque
 from tqdm.auto import tqdm
 
 from src.config import Config
-from src.features.preprocessor import load_csv, time_split, RobustScaler, obs_size_of
+from src.technical.preprocessor import load_csv, time_split, RobustScaler, obs_size_of
 from src.rl.env.trading_env import TradingEnv
 from src.rl.agent.dqn_agent import DQNAgent
-from stock_analysis.cache import EmbeddingCache
+from src.fundamental.cache import EmbeddingCache
 
 log = logging.getLogger(__name__)
 
@@ -56,12 +56,12 @@ class Trainer:
     # ─────────────────────────────────────────────────────────────────
 
     def _setup_dirs(self):
-        self.model_dir = self.cfg.output.get("model_dir", "models")
-        self.log_dir = self.cfg.output.get("log_dir", "logs")
-        self.chart_dir = self.cfg.output.get("chart_dir", "outputs")
-        os.makedirs(self.model_dir, exist_ok=True)
-        os.makedirs(self.log_dir, exist_ok=True)
-        os.makedirs(self.chart_dir, exist_ok=True)
+        self.model_dir = Path(self.cfg.output.get("model_dir", "models"))
+        self.log_dir = Path(self.cfg.output.get("log_dir", "logs"))
+        self.chart_dir = Path(self.cfg.output.get("chart_dir", "outputs"))
+        self.model_dir.mkdir(parents=True, exist_ok=True)
+        self.log_dir.mkdir(parents=True, exist_ok=True)
+        self.chart_dir.mkdir(parents=True, exist_ok=True)
 
     def _setup_data(self):
         """Load CSVs, split, scale."""
@@ -384,3 +384,122 @@ class Trainer:
         trades = np.clip(metrics.get("n_trades", 0) / 50, 0, 1)
         wr = np.clip(metrics.get("win_rate", 0) / 100, 0, 1)
         return float(ret * 0.35 + sharpe * 0.30 + trades * 0.15 + wr * 0.20)
+
+    # ─────────────────────────────────────────────────────────────────
+    # Evaluate & Export
+    # ─────────────────────────────────────────────────────────────────
+
+    def evaluate(self, model_path: str | None = None, history: list[dict] | None = None):
+        """
+        Evaluate on test set and export results (ROI table, charts, LLM report).
+        Loads best_model.pkl by default.
+        """
+        from src.visualization.reports import export_roi_table, export_llm_integration_report
+
+        # Load best model
+        best_path = model_path or f"{self.model_dir}/best_model.pkl"
+        if Path(best_path).exists():
+            self.agent.load(best_path)
+        self.agent.eps = 0.0  # Greedy
+
+        env_cfg = self.cfg.env
+
+        for stock_idx in range(len(self.test_raws)):
+            symbol = self.stock_ids[stock_idx]
+            stock_id = symbol if self.analysis_enabled else None
+            te_raw = self.test_raws[stock_idx]
+            te_norm = self.test_norms[stock_idx]
+
+            log.info(f"[Evaluate] Testing {symbol}...")
+
+            # Run test episode
+            env = TradingEnv(
+                df_raw=te_raw, df_norm=te_norm,
+                window=env_cfg["window"],
+                init_cap=env_cfg["initial_cap"],
+                tx_cost=env_cfg.get("tx_cost", 0.0015),
+                sell_tax=env_cfg.get("sell_tax", 0.001),
+                slippage=env_cfg.get("slippage", 0.0003),
+                atr_sl_mult=env_cfg.get("atr_sl_mult", 1.5),
+                atr_tp_mult=env_cfg.get("atr_tp_mult", 3.0),
+                risk_per_trade=env_cfg.get("risk_per_trade", 0.02),
+                stop_loss=env_cfg["stop_loss"],
+                take_profit=env_cfg["take_profit"],
+                max_hold=env_cfg.get("max_hold", 60),
+                t_plus=env_cfg.get("t_plus", 2),
+                lot_size=env_cfg.get("lot_size", 100),
+                price_limit=env_cfg.get("price_limit", 0.07),
+                stock_id=stock_id,
+                analysis_model=self.analysis_model,
+                embedding_cache=self.embedding_cache,
+            )
+
+            obs = env.reset()
+            done = False
+            acts, eqs = [], []
+            while not done:
+                analysis_embed = env.get_analysis_embed()
+                a = self.agent.act(obs, valid_actions=env.valid_actions(),
+                                   greedy=True, analysis_embed=analysis_embed)
+                obs, _, done, info = env.step(a)
+                acts.append(a)
+                eqs.append(info["equity"])
+
+            test_m = env.metrics()
+            test_m["obs_size"] = self.obs_sz
+            log.info(f"[{symbol}] return={test_m['return_pct']:+.2f}% "
+                     f"sharpe={test_m['sharpe']:.3f} trades={test_m['n_trades']} "
+                     f"WR={test_m.get('win_rate', 0):.0f}%")
+
+            # Build result_df
+            window = env_cfg["window"]
+            n_valid = min(len(acts), len(te_raw) - window)
+            result_df = te_raw.iloc[window:window + n_valid].copy().reset_index(drop=True)
+            result_df["rl_action"] = acts[:n_valid]
+            result_df["rl_equity"] = eqs[:n_valid]
+
+            buy_flags = [False] * n_valid
+            sell_flags = [False] * n_valid
+            for t in env.trades:
+                idx = t["step"] - window
+                if 0 <= idx < n_valid:
+                    if t["type"] == "BUY":
+                        buy_flags[idx] = True
+                    elif t["type"] in ["SELL", "AUTO_EXIT"]:
+                        sell_flags[idx] = True
+            result_df["buy_signal"] = buy_flags
+            result_df["sell_signal"] = sell_flags
+
+            # Save pkl
+            res = {
+                "symbol": symbol,
+                "result_df": result_df,
+                "test_metrics": test_m,
+                "test_trades": env.trades,
+                "history": history or [],
+            }
+            import pickle
+            pkl_path = f"{self.log_dir}/test_results_{symbol}.pkl"
+            with open(pkl_path, "wb") as f:
+                pickle.dump(res, f)
+
+            # Export ROI table
+            export_roi_table(env.trades, self.log_dir, symbol)
+
+            # Export charts
+            try:
+                from src.visualization.charts import generate_all
+                generate_all(
+                    result_df=result_df,
+                    metrics=test_m,
+                    trades=env.trades,
+                    history=history or [],
+                    initial_cap=env_cfg["initial_cap"],
+                    out_dir=f"{self.chart_dir}/{symbol}",
+                    symbol=symbol,
+                )
+            except Exception as e:
+                log.warning(f"[Charts] Lỗi tạo chart cho {symbol}: {e}")
+
+            # Export LLM integration report
+            export_llm_integration_report(result_df, test_m, self.log_dir, symbol)

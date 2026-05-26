@@ -23,7 +23,7 @@ import logging
 import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
-from src.features.preprocessor import get_obs, FEAT_COLS
+from src.technical.preprocessor import get_obs, FEAT_COLS
 
 log = logging.getLogger(__name__)
 
@@ -481,7 +481,7 @@ class TradingEnv:
 
         # ── Slow path: pipeline() (disk I/O) ─────────────────────
         try:
-            from stock_analysis import pipeline
+            from src.fundamental import pipeline
 
             result = pipeline(
                 model=self.analysis_model,

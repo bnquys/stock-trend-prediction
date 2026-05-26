@@ -10,5 +10,9 @@ wheels/
 .venv
 .env
 
+# Artifacts (data, weights, logs, outputs, embeddings)
+artifacts/
+
+# Legacy paths (trước refactor)
 outputs/
 weights/

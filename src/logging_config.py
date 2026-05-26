@@ -18,7 +18,6 @@ Usage (call once at entry point):
 from __future__ import annotations
 import logging
 import logging.handlers
-import os
 import sys
 from datetime import datetime
 from pathlib import Path

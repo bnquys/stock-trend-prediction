@@ -7,9 +7,10 @@ Usage:
     python scripts/infer.py --model weights/best_model.pkl --stock data/FPT.csv
 """
 from __future__ import annotations
-import argparse, logging, os, sys
+import argparse, logging, sys
+from pathlib import Path
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.config import Config
 from src.inference.inferencer import Inferencer
@@ -36,7 +37,7 @@ def main():
 
     if args.all:
         paths = cfg.data.get("paths", [])
-        stock_map = {os.path.splitext(os.path.basename(p))[0]: p for p in paths}
+        stock_map = {Path(p).stem: p for p in paths}
         results = infer.predict_batch(stock_map)
         print(f"\n{'═' * 70}")
         print(f"{'Stock':<8} {'Action':<12} {'Confidence':>10} {'Close':>12} {'Date':<12}")

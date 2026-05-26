@@ -6,10 +6,10 @@ project:
 
 data:
   paths:
-    - "data/VNM.csv"
-    - "data/FPT.csv"
-    - "data/VIC.csv"
-    - "data/HPG.csv"
+    - "artifacts/data/VNM.csv"
+    - "artifacts/data/FPT.csv"
+    - "artifacts/data/VIC.csv"
+    - "artifacts/data/HPG.csv"
   source: "VCI"
 
 split:
@@ -17,7 +17,7 @@ split:
   val_ratio:   0.1
 
 output:
-  model_dir:  "weights"
-  log_dir:    "logs"
-  chart_dir:  "outputs"
+  model_dir:  "artifacts/weights"
+  log_dir:    "artifacts/logs"
+  chart_dir:  "artifacts/outputs"
   dpi:        150

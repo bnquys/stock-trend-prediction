@@ -6,6 +6,7 @@ Tập trung vào clarity: người xem không chuyên cũng hiểu ngay.
 ════════════════════════════════════════════════════════════════════════════
 """
 from __future__ import annotations
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib; matplotlib.use("Agg")
@@ -492,7 +493,7 @@ def plot_dashboard(df, metrics, history, trades, initial_cap=100000000, out_path
 def generate_all(result_df, metrics, trades, history,
                  initial_cap, out_dir, symbol="VNM"):
     """Sinh tất cả 5 chart một lần."""
-    import os; os.makedirs(out_dir, exist_ok=True)
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
     plot_price_signals(result_df,                       f"{out_dir}/1_price_signals.png", symbol=symbol)
     plot_equity(result_df, metrics, initial_cap,        f"{out_dir}/2_equity_drawdown.png")
     plot_training(history,                              f"{out_dir}/3_training_curves.png")

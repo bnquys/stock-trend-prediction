@@ -21,7 +21,7 @@ import pytest
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from src.rl.env.trading_env import TradingEnv
-from src.features.preprocessor import FEAT_COLS
+from src.technical.preprocessor import FEAT_COLS
 
 
 # ─── Fixtures ────────────────────────────────────────────────────────────

@@ -6,7 +6,8 @@ Hỗ trợ Analysis Embedding (phân tích cơ bản) qua Addition fusion.
 ════════════════════════════════════════════════════════════════════════════
 """
 from __future__ import annotations
-import os, pickle, logging
+import pickle, logging
+from pathlib import Path
 import numpy as np
 import torch
 import torch.nn as nn
@@ -298,7 +299,7 @@ class DQNAgent:
             param_group['lr'] = new_lr
 
     def save(self, path: str) -> None:
-        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
         data = {
             "model_state": self.q.state_dict(),
             "target_state": self.q_tgt.state_dict(),
