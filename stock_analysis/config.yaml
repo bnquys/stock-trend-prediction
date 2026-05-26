@@ -12,7 +12,7 @@ llm:
 # ── Embedding (vector hóa tóm tắt báo cáo tài chính từ LLM) ───────────────────────────
 embedding:
   model:    "perplexity-ai/pplx-embed-context-v1-4b"
-  gradio_url: "https://c54163ebbc09d662b7.gradio.live/"
+  gradio_url: "https://ba6424981bc6d20fbd.gradio.live"
   dim:      2560              # Chiều embedding output
 
 # ── Projection (giảm chiều cho agent) ─────────────────────────

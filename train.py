@@ -24,7 +24,7 @@ from tqdm.auto import tqdm
 
 sys.path.insert(0, os.path.dirname(__file__))
 from src.logging_config import setup_logging
-setup_logging(level="INFO", log_file="logs/train.log")
+setup_logging()  # Đọc configs/logging.yaml
 log = logging.getLogger(__name__)
 
 from src.features.preprocessor import load_csv, time_split, RobustScaler, obs_size_of

@@ -57,27 +57,11 @@ def _buy_sell(ax, df, x, annotate=True):
     bi = df[df["buy_signal"]].index.tolist()
     si = df[df["sell_signal"]].index.tolist()
     if bi:
-        ax.scatter(bi, df.loc[bi,"close"]*0.976, marker="^", s=150,
+        ax.scatter(bi, df.loc[bi,"close"]*0.976, marker="^", s=120,
                    color=C["buy"], zorder=8, edgecolors="white", lw=0.8, label="▲ MUA")
-        if annotate:
-            for b in bi[:20]:
-                ax.annotate(f"MUA\n{df.loc[b,'close']:.0f}",
-                            (b, df.loc[b,"close"]*0.974),
-                            fontsize=6.5, color=C["buy"], ha="center", va="top",
-                            fontweight="bold",
-                            bbox=dict(boxstyle="round,pad=0.2", fc=C["buy_l"],
-                                      ec=C["buy"], alpha=0.9, lw=0.7))
     if si:
-        ax.scatter(si, df.loc[si,"close"]*1.024, marker="v", s=150,
+        ax.scatter(si, df.loc[si,"close"]*1.024, marker="v", s=120,
                    color=C["sell"], zorder=8, edgecolors="white", lw=0.8, label="▼ BÁN")
-        if annotate:
-            for s in si[:20]:
-                ax.annotate(f"BÁN\n{df.loc[s,'close']:.0f}",
-                            (s, df.loc[s,"close"]*1.026),
-                            fontsize=6.5, color=C["sell"], ha="center", va="bottom",
-                            fontweight="bold",
-                            bbox=dict(boxstyle="round,pad=0.2", fc=C["sell_l"],
-                                      ec=C["sell"], alpha=0.9, lw=0.7))
 
 
 def _shade(ax, df):
@@ -135,8 +119,9 @@ def plot_price_signals(df, out_path=None, symbol="VNM"):
 
     # MACD
     ax2 = axes[1]
-    if "macd_histogram" in df.columns:
-        hist = df["macd_histogram"].fillna(0).values
+    macd_col = "macd_diff" if "macd_diff" in df.columns else "macd_histogram"
+    if macd_col in df.columns:
+        hist = df[macd_col].fillna(0).values
         ax2.bar(x, hist, color=np.where(hist>=0,C["buy"],C["sell"]), alpha=0.75, width=1)
         ax2.fill_between(x, hist, 0, where=(hist>0), alpha=0.1, color=C["buy"])
         ax2.fill_between(x, hist, 0, where=(hist<0), alpha=0.1, color=C["sell"])
@@ -146,8 +131,9 @@ def plot_price_signals(df, out_path=None, symbol="VNM"):
 
     # RSI
     ax3 = axes[2]
-    if "rsi_14" in df.columns:
-        rsi = df["rsi_14"].fillna(50).values
+    rsi_col = "rsi" if "rsi" in df.columns else "rsi_14"
+    if rsi_col in df.columns:
+        rsi = df[rsi_col].fillna(50).values
         ax3.plot(x, rsi, color=C["purple"], lw=1.3, label="RSI 14")
         ax3.axhline(70, color=C["sell"], lw=1.0, ls="--", alpha=0.8, label="Quá mua (70)")
         ax3.axhline(30, color=C["buy"],  lw=1.0, ls="--", alpha=0.8, label="Quá bán (30)")
@@ -420,16 +406,18 @@ def plot_dashboard(df, metrics, history, trades, initial_cap=100000000, out_path
 
     # Row 2L: MACD
     ax3=fig.add_subplot(gs[2,0])
-    if "macd_histogram" in df.columns:
-        hist=df["macd_histogram"].fillna(0).values
+    macd_col_d = "macd_diff" if "macd_diff" in df.columns else "macd_histogram"
+    if macd_col_d in df.columns:
+        hist=df[macd_col_d].fillna(0).values
         ax3.bar(x,hist,color=np.where(hist>=0,C["buy"],C["sell"]),alpha=0.75,width=1)
         ax3.axhline(0,color=C["muted"],lw=0.7,ls="--")
     _ax(ax3,"MACD Histogram","Dương=tăng  |  Âm=giảm"); _xt(ax3,dates)
 
     # Row 2R: RSI
     ax4=fig.add_subplot(gs[2,1])
-    if "rsi_14" in df.columns:
-        rsi=df["rsi_14"].fillna(50).values
+    rsi_col_d = "rsi" if "rsi" in df.columns else "rsi_14"
+    if rsi_col_d in df.columns:
+        rsi=df[rsi_col_d].fillna(50).values
         ax4.plot(x,rsi,color=C["purple"],lw=1.3)
         ax4.axhline(70,color=C["sell"],lw=0.9,ls="--",label="Quá mua (70)")
         ax4.axhline(30,color=C["buy"],lw=0.9,ls="--",label="Quá bán (30)")
