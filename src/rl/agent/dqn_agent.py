@@ -212,6 +212,26 @@ class DQNAgent:
         for p in self.q_tgt.parameters():
             p.requires_grad = False
 
+        # Lưu reference gốc để save/load state_dict
+        self._q_module = self.q
+        self._q_tgt_module = self.q_tgt
+
+        # JIT compile networks for CPU speedup (PyTorch 2.x)
+        # Requires C++ compiler: Linux/Mac (gcc/clang), Windows (MSVC cl.exe)
+        # Skip on Windows without MSVC to avoid InductorError
+        import platform
+        _can_compile = hasattr(torch, "compile") and DEVICE.type == "cpu"
+        if _can_compile and platform.system() == "Windows":
+            import shutil
+            _can_compile = shutil.which("cl") is not None
+        if _can_compile:
+            try:
+                self.q = torch.compile(self.q, mode="default")  # type: ignore
+                self.q_tgt = torch.compile(self.q_tgt, mode="default")  # type: ignore
+                log.debug("[Agent] torch.compile enabled (default mode)")
+            except Exception as e:
+                log.debug(f"[Agent] torch.compile skipped: {e}")
+
         self.optimizer = optim.Adam(self.q.parameters(), lr=lr, weight_decay=1e-4)
         self.buf    = ReplayBuffer(
             cap=buffer_cap,
@@ -311,8 +331,8 @@ class DQNAgent:
     def save(self, path: str) -> None:
         Path(path).parent.mkdir(parents=True, exist_ok=True)
         data = {
-            "model_state": self.q.state_dict(),
-            "target_state": self.q_tgt.state_dict(),
+            "model_state": self._q_module.state_dict(),
+            "target_state": self._q_tgt_module.state_dict(),
             "optimizer_state": self.optimizer.state_dict(),
             "eps": self.eps,
             "steps": self.steps,
@@ -326,8 +346,8 @@ class DQNAgent:
 
     def load(self, path: str) -> None:
         checkpoint = torch.load(path, map_location=DEVICE)
-        self.q.load_state_dict(checkpoint["model_state"])
-        self.q_tgt.load_state_dict(checkpoint["target_state"])
+        self._q_module.load_state_dict(checkpoint["model_state"])
+        self._q_tgt_module.load_state_dict(checkpoint["target_state"])
         self.optimizer.load_state_dict(checkpoint["optimizer_state"])
         self.eps = checkpoint.get("eps", self.eps_end)
         self.steps = checkpoint.get("steps", 0)

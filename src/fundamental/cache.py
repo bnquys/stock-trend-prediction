@@ -48,6 +48,10 @@ class EmbeddingCache:
             n = self._load_stock(sid)
             total_vectors += n
 
+        # Pre-build fast lookup (loại bỏ SHA256 trong training loop)
+        self._fast_lookup: dict[str, np.ndarray] = {}
+        self._build_fast_lookup()
+
         log.debug(f"[EmbeddingCache] Loaded {total_vectors} vectors for {len(stock_ids)} stocks into RAM")
 
     def _load_stock(self, stock_id: str) -> int:
@@ -110,16 +114,23 @@ class EmbeddingCache:
         """
         Lookup embedding vector cho (stock_id, date_start, date_end).
         Trả về numpy array (embed_dim,) hoặc None nếu không tìm thấy.
+
+        Tối ưu: dùng pre-built _fast_lookup nếu có (O(1) string key, no SHA256).
+        Fallback: tính SHA256 nếu fast lookup miss.
         """
         if stock_id not in self._vectors:
             return None
 
-        # Tìm report hash từ date range (giống logic trong Report.create)
+        # ── Fast path: pre-built lookup (no SHA256) ───────────────
+        fast_key = f"{stock_id}::{date_start.isoformat()}::{date_end.isoformat()}"
+        if fast_key in self._fast_lookup:
+            return self._fast_lookup[fast_key]
+
+        # ── Slow path: SHA256 (fallback, should rarely hit) ───────
         date_hash = self._compute_date_hash(stock_id, date_start, date_end)
         if date_hash is None:
             return None
 
-        # date_hash → report_hash (từ report logs)
         report_logs = self._report_logs.get(stock_id, {})
         report_info = report_logs.get(date_hash)
         if report_info is None:
@@ -127,16 +138,54 @@ class EmbeddingCache:
 
         report_hash = report_info.get("content_hash", date_hash)
 
-        # report_hash → response_hash
         report_map = self._report_map.get(stock_id, {})
         response_hash = report_map.get(report_hash)
         if response_hash is None:
             return None
 
-        # response_hash → vector
         vectors = self._vectors.get(stock_id, {})
         vector = vectors.get(response_hash)
+
+        # Cache vào fast_lookup cho lần sau
+        if vector is not None:
+            self._fast_lookup[fast_key] = vector
+
         return vector
+
+    def _build_fast_lookup(self):
+        """
+        Pre-build direct lookup: "{stock_id}::{date_start_iso}::{date_end_iso}" → vector.
+        Chạy 1 lần khi init, loại bỏ SHA256 trong training loop.
+        """
+        import hashlib
+
+        self._fast_lookup: dict[str, np.ndarray] = {}
+
+        for stock_id in self._vectors:
+            report_logs = self._report_logs.get(stock_id, {})
+            report_map = self._report_map.get(stock_id, {})
+            vectors = self._vectors[stock_id]
+
+            for date_hash, report_info in report_logs.items():
+                # Recover original date string from report_info
+                date_start_iso = report_info.get("date_start")
+                date_end_iso = report_info.get("date_end")
+                if not date_start_iso or not date_end_iso:
+                    continue
+
+                report_hash = report_info.get("content_hash", date_hash)
+                response_hash = report_map.get(report_hash)
+                if response_hash is None:
+                    continue
+
+                vector = vectors.get(response_hash)
+                if vector is None:
+                    continue
+
+                fast_key = f"{stock_id}::{date_start_iso}::{date_end_iso}"
+                self._fast_lookup[fast_key] = vector
+
+        log.debug(f"[EmbeddingCache] Fast lookup built: {len(self._fast_lookup)} entries")
 
     def _compute_date_hash(
         self, stock_id: str, date_start: datetime, date_end: datetime

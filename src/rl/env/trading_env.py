@@ -172,6 +172,11 @@ class TradingEnv:
         self.trades       = []
         self._equity      = [self.init_cap]
         self._rewards     = []
+        self._price_cache_step = -1  # Cache _price() per step
+        self._price_cache_val  = 0.0
+        # Clear embedding step cache for new episode
+        if self._analysis_enabled:
+            self._embed_step_cache.clear()
         return self._obs()
 
     def step(self, action: int):
@@ -410,8 +415,11 @@ class TradingEnv:
 
     # ── Helpers ────────────────────────────────────────────────────
     def _price(self, step: int | None = None) -> float:
-        """Lấy giá close, enforce price limit ±7%. Dùng precomputed numpy array."""
+        """Lấy giá close, enforce price limit ±7%. Cached per step."""
         idx = step if step is not None else self._step
+        # Cache hit: same step → return cached value (avoid redundant computation)
+        if idx == self._price_cache_step:
+            return self._price_cache_val
         idx = int(np.clip(idx, 0, self.n - 1))
         raw = float(self._close_arr[idx])
         # Apply price limit ±7% so với phiên trước
@@ -419,6 +427,8 @@ class TradingEnv:
             prev = float(self._close_arr[idx - 1])
             raw  = float(np.clip(raw, prev * (1 - self.price_limit),
                                       prev * (1 + self.price_limit)))
+        self._price_cache_step = idx
+        self._price_cache_val = raw
         return raw
 
     def _round_tick(self, price: float) -> float:
