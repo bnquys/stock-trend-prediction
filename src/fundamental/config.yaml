@@ -24,7 +24,7 @@ llm:
 # ── Embedding Gradio ────────────────────────────────────────
 embedding:
   model: "perplexity-ai/pplx-embed-context-v1-4b"
-  gradio_url: "https://f4b37a689413db59bd.gradio.live/"
+  gradio_url: "https://27de3c007e951a0c94.gradio.live"
   dim: 2560
 
 # ── Projection (giảm chiều cho agent) ───────────────────────

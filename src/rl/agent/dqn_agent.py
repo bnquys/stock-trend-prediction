@@ -20,6 +20,13 @@ log = logging.getLogger(__name__)
 # Tự động chọn Device (GPU nếu có)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+# CPU optimization: ensure PyTorch uses all available cores
+if DEVICE.type == "cpu":
+    import os
+    _num_threads = int(os.environ.get("TORCH_NUM_THREADS", 0)) or os.cpu_count() or 4
+    torch.set_num_threads(_num_threads)
+    torch.set_num_interop_threads(max(1, _num_threads // 2))
+
 
 class DuelingQNet(nn.Module):
     """
@@ -201,6 +208,9 @@ class DQNAgent:
                                   analysis_proj_layers=analysis_proj_layers).to(DEVICE)
         self.q_tgt.load_state_dict(self.q.state_dict())
         self.q_tgt.eval()
+        # Disable gradient tracking for target network — saves CPU overhead
+        for p in self.q_tgt.parameters():
+            p.requires_grad = False
 
         self.optimizer = optim.Adam(self.q.parameters(), lr=lr, weight_decay=1e-4)
         self.buf    = ReplayBuffer(
@@ -237,14 +247,10 @@ class DQNAgent:
         with torch.no_grad():
             q_values = self.q(obs_t, analysis_embed=embed_t).squeeze(0)
 
-        # Action Masking — stay on tensor to avoid .cpu().numpy() overhead
-        best_action = -1
-        best_q = -float("inf")
-        for a in valid_actions:
-            qv = q_values[a].item()
-            if qv > best_q:
-                best_q = qv
-                best_action = a
+        # Action Masking — tensor indexing avoids Python loop overhead
+        valid_t = torch.tensor(valid_actions, dtype=torch.long, device=DEVICE)
+        q_valid = q_values[valid_t]
+        best_action = valid_actions[q_valid.argmax().item()]
 
         return best_action
 
@@ -270,7 +276,7 @@ class DQNAgent:
         # ── Loss & Optimizer ────────────────────────────────────
         loss = F.huber_loss(q_cur, target)
 
-        self.optimizer.zero_grad()
+        self.optimizer.zero_grad(set_to_none=True)
         loss.backward()
         torch.nn.utils.clip_grad_norm_(self.q.parameters(), max_norm=1.0)
         self.optimizer.step()
@@ -283,10 +289,11 @@ class DQNAgent:
         self.learn_count += 1
         return loss_val
 
+    @torch.no_grad()
     def _soft_update(self):
-        """θ_tgt = τ*θ + (1-τ)*θ_tgt"""
+        """θ_tgt = τ*θ + (1-τ)*θ_tgt — in-place ops to avoid temp tensors."""
         for t_param, o_param in zip(self.q_tgt.parameters(), self.q.parameters()):
-            t_param.data.copy_(self.tau * o_param.data + (1.0 - self.tau) * t_param.data)
+            t_param.data.mul_(1.0 - self.tau).add_(o_param.data, alpha=self.tau)
 
     def decay_epsilon(self):
         self.eps = max(self.eps_end, self.eps * self.eps_decay)

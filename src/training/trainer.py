@@ -14,6 +14,7 @@ Usage:
 """
 from __future__ import annotations
 import json, logging, pickle, time
+from datetime import datetime, timezone
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -244,6 +245,43 @@ class Trainer:
         val_every = training_cfg.get("val_every", 5)
         ckpt_every = training_cfg.get("checkpoint_every", 50)
 
+        # ── Create output run directory with timestamp ─────────────────
+        run_ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.run_dir = self.chart_dir / f"output_{run_ts}"
+        self.run_dir.mkdir(parents=True, exist_ok=True)
+
+        # Write logs.json with run metadata & hyperparameters
+        run_meta = {
+            "started_at": datetime.now(timezone.utc).isoformat(),
+            "hyperparameters": {
+                "agent": {
+                    "hidden": self.cfg.agent.get("hidden"),
+                    "lr": self.cfg.agent.get("lr"),
+                    "lr_decay": self.cfg.agent.get("lr_decay"),
+                    "lr_min": self.cfg.agent.get("lr_min"),
+                    "gamma": self.cfg.agent.get("gamma"),
+                    "tau": self.cfg.agent.get("tau"),
+                    "eps_start": self.cfg.agent.get("eps_start"),
+                    "eps_end": self.cfg.agent.get("eps_end"),
+                    "eps_decay": self.cfg.agent.get("eps_decay"),
+                    "buffer_cap": self.cfg.agent.get("buffer_cap"),
+                    "batch_size": self.cfg.agent.get("batch_size"),
+                    "warmup": self.cfg.agent.get("warmup"),
+                },
+                "training": {
+                    "n_episodes": n_ep,
+                    "patience": patience,
+                    "val_every": val_every,
+                    "learn_every": training_cfg.get("learn_every", 4),
+                    "checkpoint_every": ckpt_every,
+                },
+            },
+        }
+        (self.run_dir / "logs.json").write_text(
+            json.dumps(run_meta, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+        log.info(f"[Run] Output directory: {self.run_dir}")
+
         # Resume
         start_ep = 1
         if resume_from and Path(resume_from).exists():
@@ -393,10 +431,10 @@ class Trainer:
 
     def evaluate(self, model_path: str | None = None, history: list[dict] | None = None):
         """
-        Evaluate on test set and export results (ROI table, charts, LLM report).
+        Evaluate on test set and export results (ROI table, charts).
         Loads best_model.pkl by default.
         """
-        from src.visualization.reports import export_roi_table, export_llm_integration_report
+        from src.visualization.reports import export_roi_table
 
         # Load best model
         best_path = model_path or f"{self.model_dir}/best_model.pkl"
@@ -486,7 +524,8 @@ class Trainer:
             # Export ROI table
             export_roi_table(env.trades, self.log_dir, symbol)
 
-            # Export charts
+            # Export charts into run directory (if available) or chart_dir
+            chart_out = str(self.run_dir / symbol) if hasattr(self, "run_dir") else f"{self.chart_dir}/{symbol}"
             try:
                 from src.visualization.charts import generate_all
                 generate_all(
@@ -495,11 +534,8 @@ class Trainer:
                     trades=env.trades,
                     history=history or [],
                     initial_cap=env_cfg["initial_cap"],
-                    out_dir=f"{self.chart_dir}/{symbol}",
+                    out_dir=chart_out,
                     symbol=symbol,
                 )
             except Exception as e:
                 log.warning(f"[Charts] Lỗi tạo chart cho {symbol}: {e}")
-
-            # Export LLM integration report
-            export_llm_integration_report(result_df, test_m, self.log_dir, symbol)
