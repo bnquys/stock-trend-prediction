@@ -154,3 +154,20 @@ class EmbeddingCache:
     def stats(self) -> dict[str, int]:
         """Trả về thống kê số vectors per stock."""
         return {sid: len(vecs) for sid, vecs in self._vectors.items()}
+
+    def validate(self, min_vectors: int = 1) -> None:
+        """
+        Kiểm tra cache đủ embeddings cho tất cả stocks.
+        Raise RuntimeError CRITICAL nếu bất kỳ stock nào thiếu cache.
+        """
+        missing = [sid for sid, n in self.stats.items() if n < min_vectors]
+        if missing:
+            msg = (
+                f"CRITICAL: Embedding cache thiếu cho {missing}! "
+                f"Mỗi stock cần ít nhất {min_vectors} vectors. "
+                f"Hiện tại: {self.stats}. "
+                f"Hãy chạy warmup_cache.ipynb trước khi training."
+            )
+            log.critical(msg)
+            raise RuntimeError(msg)
+        log.debug(f"[EmbeddingCache] Validate OK: {self.stats}")

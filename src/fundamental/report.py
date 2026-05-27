@@ -62,19 +62,20 @@ class Report:
         - content_hash dùng làm cache key cho LLM và embedding.
         - Logs map date_hash → content_hash + metadata.
         """
+        # Window range: [date_start, date_end] (ví dụ 2025-01-01 → 2025-01-28)
         if date_start > date_end:
             raise ValueError("Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.")
         if date_end > datetime.now():
             raise ValueError("Ngày kết thúc không được lớn hơn ngày hiện tại.")
 
+        stock_id = self.data.id
+        date_hash = self.get_hash_id(stock_id, date_start, date_end)
+
         dt_start_tmp = date_start
         dt_end_tmp = date_end
 
-        date_start -= relativedelta(months=1)
-        date_end = date_start - relativedelta(years=1)
-
-        stock_id = self.data.id
-        date_hash = self.get_hash_id(stock_id, date_start, date_end)
+        date_end -= relativedelta(months=1) # Lùi lại vì BCTC-Quý có thể công bố muộn hơn ngày kết thúc window.
+        date_start = date_end - relativedelta(years=1) # Lùi lại vì thường phân tích nội tại công ty trong một năm qua.
 
         # Kiểm tra cache trong reports/
         reports_dir = self.data_dir / "reports"

@@ -468,7 +468,7 @@ class TradingEnv:
         date_end = pd.Timestamp(self.df_raw["date"].iloc[safe])
         date_start = pd.Timestamp(self.df_raw["date"].iloc[start_idx])
 
-        # ── Fast path: EmbeddingCache (zero I/O) ──────────────────
+        # ── EmbeddingCache lookup (zero I/O) ─────────────────────
         if self._embedding_cache is not None:
             vector = self._embedding_cache.get(
                 stock_id=self.stock_id,
@@ -477,23 +477,24 @@ class TradingEnv:
             )
             if vector is not None:
                 return vector.astype(np.float32)
-            # Cache miss — fall through to pipeline
 
-        # ── Slow path: pipeline() (disk I/O) ─────────────────────
-        try:
-            from src.fundamental import pipeline
-
-            result = pipeline(
-                model=self.analysis_model,
-                stock_id=self.stock_id,
-                date_start=date_start.to_pydatetime(),
-                date_end=date_end.to_pydatetime(),
+            # Cache miss → CRITICAL error (không fallback)
+            msg = (
+                f"CRITICAL: Embedding cache miss! "
+                f"stock={self.stock_id}, step={self._step}, "
+                f"date_range=[{date_start.date()} → {date_end.date()}]. "
+                f"Hãy chạy warmup_cache.ipynb để pre-generate embeddings trước khi training."
             )
-            return result["vector"].astype(np.float32)
+            log.critical(msg)
+            raise RuntimeError(msg)
 
-        except Exception as e:
-            log.warning(f"[Analysis] Failed to get embedding at step {self._step}: {e}")
-            return None
+        # Không có cache → CRITICAL
+        msg = (
+            f"CRITICAL: analysis enabled nhưng embedding_cache=None! "
+            f"Hãy bật preload_embeddings: true trong config và chạy warmup_cache.ipynb."
+        )
+        log.critical(msg)
+        raise RuntimeError(msg)
 
     def _date(self) -> str:
         i = min(self._step, self.n - 1)

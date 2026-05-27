@@ -209,8 +209,7 @@ def _load_config(path: str) -> dict:
     """Load YAML config, return empty dict if not found."""
     p = Path(path)
     if p.exists():
-        with open(p, encoding="utf-8") as f:
-            return yaml.safe_load(f) or {}
+        return yaml.safe_load(p.read_text(encoding="utf-8")) or {}
     return {}
 
 

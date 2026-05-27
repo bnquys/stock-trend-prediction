@@ -15,8 +15,7 @@ _PACKAGE_DIR = Path(__file__).parent
 # Load URL từ stock_analysis/config.yaml
 def _load_analysis_cfg() -> dict:
     cfg_path = _PACKAGE_DIR / "config.yaml"
-    with open(cfg_path, encoding="utf-8") as f:
-        return yaml.safe_load(f)
+    return yaml.safe_load(cfg_path.read_text(encoding="utf-8"))
 
 _analysis_cfg = _load_analysis_cfg()
 
@@ -28,7 +27,16 @@ def _get_client():
     global _client
     if _client is None:
         from gradio_client import Client
-        _client = Client(_analysis_cfg["embedding"]["gradio_url"])
+        url = _analysis_cfg.get("embedding", {}).get("gradio_url", "")
+        if not url:
+            url = input(
+                "⚠️ embedding.gradio_url trống. Nhập Gradio Embedding URL "
+                "(chỉ dùng cho phiên này, muốn persist hãy điền vào src/fundamental/config.yaml): "
+            ).strip()
+            if not url:
+                raise ValueError("Embedding Gradio URL không được để trống!")
+            _analysis_cfg.setdefault("embedding", {})["gradio_url"] = url
+        _client = Client(url)
     return _client
 
 MAX_RETRIES = 3

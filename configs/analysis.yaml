@@ -1,7 +1,6 @@
 # ════════════════════════════════════════════════════════════════
 # Analysis Config — Agent-side settings
-# Chi tiết LLM/Embedding nằm trong stock_analysis/config.yaml
+# model & embed_dim tự đọc từ src/fundamental/config.yaml (single source of truth)
 # ════════════════════════════════════════════════════════════════
 enabled:    true
-embed_dim:  2560              # Phải khớp với stock_analysis/config.yaml → embedding.dim
 projection: [1024, 512, 128]  # Giảm chiều cho agent: 2560→1024→512→128

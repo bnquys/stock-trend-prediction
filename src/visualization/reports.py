@@ -132,8 +132,7 @@ def export_llm_integration_report(
     out_dir.mkdir(parents=True, exist_ok=True)
 
     out_json = out_dir / f"llm_integration_summary_{symbol}.json"
-    with open(out_json, "w", encoding="utf-8") as f:
-        json.dump(llm_data, f, ensure_ascii=False, indent=4)
+    out_json.write_text(json.dumps(llm_data, ensure_ascii=False, indent=4), encoding="utf-8")
 
     # Markdown summary
     md_table = f"""

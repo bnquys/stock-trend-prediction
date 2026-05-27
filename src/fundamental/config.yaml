@@ -1,19 +1,31 @@
 # ════════════════════════════════════════════════════════════════
 # Analysis Config — LLM & Embedding Pipeline
-# Đặt trong package stock_analysis/ để dễ quản lý
 # ════════════════════════════════════════════════════════════════
-enabled:    true
+enabled: true
 
-# ── LLM (phân tích cơ bản/ báo cáo tài chính) ──────────────────────────────────
+# ── Backend Selection ─────────────────────────────────────────
+# LLM backend: "ckey" (REST API) hoặc "gradio" (Gradio client)
+llm_backend: "ckey"
+
+# Embedding backend: "gradio" (hiện tại chỉ hỗ trợ gradio)
+embedding_backend: "gradio"
+
+# ── CKey API (REST) ──────────────────────────────────────────
+ckey:
+  model: "mistral-small-4-119b-2603"
+  url: "https://ckey.vn/v1/chat/completions"
+  # API key đọc từ .env → CKEY_API
+
+# ── LLM Gradio ──────────────────────────────────────────────
 llm:
-  model:    "unsloth/Qwen2.5-14B-Instruct-bnb-4bit"
-  gradio_url: "https://0cd1a98b5128649e8e.gradio.live/"
+  model: "unsloth/Qwen2.5-14B-Instruct-bnb-4bit"
+  gradio_url: ""
 
-# ── Embedding (vector hóa tóm tắt báo cáo tài chính từ LLM) ───────────────────────────
+# ── Embedding Gradio ────────────────────────────────────────
 embedding:
-  model:    "perplexity-ai/pplx-embed-context-v1-4b"
-  gradio_url: "https://9a896c5f2bd3bb873f.gradio.live/"
-  dim:      2560              # Chiều embedding output
+  model: "perplexity-ai/pplx-embed-context-v1-4b"
+  gradio_url: "https://f4b37a689413db59bd.gradio.live/"
+  dim: 2560
 
-# ── Projection (giảm chiều cho agent) ─────────────────────────
+# ── Projection (giảm chiều cho agent) ───────────────────────
 projection: [1024, 512, 128]  # 2560→1024→512→128

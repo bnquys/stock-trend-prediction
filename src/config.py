@@ -20,8 +20,7 @@ def _load_yaml(path: Path) -> dict:
     """Load a YAML file, return empty dict if not found."""
     if not path.exists():
         return {}
-    with open(path, encoding="utf-8") as f:
-        return yaml.safe_load(f) or {}
+    return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
 
 
 @dataclass
@@ -42,9 +41,19 @@ class Config:
         """
         Load modular configs from a directory.
         Files: base.yaml, env.yaml, agent.yaml, analysis.yaml, training.yaml
+
+        analysis.yaml chỉ chứa agent-side settings (enabled, projection).
+        model & embed_dim tự đọc từ src/fundamental/config.yaml (single source of truth).
         """
         d = Path(config_dir)
         base = _load_yaml(d / "base.yaml")
+
+        # Load analysis config + auto-merge từ fundamental config
+        analysis = _load_yaml(d / "analysis.yaml")
+        fund_cfg = _load_yaml(Path("src/fundamental/config.yaml"))
+        if fund_cfg:
+            analysis.setdefault("model", fund_cfg.get("llm", {}).get("model"))
+            analysis.setdefault("embed_dim", fund_cfg.get("embedding", {}).get("dim", 2560))
 
         return cls(
             project=base.get("project", {}),
@@ -52,7 +61,7 @@ class Config:
             split=base.get("split", {}),
             env=_load_yaml(d / "env.yaml"),
             agent=_load_yaml(d / "agent.yaml"),
-            analysis=_load_yaml(d / "analysis.yaml"),
+            analysis=analysis,
             training=_load_yaml(d / "training.yaml"),
             output=base.get("output", {}),
         )

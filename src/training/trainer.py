@@ -88,8 +88,7 @@ class Trainer:
         self.val_norms = [self.scaler.transform(df) for df in self.val_raws]
         self.test_norms = [self.scaler.transform(df) for df in self.test_raws]
 
-        with open(f"{self.model_dir}/scaler.pkl", "wb") as f:
-            pickle.dump(self.scaler, f)
+        Path(f"{self.model_dir}/scaler.pkl").write_bytes(pickle.dumps(self.scaler))
 
         log.debug(f"[Data] {len(paths)} stocks loaded: {self.stock_ids}")
 
@@ -127,11 +126,13 @@ class Trainer:
         log.debug(f"[Agent] obs_size={obs_sz} | window={window} | type={ac.get('type', 'dqn')}")
 
     def _setup_cache(self):
-        """Pre-load embedding cache if enabled."""
+        """Pre-load embedding cache if enabled. Fail-fast nếu cache thiếu."""
         self.embedding_cache = None
         training_cfg = self.cfg.training
         if self.analysis_enabled and training_cfg.get("preload_embeddings", True):
             self.embedding_cache = EmbeddingCache(self.stock_ids)
+            # CRITICAL: validate cache đủ trước khi train
+            self.embedding_cache.validate(min_vectors=1)
             log.debug(f"[EmbeddingCache] {self.embedding_cache.stats}")
 
     # ─────────────────────────────────────────────────────────────────
@@ -332,8 +333,9 @@ class Trainer:
 
         # ── Save final ────────────────────────────────────────────────
         self.agent.save(f"{self.model_dir}/last_model.pkl")
-        with open(f"{self.log_dir}/training_log.json", "w", encoding="utf-8") as f:
-            json.dump(history, f, indent=2)
+        Path(f"{self.log_dir}/training_log.json").write_text(
+            json.dumps(history, indent=2), encoding="utf-8"
+        )
 
         elapsed = time.time() - start_t
         log.info(f"Training done: {elapsed/60:.1f}min | best @ ep {best_ep} (score={best_val:.4f})")
@@ -478,10 +480,8 @@ class Trainer:
                 "test_trades": env.trades,
                 "history": history or [],
             }
-            import pickle
-            pkl_path = f"{self.log_dir}/test_results_{symbol}.pkl"
-            with open(pkl_path, "wb") as f:
-                pickle.dump(res, f)
+            pkl_path = Path(f"{self.log_dir}/test_results_{symbol}.pkl")
+            pkl_path.write_bytes(pickle.dumps(res))
 
             # Export ROI table
             export_roi_table(env.trades, self.log_dir, symbol)

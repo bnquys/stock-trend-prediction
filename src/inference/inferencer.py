@@ -50,10 +50,10 @@ class Inferencer:
         self.agent.eps = 0.0  # Greedy inference
 
     def _load_scaler(self, path: str) -> RobustScaler:
-        if not Path(path).exists():
+        p = Path(path)
+        if not p.exists():
             raise FileNotFoundError(f"Scaler not found: {path}")
-        with open(path, "rb") as f:
-            return pickle.load(f)
+        return pickle.loads(p.read_bytes())
 
     def _load_agent(self, path: str) -> DQNAgent:
         if not Path(path).exists():
