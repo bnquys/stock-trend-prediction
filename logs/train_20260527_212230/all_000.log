@@ -1,4 +1,0 @@
-2026-05-27 21:22:30 DEBUG    src.logging_config │ Logging initialized: dir=logs\train_20260527_212230, console=WARNING, file=DEBUG, max_bytes=5000000
-2026-05-27 21:22:31 DEBUG    src.training.trainer │ [Data] 4 stocks loaded: ['VNM', 'FPT', 'VIC', 'HPG']
-2026-05-27 21:22:31 DEBUG    src.rl.agent.dqn_agent │ [Net] Analysis projection: 2560 → [1024, 512, 128]
-2026-05-27 21:22:31 DEBUG    src.rl.agent.dqn_agent │ [Net] Analysis projection: 2560 → [1024, 512, 128]

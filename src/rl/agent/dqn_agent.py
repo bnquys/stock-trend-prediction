@@ -244,15 +244,18 @@ class DQNAgent:
         if self.has_analysis and analysis_embed is not None:
             embed_t = torch.as_tensor(analysis_embed, dtype=torch.float32, device=DEVICE).unsqueeze(0)
 
-        with torch.no_grad():
+        with torch.inference_mode():
             q_values = self.q(obs_t, analysis_embed=embed_t).squeeze(0)
 
-        # Action Masking — tensor indexing avoids Python loop overhead
-        valid_t = torch.tensor(valid_actions, dtype=torch.long, device=DEVICE)
-        q_valid = q_values[valid_t]
-        best_action = valid_actions[q_valid.argmax().item()]
-
-        return best_action
+        # Action Masking — direct numpy for small valid_actions (faster than tensor on CPU)
+        q_np = q_values.numpy()
+        best_idx = 0
+        best_val = -float('inf')
+        for i, a in enumerate(valid_actions):
+            if q_np[a] > best_val:
+                best_val = q_np[a]
+                best_idx = i
+        return valid_actions[best_idx]
 
     def store(self, obs, action, reward, next_obs, done, analysis_embed=None):
         self.buf.push(obs, action, reward, next_obs, done, analysis_embed=analysis_embed)

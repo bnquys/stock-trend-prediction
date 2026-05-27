@@ -2,11 +2,15 @@
 # Logging Config — Per-component level control
 # ════════════════════════════════════════════════════════════════
 
-# File handler: ghi vào logs/train_<timestamp>/all_NNN.log
-# Chia file khi đạt max_bytes, KHÔNG xóa file cũ
+# Base directory for log files (mỗi run tạo subfolder train_<timestamp>/)
+base_dir: "artifacts/logs"
+
+# File handler: RotatingFileHandler — chia file khi đạt max_bytes
+# Giữ tối đa backup_count file cũ (train.log.1, train.log.2, ...)
 file:
   level: DEBUG
-  max_bytes: 5_000_000     # 5MB mỗi file, Notepad mở thoải mái
+  max_bytes: 5_000_000     # 5MB mỗi file
+  backup_count: 100        # Giữ tối đa 100 file cũ (không xóa trong thực tế)
 
 # Console handler: mặc định WARNING (ít output trong notebook)
 console:

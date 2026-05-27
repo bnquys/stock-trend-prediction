@@ -95,6 +95,14 @@ class TradingEnv:
         self._embedding_cache = embedding_cache
         self._analysis_enabled = (stock_id is not None and analysis_model is not None)
 
+        # Precompute dates as python datetime for fast cache lookup (avoid pandas per-step)
+        if self._analysis_enabled:
+            self._dates_dt = [
+                pd.Timestamp(d).to_pydatetime()
+                for d in self.df_raw["date"].values
+            ]
+            self._embed_step_cache: dict[int, np.ndarray] = {}
+
         # ── Precompute ATR(14) cho df_raw ──────────────────────
         self._atr = self._compute_atr(df_raw, period=14)
 
@@ -449,40 +457,44 @@ class TradingEnv:
     def get_analysis_embed(self) -> np.ndarray | None:
         """
         Lấy analysis embedding cho cửa sổ 20 ngày hiện tại.
-
-        Ưu tiên:
-        1. EmbeddingCache (pre-loaded in RAM) → O(1) dict lookup, zero I/O
-        2. Fallback: gọi pipeline() (disk I/O mỗi step)
+        Tối ưu: per-step cache + precomputed dates (tránh pandas/SHA256 mỗi step).
 
         Returns:
             numpy array (2560,) hoặc None nếu analysis không enabled.
         """
         if not self._analysis_enabled:
             return None
+
+        # ── Per-step cache hit (O(1) dict lookup, no hash) ────────
+        step_key = self._step
+        if step_key in self._embed_step_cache:
+            return self._embed_step_cache[step_key]
+
         assert self.analysis_model is not None and self.stock_id is not None
 
-        # Xác định date_start và date_end cho window hiện tại
+        # Dùng precomputed dates (tránh pd.Timestamp + iloc mỗi step)
         safe = min(self._step, self.n - 1)
         start_idx = max(0, safe - self.window + 1)
-
-        date_end = pd.Timestamp(self.df_raw["date"].iloc[safe])
-        date_start = pd.Timestamp(self.df_raw["date"].iloc[start_idx])
+        date_end = self._dates_dt[safe]
+        date_start = self._dates_dt[start_idx]
 
         # ── EmbeddingCache lookup (zero I/O) ─────────────────────
         if self._embedding_cache is not None:
             vector = self._embedding_cache.get(
                 stock_id=self.stock_id,
-                date_start=date_start.to_pydatetime(),
-                date_end=date_end.to_pydatetime(),
+                date_start=date_start,
+                date_end=date_end,
             )
             if vector is not None:
-                return vector.astype(np.float32)
+                result = vector.astype(np.float32)
+                self._embed_step_cache[step_key] = result
+                return result
 
             # Cache miss → CRITICAL error (không fallback)
             msg = (
                 f"CRITICAL: Embedding cache miss! "
                 f"stock={self.stock_id}, step={self._step}, "
-                f"date_range=[{date_start.date()} → {date_end.date()}]. "
+                f"date_range=[{date_start} → {date_end}]. "
                 f"Hãy chạy warmup_cache.ipynb để pre-generate embeddings trước khi training."
             )
             log.critical(msg)

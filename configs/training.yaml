@@ -7,7 +7,7 @@ checkpoint_every:   50
 
 # Performance optimization
 val_every:          5         # Validate mỗi N episodes
-learn_every:        4         # Learn mỗi N steps
+learn_every:        8         # Learn mỗi N steps (8 tối ưu cho CPU, giảm 50% forward passes)
 preload_embeddings: true      # Pre-load embeddings vào RAM
 
 # Display
