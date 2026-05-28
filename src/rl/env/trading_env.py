@@ -23,7 +23,7 @@ import logging
 import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
-from src.features.preprocessor import get_obs, FEAT_COLS
+from src.technical.preprocessor import get_obs, FEAT_COLS
 
 log = logging.getLogger(__name__)
 
