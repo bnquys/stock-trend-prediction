@@ -58,12 +58,10 @@ agent:
   patience:     80              # Kiên nhẫn hơn trước khi early stop
   checkpoint_every: 50
 
-# ── Analysis Embedding (phân tích cơ bản từ LLM) ──────────────────
+# ── Analysis (phân tích cơ bản từ LLM) ────────────────────────────
+# Chi tiết LLM, embedding, dim, projection → src/fundamental/config.yaml
 analysis:
   enabled:    true                          # true/false để switch on/off
-  model:      "unsloth/Qwen2.5-14B-Instruct-bnb-4bit"   # LLM model cho pipeline
-  embed_dim:  2560                          # Chiều embedding từ pipeline
-  projection: [1024, 512, 128]              # Giảm chiều từ từ: 2560→1024→512→128
 
 # ── Training Optimization ─────────────────────────────────────────
 training:

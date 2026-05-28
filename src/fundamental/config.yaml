@@ -1,8 +1,8 @@
 # ════════════════════════════════════════════════════════════════
-# Analysis Config — LLM & Embedding Pipeline
+# Fundamental Config — LLM & Embedding Pipeline
 # Đặt trong package src/fundamental/ để dễ quản lý
+# enabled flag nằm trong configs/config.yaml → analysis.enabled
 # ════════════════════════════════════════════════════════════════
-enabled:    true
 
 # ── LLM (phân tích cơ bản/ báo cáo tài chính) ──────────────────────────────────
 llm:

@@ -4,7 +4,7 @@ src/config.py
 ConfigLoader — Merge multiple YAML config files into a single Config object.
 
 Supports:
-  - Modular configs (base.yaml, env.yaml, agent.yaml, analysis.yaml, training.yaml)
+  - Modular configs (base.yaml, env.yaml, agent.yaml, training.yaml)
   - Single legacy config (config.yaml) for backward compatibility
   - CLI overrides via dot-notation (e.g., --set agent.lr=0.001)
 ════════════════════════════════════════════════════════════════════════════
@@ -41,7 +41,8 @@ class Config:
     def from_dir(cls, config_dir: str | Path = "configs/") -> "Config":
         """
         Load modular configs from a directory.
-        Files: base.yaml, env.yaml, agent.yaml, analysis.yaml, training.yaml
+        Files: base.yaml, env.yaml, agent.yaml, training.yaml
+        Analysis config (dim, projection) lives in src/fundamental/config.yaml.
         """
         d = Path(config_dir)
         base = _load_yaml(d / "base.yaml")
@@ -52,7 +53,7 @@ class Config:
             split=base.get("split", {}),
             env=_load_yaml(d / "env.yaml"),
             agent=_load_yaml(d / "agent.yaml"),
-            analysis=_load_yaml(d / "analysis.yaml"),
+            analysis=base.get("analysis", {}),
             training=_load_yaml(d / "training.yaml"),
             output=base.get("output", {}),
         )
