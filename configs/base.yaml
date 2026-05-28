@@ -17,7 +17,5 @@ split:
   val_ratio:   0.1
 
 output:
-  model_dir:  "artifacts/weights"
-  log_dir:    "artifacts/logs"
-  chart_dir:  "artifacts/outputs"
+  base_dir:   "artifacts/outputs"
   dpi:        150

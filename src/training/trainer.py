@@ -3,6 +3,19 @@ src/training/trainer.py
 ════════════════════════════════════════════════════════════════════════════
 Trainer — OOP wrapper for the training loop.
 
+Output structure:
+    outputs/output_<timestamp>/
+    ├── logs.json              ← parameters + runtime + results
+    ├── training_log.json      ← episode history
+    ├── weights/
+    │   ├── best_model.pkl
+    │   ├── last_model.pkl
+    │   ├── ckpt_ep*.pkl
+    │   └── scaler.pkl
+    └── charts/
+        ├── <stock_id>/        ← per-stock charts
+        └── training_curves.png
+
 Usage:
     from src.config import Config
     from src.training import Trainer
@@ -14,6 +27,7 @@ Usage:
 """
 from __future__ import annotations
 import json, logging, os, pickle, time
+from datetime import datetime
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -37,6 +51,7 @@ class Trainer:
       3. Agent creation
       4. Training loop with curriculum learning
       5. Checkpointing & early stopping
+      6. Test evaluation & chart generation
     """
 
     def __init__(self, cfg: Config):
@@ -56,12 +71,19 @@ class Trainer:
     # ─────────────────────────────────────────────────────────────────
 
     def _setup_dirs(self):
-        self.model_dir = self.cfg.output.get("model_dir", "models")
-        self.log_dir = self.cfg.output.get("log_dir", "logs")
-        self.chart_dir = self.cfg.output.get("chart_dir", "outputs")
-        os.makedirs(self.model_dir, exist_ok=True)
-        os.makedirs(self.log_dir, exist_ok=True)
-        os.makedirs(self.chart_dir, exist_ok=True)
+        """Create timestamped output directory with subdirs."""
+        base_dir = self.cfg.output.get("base_dir", "outputs")
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.run_id = f"output_{ts}"
+        self.run_dir = Path(base_dir) / self.run_id
+
+        self.weights_dir = self.run_dir / "weights"
+        self.charts_dir = self.run_dir / "charts"
+
+        os.makedirs(self.weights_dir, exist_ok=True)
+        os.makedirs(self.charts_dir, exist_ok=True)
+
+        log.info(f"[Output] Run directory: {self.run_dir}")
 
     def _setup_data(self):
         """Load CSVs, split, scale."""
@@ -88,7 +110,7 @@ class Trainer:
         self.val_norms = [self.scaler.transform(df) for df in self.val_raws]
         self.test_norms = [self.scaler.transform(df) for df in self.test_raws]
 
-        with open(f"{self.model_dir}/scaler.pkl", "wb") as f:
+        with open(self.weights_dir / "scaler.pkl", "wb") as f:
             pickle.dump(self.scaler, f)
 
         log.debug(f"[Data] {len(paths)} stocks loaded: {self.stock_ids}")
@@ -175,8 +197,6 @@ class Trainer:
             ep_label = f"Ep{episode_num}"
             if stock_id:
                 ep_label += f" ({stock_id})"
-            # Inner step progress bar mặc định OFF để tránh nổ output
-            # trong notebook. Bật bằng training.show_step_progress: true.
             show_step_pb = self.cfg.training.get("show_step_progress", False)
             step_bar = tqdm(total=total_steps, desc=f"  {ep_label}",
                             unit="step", leave=False, dynamic_ncols=True,
@@ -203,7 +223,6 @@ class Trainer:
                         step_bar.set_postfix_str(f"R={cum_reward:+.1f}")
 
                 except Exception as e:
-                    # exc_info=True ghi full traceback vào logs/train.log
                     log.error(
                         f"Step error at ep {episode_num}, step {step_count}: {e}",
                         exc_info=True,
@@ -251,11 +270,11 @@ class Trainer:
             log.info(f"[Resume] from episode {start_ep}")
 
         # State
+        self._start_time = time.time()
         history: list[dict] = []
         best_val = -float("inf")
         best_ep = 0
         pat_cnt = 0
-        start_t = time.time()
         learned_once = False
         val_history: deque = deque(maxlen=10)
         vl_m = self._empty_metrics()
@@ -265,6 +284,7 @@ class Trainer:
         pbar = tqdm(range(start_ep, n_ep + 1), desc="Training", unit="ep",
                     dynamic_ncols=True, initial=start_ep - 1, total=n_ep)
 
+        early_stopped = False
         for ep in pbar:
             # ── Curriculum: select stock ──────────────────────────────
             stock_idx = self._curriculum_select(ep, n_ep)
@@ -317,27 +337,282 @@ class Trainer:
                     best_val = score
                     best_ep = ep
                     pat_cnt = 0
-                    self.agent.save(f"{self.model_dir}/best_model.pkl")
+                    self.agent.save(str(self.weights_dir / "best_model.pkl"))
                     log.info(f"  → New best (score={score:.4f}) @ ep {ep}")
                 else:
                     pat_cnt += 1
 
             if ep % ckpt_every == 0:
-                self.agent.save(f"{self.model_dir}/ckpt_ep{ep}.pkl")
+                self.agent.save(str(self.weights_dir / f"ckpt_ep{ep}.pkl"))
 
             # ── Early stopping ────────────────────────────────────────
             if learned_once and pat_cnt >= patience and self.agent.eps < 0.3:
                 log.info(f"Early stop @ ep {ep}")
+                early_stopped = True
                 break
 
         # ── Save final ────────────────────────────────────────────────
-        self.agent.save(f"{self.model_dir}/last_model.pkl")
-        with open(f"{self.log_dir}/training_log.json", "w", encoding="utf-8") as f:
+        self.agent.save(str(self.weights_dir / "last_model.pkl"))
+        with open(self.run_dir / "training_log.json", "w", encoding="utf-8") as f:
             json.dump(history, f, indent=2)
 
-        elapsed = time.time() - start_t
+        elapsed = time.time() - self._start_time
         log.info(f"Training done: {elapsed/60:.1f}min | best @ ep {best_ep} (score={best_val:.4f})")
+
+        # ── Write logs.json ───────────────────────────────────────────
+        self._write_run_log(
+            history=history,
+            best_ep=best_ep,
+            best_score=best_val,
+            total_episodes=len(history),
+            early_stopped=early_stopped,
+        )
+
+        # ── Auto evaluate + charts ───────────────────────────────────
+        test_results = self.evaluate()
+        self.export_roi_table(test_results)
+        self.generate_charts(test_results)
+
+        log.info(f"✅ All outputs → {self.run_dir}")
         return history
+
+    # ─────────────────────────────────────────────────────────────────
+    # Evaluate (test set)
+    # ─────────────────────────────────────────────────────────────────
+
+    def evaluate(self, model_path: str | None = None):
+        """
+        Evaluate on test set using best model.
+        Returns dict of {stock_id: {metrics, trades, result_df}}.
+        """
+        # Load best model
+        best_path = model_path or str(self.weights_dir / "best_model.pkl")
+        if Path(best_path).exists():
+            self.agent.load(best_path)
+        self.agent.eps = 0.0  # Greedy
+
+        env_cfg = self.cfg.env
+        results = {}
+
+        for stock_idx in range(len(self.test_raws)):
+            symbol = self.stock_ids[stock_idx]
+            te_raw = self.test_raws[stock_idx]
+            te_norm = self.test_norms[stock_idx]
+
+            test_env = TradingEnv(
+                df_raw=te_raw, df_norm=te_norm,
+                window=env_cfg["window"],
+                init_cap=env_cfg["initial_cap"],
+                tx_cost=env_cfg.get("tx_cost", 0.0015),
+                sell_tax=env_cfg.get("sell_tax", 0.001),
+                slippage=env_cfg.get("slippage", 0.0003),
+                atr_sl_mult=env_cfg.get("atr_sl_mult", 1.5),
+                atr_tp_mult=env_cfg.get("atr_tp_mult", 3.0),
+                risk_per_trade=env_cfg.get("risk_per_trade", 0.02),
+                stop_loss=env_cfg["stop_loss"],
+                take_profit=env_cfg["take_profit"],
+                max_hold=env_cfg.get("max_hold", 60),
+                t_plus=env_cfg.get("t_plus", 2),
+                lot_size=env_cfg.get("lot_size", 100),
+                price_limit=env_cfg.get("price_limit", 0.07),
+                stock_id=symbol if self.analysis_enabled else None,
+                analysis_model=self.analysis_model,
+                embedding_cache=self.embedding_cache,
+            )
+
+            obs = test_env.reset()
+            done = False
+            acts: list[int] = []
+            eqs: list[float] = []
+
+            while not done:
+                analysis_embed = test_env.get_analysis_embed()
+                a = self.agent.act(obs, valid_actions=test_env.valid_actions(),
+                                   greedy=True, analysis_embed=analysis_embed)
+                obs, _, done, info = test_env.step(a)
+                acts.append(a)
+                eqs.append(info["equity"])
+
+            test_m = test_env.metrics()
+            test_m["obs_size"] = self.obs_sz
+
+            # Build result_df
+            window = env_cfg["window"]
+            n_valid = min(len(acts), len(te_raw) - window)
+            result_df = te_raw.iloc[window: window + n_valid].copy().reset_index(drop=True)
+            result_df["rl_action"] = acts[:n_valid]
+            result_df["rl_equity"] = eqs[:n_valid]
+
+            buy_flags = [False] * n_valid
+            sell_flags = [False] * n_valid
+            for t in test_env.trades:
+                idx = t["step"] - window
+                if 0 <= idx < n_valid:
+                    if t["type"] == "BUY":
+                        buy_flags[idx] = True
+                    elif t["type"] in ["SELL", "AUTO_EXIT"]:
+                        sell_flags[idx] = True
+            result_df["buy_signal"] = buy_flags
+            result_df["sell_signal"] = sell_flags
+
+            results[symbol] = {
+                "metrics": test_m,
+                "trades": test_env.trades,
+                "result_df": result_df,
+            }
+
+            log.info(f"[Test {symbol}] return={test_m['return_pct']:+.2f}% "
+                     f"sharpe={test_m['sharpe']:.3f} trades={test_m['n_trades']} "
+                     f"WR={test_m['win_rate']:.0f}%")
+
+            # Save test results pkl
+            with open(self.run_dir / f"test_results_{symbol}.pkl", "wb") as f:
+                pickle.dump(results[symbol], f)
+
+        return results
+
+    # ─────────────────────────────────────────────────────────────────
+    # Charts
+    # ─────────────────────────────────────────────────────────────────
+
+    def generate_charts(self, test_results: dict | None = None):
+        """
+        Generate charts for training curves and per-stock test results.
+        Charts are saved into run_dir/charts/.
+
+        Args:
+            test_results: Output from evaluate(). If None, generates only training curves.
+        """
+        try:
+            from src.visualization.charts import (
+                generate_all, plot_training
+            )
+        except ImportError as e:
+            log.warning(f"[Charts] Cannot import visualization: {e}")
+            return
+
+        # Training curves (from training_log.json)
+        log_path = self.run_dir / "training_log.json"
+        if log_path.exists():
+            with open(log_path, encoding="utf-8") as f:
+                history = json.load(f)
+            plot_training(history, out_path=str(self.charts_dir / "training_curves.png"))
+
+        # Per-stock charts
+        if test_results:
+            for symbol, res in test_results.items():
+                stock_chart_dir = str(self.charts_dir / symbol)
+                # Load history for dashboard
+                history = []
+                if log_path.exists():
+                    with open(log_path, encoding="utf-8") as f:
+                        history = json.load(f)
+
+                generate_all(
+                    result_df=res["result_df"],
+                    metrics=res["metrics"],
+                    trades=res["trades"],
+                    history=history,
+                    initial_cap=self.cfg.env["initial_cap"],
+                    out_dir=stock_chart_dir,
+                    symbol=symbol,
+                )
+
+        log.info(f"[Charts] Generated → {self.charts_dir}")
+
+    # ─────────────────────────────────────────────────────────────────
+    # ROI Table
+    # ─────────────────────────────────────────────────────────────────
+
+    def export_roi_table(self, test_results: dict | None = None):
+        """Export ROI table CSV for each stock's test trades."""
+        if not test_results:
+            return
+
+        for symbol, res in test_results.items():
+            trades = res.get("trades", [])
+            closed_trades = [t for t in trades if t["type"] in ["SELL", "AUTO_EXIT"]]
+            if not closed_trades:
+                continue
+
+            buy_trades = [t for t in trades if t["type"] == "BUY"]
+            roi_data = []
+            buy_idx = 0
+
+            for ct in closed_trades:
+                buy_date = "N/A"
+                shares = 0
+                while buy_idx < len(buy_trades) and buy_trades[buy_idx]["step"] <= ct["step"]:
+                    b_trade = buy_trades[buy_idx]
+                    buy_date = b_trade["date"]
+                    shares = b_trade.get("shares", 0)
+                    buy_idx += 1
+                    break
+
+                entry_price = ct["entry_price"]
+                exit_price = ct["price"]
+                pnl_pct = ct["pnl_pct"]
+                hold_days = ct.get("hold_days", 0)
+                reason = ct.get("reason", "manual")
+                capital_invested = shares * entry_price
+                profit = capital_invested * (pnl_pct / 100)
+
+                roi_data.append({
+                    "Buy Date": buy_date,
+                    "Sell Date": ct["date"],
+                    "Shares": shares,
+                    "Entry (VND)": entry_price,
+                    "Exit (VND)": exit_price,
+                    "Hold Days": hold_days,
+                    "Exit Reason": reason.upper(),
+                    "Invested (VND)": f"{capital_invested:,.0f}",
+                    "P/L (VND)": f"{profit:,.0f}",
+                    "ROI (%)": pnl_pct,
+                })
+
+            df_roi = pd.DataFrame(roi_data)
+            out_path = self.run_dir / f"roi_table_{symbol}.csv"
+            df_roi.to_csv(out_path, index=False)
+            log.info(f"[ROI] {symbol}: {len(roi_data)} trades → {out_path}")
+
+    # ─────────────────────────────────────────────────────────────────
+    # logs.json
+    # ─────────────────────────────────────────────────────────────────
+
+    def _write_run_log(self, history: list[dict], best_ep: int,
+                       best_score: float, total_episodes: int,
+                       early_stopped: bool):
+        """Write logs.json with parameters, runtime, and results."""
+        elapsed = time.time() - self._start_time
+        started_at = datetime.fromtimestamp(self._start_time).isoformat()
+        finished_at = datetime.now().isoformat()
+
+        run_log = {
+            "run_id": self.run_id,
+            "started_at": started_at,
+            "finished_at": finished_at,
+            "elapsed_minutes": round(elapsed / 60, 2),
+            "parameters": {
+                "project": self.cfg.project,
+                "data": self.cfg.data,
+                "split": self.cfg.split,
+                "env": self.cfg.env,
+                "agent": self.cfg.agent,
+                "analysis": self.cfg.analysis,
+                "training": self.cfg.training,
+            },
+            "result": {
+                "best_episode": best_ep,
+                "best_score": round(best_score, 4),
+                "total_episodes": total_episodes,
+                "early_stopped": early_stopped,
+            },
+        }
+
+        with open(self.run_dir / "logs.json", "w", encoding="utf-8") as f:
+            json.dump(run_log, f, indent=2, ensure_ascii=False, default=str)
+
+        log.info(f"[Logs] Run metadata → {self.run_dir / 'logs.json'}")
 
     # ─────────────────────────────────────────────────────────────────
     # Helpers
