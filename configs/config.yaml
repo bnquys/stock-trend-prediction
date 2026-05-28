@@ -54,6 +54,9 @@ agent:
   buffer_cap:   20000           # Buffer vừa đủ (~27 episodes) — tiết kiệm RAM
   batch_size:   256             # Batch lớn → gradient ổn định hơn với obs_size=547
   warmup:       1000            # Đợi buffer đầy hơn trước khi học
+  weight_decay: 0.0001          # L2 regularization cho Adam optimizer
+  grad_clip:    1.0             # Max norm gradient clipping
+  loss_fn:      "huber"         # Loss function: "huber" hoặc "mse"
   n_episodes:   500
   patience:     80              # Kiên nhẫn hơn trước khi early stop
   checkpoint_every: 50

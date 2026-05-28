@@ -143,6 +143,9 @@ class Trainer:
             buffer_cap=ac["buffer_cap"],
             batch_size=ac["batch_size"],
             warmup=ac["warmup"],
+            weight_decay=ac.get("weight_decay", 1e-4),
+            grad_clip=ac.get("grad_clip", 1.0),
+            loss_fn=ac.get("loss_fn", "huber"),
             analysis_embed_dim=analysis_cfg.get("embed_dim") if analysis_enabled else None,
             analysis_proj_layers=analysis_cfg.get("projection") if analysis_enabled else None,
         )
@@ -359,19 +362,20 @@ class Trainer:
         elapsed = time.time() - self._start_time
         log.info(f"Training done: {elapsed/60:.1f}min | best @ ep {best_ep} (score={best_val:.4f})")
 
-        # ── Write logs.json ───────────────────────────────────────────
+        # ── Auto evaluate + charts ───────────────────────────────────
+        test_results = self.evaluate()
+        self.export_roi_table(test_results)
+        self.generate_charts(test_results)
+
+        # ── Write logs.json (after evaluate to include test_metrics) ──
         self._write_run_log(
             history=history,
             best_ep=best_ep,
             best_score=best_val,
             total_episodes=len(history),
             early_stopped=early_stopped,
+            test_results=test_results,
         )
-
-        # ── Auto evaluate + charts ───────────────────────────────────
-        test_results = self.evaluate()
-        self.export_roi_table(test_results)
-        self.generate_charts(test_results)
 
         log.info(f"✅ All outputs → {self.run_dir}")
         return history
@@ -581,17 +585,71 @@ class Trainer:
 
     def _write_run_log(self, history: list[dict], best_ep: int,
                        best_score: float, total_episodes: int,
-                       early_stopped: bool):
+                       early_stopped: bool,
+                       test_results: dict | None = None):
         """Write logs.json with parameters, runtime, and results."""
         elapsed = time.time() - self._start_time
         started_at = datetime.fromtimestamp(self._start_time).isoformat()
         finished_at = datetime.now().isoformat()
+
+        # ── Load fundamental config for model names ───────────────
+        fundamental_cfg: dict = {}
+        fund_cfg_path = Path("src/fundamental/config.yaml")
+        if fund_cfg_path.exists():
+            import yaml
+            with open(fund_cfg_path, encoding="utf-8") as f:
+                fundamental_cfg = yaml.safe_load(f) or {}
+
+        # ── Build test_metrics summary ────────────────────────────
+        test_metrics: dict = {}
+        if test_results:
+            all_returns, all_sharpes, all_wr, all_dd, all_trades, all_pf = [], [], [], [], [], []
+            for symbol, res in test_results.items():
+                m = res["metrics"]
+                stock_summary = {
+                    "return_pct": round(float(m.get("return_pct", 0)), 2),
+                    "sharpe": round(float(m.get("sharpe", 0)), 4),
+                    "win_rate": round(float(m.get("win_rate", 0)), 1),
+                    "max_dd_pct": round(float(m.get("max_dd_pct", 0)), 2),
+                    "n_trades": int(m.get("n_trades", 0)),
+                    "profit_factor": round(float(m.get("pf", 0)), 2),
+                    "avg_win": round(float(m.get("avg_win", 0)), 2),
+                    "avg_loss": round(float(m.get("avg_loss", 0)), 2),
+                }
+                test_metrics[symbol] = stock_summary
+                all_returns.append(stock_summary["return_pct"])
+                all_sharpes.append(stock_summary["sharpe"])
+                all_wr.append(stock_summary["win_rate"])
+                all_dd.append(stock_summary["max_dd_pct"])
+                all_trades.append(stock_summary["n_trades"])
+                all_pf.append(stock_summary["profit_factor"])
+
+            # Average across all stocks
+            if all_returns:
+                test_metrics["average"] = {
+                    "return_pct": round(float(np.mean(all_returns)), 2),
+                    "sharpe": round(float(np.mean(all_sharpes)), 4),
+                    "win_rate": round(float(np.mean(all_wr)), 1),
+                    "max_dd_pct": round(float(np.mean(all_dd)), 2),
+                    "n_trades": int(np.mean(all_trades)),
+                    "profit_factor": round(float(np.mean(all_pf)), 2),
+                }
+
+        # ── Model names ───────────────────────────────────────────
+        llm_cfg = fundamental_cfg.get("llm", {})
+        embed_cfg = fundamental_cfg.get("embedding", {})
+        models_info = {
+            "llm_model": llm_cfg.get("model", "N/A"),
+            "embedding_model": embed_cfg.get("model", "N/A"),
+            "embedding_dim": embed_cfg.get("dim", 0),
+        }
 
         run_log = {
             "run_id": self.run_id,
             "started_at": started_at,
             "finished_at": finished_at,
             "elapsed_minutes": round(elapsed / 60, 2),
+            "models": models_info,
             "parameters": {
                 "project": self.cfg.project,
                 "data": self.cfg.data,
@@ -606,6 +664,7 @@ class Trainer:
                 "best_score": round(best_score, 4),
                 "total_episodes": total_episodes,
                 "early_stopped": early_stopped,
+                "test_metrics": test_metrics,
             },
         }
 

@@ -5,6 +5,7 @@ Trading Simulation UI — Gradio App
 
 4 tabs riêng biệt cho 4 mã cổ phiếu (VNM, FPT, VIC, HPG).
 Mỗi tab mô phỏng trading thời gian thực trên test-set.
+Hỗ trợ chọn model từ Dropdown (chỉ hiện các run đã train hoàn chỉnh).
 
 Usage:
     python -m src.ui.app
@@ -13,6 +14,7 @@ Usage:
 """
 from __future__ import annotations
 
+import json
 import logging
 import pickle
 import sys
@@ -35,6 +37,97 @@ from src.ui.components import create_candlestick_chart, format_prediction, forma
 log = logging.getLogger(__name__)
 
 # ─────────────────────────────────────────────────────────────────────────
+# Model Discovery
+# ─────────────────────────────────────────────────────────────────────────
+
+def list_available_models() -> list[dict]:
+    """
+    Scan artifacts/outputs/ for completed training runs.
+    A run is considered complete if it has both:
+      - weights/best_model.pkl
+      - logs.json
+    Returns list of dicts with run info, sorted newest first.
+    """
+    outputs_dir = _PROJECT_ROOT / "artifacts" / "outputs"
+    if not outputs_dir.exists():
+        return []
+
+    models = []
+    for logs_path in sorted(outputs_dir.glob("output_*/logs.json"), reverse=True):
+        run_dir = logs_path.parent
+        weights_path = run_dir / "weights" / "best_model.pkl"
+        if not weights_path.exists():
+            continue
+
+        # Read logs.json for display info
+        try:
+            with open(logs_path, encoding="utf-8") as f:
+                run_log = json.load(f)
+
+            # Extract key info for display
+            result = run_log.get("result", {})
+            test_metrics = result.get("test_metrics", {})
+            avg = test_metrics.get("average", {})
+            params = run_log.get("parameters", {})
+            env_params = params.get("env", {})
+            agent_params = params.get("agent", {})
+            models_info = run_log.get("models", {})
+
+            models.append({
+                "run_id": run_log.get("run_id", run_dir.name),
+                "run_dir": str(run_dir),
+                "weights_dir": str(run_dir / "weights"),
+                "finished_at": run_log.get("finished_at", ""),
+                "elapsed_min": run_log.get("elapsed_minutes", 0),
+                "best_score": result.get("best_score", 0),
+                "sharpe": avg.get("sharpe", 0),
+                "return_pct": avg.get("return_pct", 0),
+                "win_rate": avg.get("win_rate", 0),
+                "n_trades": avg.get("n_trades", 0),
+                "window": env_params.get("window", 20),
+                "gamma": agent_params.get("gamma", 0.97),
+                "lr": agent_params.get("lr", 0.0005),
+                "llm_model": models_info.get("llm_model", "N/A"),
+                "embedding_model": models_info.get("embedding_model", "N/A"),
+            })
+        except (json.JSONDecodeError, KeyError) as e:
+            log.warning(f"Skipping {run_dir.name}: {e}")
+            continue
+
+    return models
+
+
+def format_model_choice(model: dict) -> str:
+    """Format model info for Dropdown display."""
+    return (
+        f"{model['run_id']} | "
+        f"Sharpe={model['sharpe']:.2f} | "
+        f"Return={model['return_pct']:+.1f}% | "
+        f"WR={model['win_rate']:.0f}% | "
+        f"γ={model['gamma']} | "
+        f"w={model['window']}"
+    )
+
+
+def format_model_info(model: dict) -> str:
+    """Format detailed model info as Markdown."""
+    return (
+        f"**Model:** `{model['run_id']}`  \n"
+        f"**Finished:** {model['finished_at']}  \n"
+        f"**Score:** {model['best_score']:.4f} | "
+        f"**Sharpe:** {model['sharpe']:.3f} | "
+        f"**Return:** {model['return_pct']:+.2f}% | "
+        f"**Win Rate:** {model['win_rate']:.0f}% | "
+        f"**Trades:** {model['n_trades']}  \n"
+        f"**Window:** {model['window']} | "
+        f"**Gamma:** {model['gamma']} | "
+        f"**LR:** {model['lr']}  \n"
+        f"**LLM:** {model['llm_model']} | "
+        f"**Embedding:** {model['embedding_model']}"
+    )
+
+
+# ─────────────────────────────────────────────────────────────────────────
 # Initialization
 # ─────────────────────────────────────────────────────────────────────────
 
@@ -47,18 +140,22 @@ def find_latest_weights() -> Path:
             "Please train a model first with `python -m scripts.train`."
         )
 
-    # Find latest output_* directory with weights/best_model.pkl
-    candidates = sorted(outputs_dir.glob("output_*/weights/best_model.pkl"), reverse=True)
+    # Find latest output_* directory with weights/best_model.pkl AND logs.json
+    candidates = sorted(
+        [p for p in outputs_dir.glob("output_*/weights/best_model.pkl")
+         if (p.parent.parent / "logs.json").exists()],
+        reverse=True,
+    )
     if not candidates:
         raise FileNotFoundError(
-            f"No trained model found in {outputs_dir}/output_*/weights/. "
+            f"No completed training run found in {outputs_dir}/output_*/. "
             "Please train a model first."
         )
 
     return candidates[0].parent  # Return weights/ directory
 
 
-def init_app() -> tuple[Config, DQNAgent, dict[str, TradingSimulator]]:
+def init_app(weights_dir: Path | None = None) -> tuple[Config, DQNAgent, dict[str, TradingSimulator]]:
     """Initialize config, agent, and simulators for all stocks."""
     print("[*] Initializing Trading Simulation UI...")
 
@@ -67,7 +164,8 @@ def init_app() -> tuple[Config, DQNAgent, dict[str, TradingSimulator]]:
     print(f"   [OK] Config loaded")
 
     # Find weights
-    weights_dir = find_latest_weights()
+    if weights_dir is None:
+        weights_dir = find_latest_weights()
     print(f"   [OK] Weights: {weights_dir}")
 
     # Load scaler
@@ -111,6 +209,9 @@ def init_app() -> tuple[Config, DQNAgent, dict[str, TradingSimulator]]:
         buffer_cap=ac["buffer_cap"],
         batch_size=ac["batch_size"],
         warmup=ac["warmup"],
+        weight_decay=ac.get("weight_decay", 1e-4),
+        grad_clip=ac.get("grad_clip", 1.0),
+        loss_fn=ac.get("loss_fn", "huber"),
         analysis_embed_dim=analysis_cfg.get("embed_dim") if analysis_enabled else None,
         analysis_proj_layers=analysis_cfg.get("projection") if analysis_enabled else None,
     )
@@ -253,7 +354,16 @@ def build_tab(stock_id: str, sim: TradingSimulator, cfg: Config):
 
 
 def build_app(simulators: dict[str, TradingSimulator], cfg: Config) -> gr.Blocks:
-    """Build the full Gradio app with 4 tabs."""
+    """Build the full Gradio app with model selector and stock tabs."""
+
+    # Discover available models
+    available_models = list_available_models()
+    model_choices = [format_model_choice(m) for m in available_models]
+    model_map = {format_model_choice(m): m for m in available_models}
+
+    # Default to first (latest) model
+    default_choice = model_choices[0] if model_choices else "No models found"
+    default_info = format_model_info(available_models[0]) if available_models else "Không tìm thấy model nào."
 
     with gr.Blocks(
         title="RL Trading Simulator",
@@ -262,11 +372,59 @@ def build_app(simulators: dict[str, TradingSimulator], cfg: Config) -> gr.Blocks
             """
             # 🏦 RL Trading Simulator — HOSE Vietnam
             **Mô phỏng giao dịch thời gian thực** trên test-set với DQN Agent đã huấn luyện.
-            Bấm **Next Day ▶** để tiến từng ngày giao dịch.
+            Chọn model bên dưới, rồi bấm **Next Day ▶** để tiến từng ngày giao dịch.
             """
         )
 
-        # Create one tab per stock
+        # ── Model Selector ────────────────────────────────────────────
+        with gr.Row():
+            with gr.Column(scale=3):
+                model_dropdown = gr.Dropdown(
+                    choices=model_choices,
+                    value=default_choice,
+                    label="🧠 Chọn Model (chỉ hiện các run đã train hoàn chỉnh)",
+                    interactive=True,
+                )
+            with gr.Column(scale=1):
+                load_btn = gr.Button("🔄 Load Model", variant="primary", size="lg")
+
+        model_info_md = gr.Markdown(value=default_info, label="Model Info")
+
+        # ── Model load callback ───────────────────────────────────────
+        def on_load_model(choice):
+            if choice not in model_map:
+                return "❌ Model không hợp lệ. Vui lòng chọn lại."
+
+            model = model_map[choice]
+            weights_dir = Path(model["weights_dir"])
+
+            # Reload agent with new weights
+            model_path = weights_dir / "best_model.pkl"
+            if not model_path.exists():
+                return f"❌ Không tìm thấy weights: {model_path}"
+
+            try:
+                # All simulators share the same agent reference
+                # Load new weights once, then reset all simulators
+                agent_ref = next(iter(simulators.values())).agent
+                agent_ref.load(str(model_path))
+                agent_ref.eps = 0.0
+
+                for sim in simulators.values():
+                    sim.reset()
+
+                info = format_model_info(model)
+                return f"✅ Đã load model thành công!\n\n{info}"
+            except Exception as e:
+                return f"❌ Lỗi khi load model: {e}"
+
+        load_btn.click(
+            fn=on_load_model,
+            inputs=[model_dropdown],
+            outputs=[model_info_md],
+        )
+
+        # ── Stock Tabs ────────────────────────────────────────────────
         stock_ids = list(simulators.keys())
         with gr.Tabs():
             for sid in stock_ids:

@@ -171,6 +171,10 @@ class DQNAgent:
         buffer_cap: int   = 20_000,
         batch_size: int   = 256,
         warmup:     int   = 1000,
+        # ── Optimizer & training config ───────────────────────────
+        weight_decay: float = 1e-4,
+        grad_clip:    float = 1.0,
+        loss_fn:      str   = "huber",
         # ── Analysis embedding config ─────────────────────────────
         analysis_embed_dim: int | None = None,
         analysis_proj_layers: list[int] | None = None,
@@ -189,6 +193,10 @@ class DQNAgent:
         self.lr_min     = lr_min
         self.current_lr = lr
 
+        self.weight_decay = weight_decay
+        self.grad_clip    = grad_clip
+        self.loss_fn      = loss_fn
+
         self.has_analysis = analysis_embed_dim is not None
 
         h = hidden or [256, 128, 64]
@@ -201,7 +209,7 @@ class DQNAgent:
         self.q_tgt.load_state_dict(self.q.state_dict())
         self.q_tgt.eval()
 
-        self.optimizer = optim.Adam(self.q.parameters(), lr=lr, weight_decay=1e-4)
+        self.optimizer = optim.Adam(self.q.parameters(), lr=lr, weight_decay=self.weight_decay)
         self.buf    = ReplayBuffer(
             cap=buffer_cap,
             obs_size=obs_size,
@@ -267,11 +275,14 @@ class DQNAgent:
         q_cur = self.q(obs_b, analysis_embed=embed_b).gather(1, act_b.unsqueeze(1)).squeeze(1)
 
         # ── Loss & Optimizer ────────────────────────────────────
-        loss = F.huber_loss(q_cur, target)
+        if self.loss_fn == "mse":
+            loss = F.mse_loss(q_cur, target)
+        else:
+            loss = F.huber_loss(q_cur, target)
 
         self.optimizer.zero_grad()
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(self.q.parameters(), max_norm=1.0)
+        torch.nn.utils.clip_grad_norm_(self.q.parameters(), max_norm=self.grad_clip)
         self.optimizer.step()
 
         # Soft target update
