@@ -143,6 +143,9 @@ class Trainer:
             buffer_cap=ac["buffer_cap"],
             batch_size=ac["batch_size"],
             warmup=ac["warmup"],
+            weight_decay=ac.get("weight_decay", 1e-4),
+            grad_clip=ac.get("grad_clip", 1.0),
+            loss_fn=ac.get("loss_fn", "huber"),
             analysis_embed_dim=analysis_cfg.get("embed_dim") if analysis_enabled else None,
             analysis_proj_layers=analysis_cfg.get("projection") if analysis_enabled else None,
         )
