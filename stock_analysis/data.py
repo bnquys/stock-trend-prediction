@@ -9,12 +9,13 @@ log = logging.getLogger(__name__)
 
 
 _PACKAGE_DIR = Path(__file__).parent
+_PROJECT_ROOT = _PACKAGE_DIR.parent
 
 
 class Data:
     """Đại diện cho dữ liệu của một mã chứng khoán. Không phụ thuộc vnstock_data."""
 
-    def __init__(self, id: str, root: Path = _PACKAGE_DIR / "st_data"):
+    def __init__(self, id: str, root: Path = _PROJECT_ROOT / "artifacts" / "embeddings"):
         self.id = id
         self.root = root
         self._validate_data()

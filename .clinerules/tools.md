@@ -1,0 +1,20 @@
+# PROJECT ENVIRONMENT SETTINGS
+You must strictly follow these environment rules for all terminal commands and code executions:
+
+1. OS & Terminal:
+   - Operating System: Windows
+   - Shell: PowerShell (pwsh / powershell)
+   - Always use Windows-compatible paths (backslash `\` or properly quoted forward slash `/` if handled by git/uv).
+   - Use PowerShell syntax for commands (e.g., `$env:VAR="value"` instead of `export VAR="value"`, `rm -Recurse -Force` instead of `rm -rf`).
+
+2. Python Environment Manager:
+   - This project exclusively uses `uv` by Astral (not pip, not venv, not conda).
+   - To run a script: Always use `uv run python <script_name>.py` or `uv run <command>`.
+   - To add a package: Use `uv add <package_name>`.
+   - To remove a package: Use `uv remove <package_name>`.
+   - Do NOT attempt to activate virtual environments using `.\.venv\Scripts\Activate.ps1` unless explicitly asked. Rely on `uv run` for context isolation.
+   - Always check `pyproject.toml` or `uv.lock` before installing new dependencies.
+
+3. Execution Guardrails:
+   - Before running any terminal command, ensure it is safe and compatible with Windows PowerShell.
+   - Do not use Linux-specific utilities (like `grep`, `awk`, `sed`, `export`, `cat` for writing files) unless using their PowerShell equivalents (`Select-String`, `Set-Content`, etc.).

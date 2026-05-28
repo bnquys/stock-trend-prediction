@@ -748,7 +748,7 @@ if __name__ == "__main__":
                         help="Path to checkpoint .pkl to resume training")
     args = parser.parse_args()
 
-    os.makedirs("logs", exist_ok=True)
+    os.makedirs("artifacts/logs", exist_ok=True)
     cfg = load_cfg(args.config)
 
     if args.mode == "train":

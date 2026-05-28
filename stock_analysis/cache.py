@@ -23,6 +23,7 @@ import pandas as pd
 log = logging.getLogger(__name__)
 
 _PACKAGE_DIR = Path(__file__).parent
+_PROJECT_ROOT = _PACKAGE_DIR.parent
 
 
 class EmbeddingCache:
@@ -35,9 +36,9 @@ class EmbeddingCache:
         """
         Args:
             stock_ids: Danh sách mã cổ phiếu cần load (VNM, FPT, ...)
-            base_dir: Thư mục gốc chứa st_data/ (mặc định: stock_analysis/st_data/)
+            base_dir: Thư mục gốc chứa embeddings/ (mặc định: artifacts/embeddings/)
         """
-        self._base_dir = base_dir or (_PACKAGE_DIR / "st_data")
+        self._base_dir = base_dir or (_PROJECT_ROOT / "artifacts" / "embeddings")
         self._vectors: dict[str, dict[str, np.ndarray]] = {}  # {stock_id: {hash_id: vector}}
         self._report_map: dict[str, dict[str, str]] = {}  # {stock_id: {report_hash: response_hash}}
         self._report_logs: dict[str, dict] = {}  # {stock_id: report logs.json content}

@@ -145,7 +145,7 @@ def setup_logging(config_path: str = "configs/logging.yaml") -> Path:
 
     # ── Create run directory ──────────────────────────────────────
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_dir = Path("logs") / f"train_{timestamp}"
+    log_dir = Path("artifacts/logs") / f"train_{timestamp}"
     log_dir.mkdir(parents=True, exist_ok=True)
     _current_log_dir = log_dir
 

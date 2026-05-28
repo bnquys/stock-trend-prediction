@@ -21,9 +21,9 @@ def main():
     parser = argparse.ArgumentParser(description="RL Trading — Inference")
     parser.add_argument("--config", default="configs/",
                         help="Path to config dir or single YAML file")
-    parser.add_argument("--model", default="weights/best_model.pkl",
+    parser.add_argument("--model", default="artifacts/weights/best_model.pkl",
                         help="Path to trained model")
-    parser.add_argument("--scaler", default="weights/scaler.pkl",
+    parser.add_argument("--scaler", default="artifacts/weights/scaler.pkl",
                         help="Path to fitted scaler")
     parser.add_argument("--stock", type=str, default=None,
                         help="Path to single stock CSV")

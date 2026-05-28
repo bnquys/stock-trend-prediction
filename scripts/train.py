@@ -22,7 +22,7 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler("logs/train.log", mode="w", encoding="utf-8"),
+        logging.FileHandler("artifacts/logs/train.log", mode="w", encoding="utf-8"),
     ]
 )
 logging.getLogger("src.training").setLevel(logging.INFO)
@@ -38,7 +38,7 @@ def main():
                         help="Path to checkpoint .pkl to resume from")
     args = parser.parse_args()
 
-    os.makedirs("logs", exist_ok=True)
+    os.makedirs("artifacts/logs", exist_ok=True)
     cfg = Config.load(args.config)
 
     try:
