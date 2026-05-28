@@ -24,7 +24,7 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["src*", "stock_analysis*"]
+include = ["src*"]
 
 [project.scripts]
 train = "scripts.train:main"

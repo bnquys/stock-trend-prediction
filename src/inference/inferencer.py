@@ -23,7 +23,7 @@ import torch
 from pathlib import Path
 
 from src.config import Config
-from src.features.preprocessor import load_csv, RobustScaler, obs_size_of
+from src.technical.preprocessor import load_csv, RobustScaler, obs_size_of
 from src.rl.env.trading_env import TradingEnv
 from src.rl.agent.dqn_agent import DQNAgent
 

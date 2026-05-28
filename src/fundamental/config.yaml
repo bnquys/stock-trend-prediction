@@ -1,0 +1,19 @@
+# ════════════════════════════════════════════════════════════════
+# Analysis Config — LLM & Embedding Pipeline
+# Đặt trong package src/fundamental/ để dễ quản lý
+# ════════════════════════════════════════════════════════════════
+enabled:    true
+
+# ── LLM (phân tích cơ bản/ báo cáo tài chính) ──────────────────────────────────
+llm:
+  model:    "mistral-small-4-119b-2603"
+  gradio_url: "https://0cd1a98b5128649e8e.gradio.live/"
+
+# ── Embedding (vector hóa tóm tắt báo cáo tài chính từ LLM) ───────────────────────────
+embedding:
+  model:    "perplexity-ai/pplx-embed-context-v1-4b"
+  gradio_url: "https://ba6424981bc6d20fbd.gradio.live"
+  dim:      2560              # Chiều embedding output
+
+# ── Projection (giảm chiều cho agent) ─────────────────────────
+projection: [1024, 512, 128]  # 2560→1024→512→128
