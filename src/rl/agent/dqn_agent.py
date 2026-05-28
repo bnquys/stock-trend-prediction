@@ -142,16 +142,28 @@ class ReplayBuffer:
     def sample(self, bs: int):
         idx = np.random.randint(0, self._size, size=bs)
 
-        obs_t = torch.from_numpy(self._obs[idx]).to(DEVICE)
-        act_t = torch.from_numpy(self._actions[idx]).to(DEVICE)
-        rew_t = torch.from_numpy(self._rewards[idx]).to(DEVICE)
-        nobs_t = torch.from_numpy(self._next_obs[idx]).to(DEVICE)
-        done_t = torch.from_numpy(self._dones[idx]).to(DEVICE)
+        # On CPU: torch.from_numpy is zero-copy (shares memory with numpy).
+        # Skip .to(DEVICE) when already on CPU to avoid overhead.
+        if DEVICE.type == "cpu":
+            obs_t = torch.from_numpy(self._obs[idx])
+            act_t = torch.from_numpy(self._actions[idx])
+            rew_t = torch.from_numpy(self._rewards[idx])
+            nobs_t = torch.from_numpy(self._next_obs[idx])
+            done_t = torch.from_numpy(self._dones[idx])
+        else:
+            obs_t = torch.from_numpy(self._obs[idx]).to(DEVICE)
+            act_t = torch.from_numpy(self._actions[idx]).to(DEVICE)
+            rew_t = torch.from_numpy(self._rewards[idx]).to(DEVICE)
+            nobs_t = torch.from_numpy(self._next_obs[idx]).to(DEVICE)
+            done_t = torch.from_numpy(self._dones[idx]).to(DEVICE)
 
         embed_t = None
         if self.has_analysis and self._embeds is not None:
             if self._embed_mask[idx].any():
-                embed_t = torch.from_numpy(self._embeds[idx]).to(DEVICE)
+                if DEVICE.type == "cpu":
+                    embed_t = torch.from_numpy(self._embeds[idx])
+                else:
+                    embed_t = torch.from_numpy(self._embeds[idx]).to(DEVICE)
 
         return obs_t, act_t, rew_t, nobs_t, done_t, embed_t
 
@@ -216,21 +228,9 @@ class DQNAgent:
         self._q_module = self.q
         self._q_tgt_module = self.q_tgt
 
-        # JIT compile networks for CPU speedup (PyTorch 2.x)
-        # Requires C++ compiler: Linux/Mac (gcc/clang), Windows (MSVC cl.exe)
-        # Skip on Windows without MSVC to avoid InductorError
-        import platform
-        _can_compile = hasattr(torch, "compile") and DEVICE.type == "cpu"
-        if _can_compile and platform.system() == "Windows":
-            import shutil
-            _can_compile = shutil.which("cl") is not None
-        if _can_compile:
-            try:
-                self.q = torch.compile(self.q, mode="default")  # type: ignore
-                self.q_tgt = torch.compile(self.q_tgt, mode="default")  # type: ignore
-                log.debug("[Agent] torch.compile enabled (default mode)")
-            except Exception as e:
-                log.debug(f"[Agent] torch.compile skipped: {e}")
+        # torch.compile disabled — overhead > benefit for small CPU models
+        # with analysis projection (2560→1024→512→128). Compilation stalls
+        # training for 30-60s on first learn() call with no runtime gain.
 
         self.optimizer = optim.Adam(self.q.parameters(), lr=lr, weight_decay=1e-4)
         self.buf    = ReplayBuffer(

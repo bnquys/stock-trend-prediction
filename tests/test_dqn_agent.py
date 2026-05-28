@@ -118,8 +118,8 @@ class TestAgentSaveLoad:
         agent.steps = 123
         agent.save(save_path)
         
-        # Tạo agent mới và load
-        new_agent = DQNAgent(obs_size=100, n_actions=3)
+        # Tạo agent mới với cùng architecture và load
+        new_agent = DQNAgent(obs_size=100, n_actions=3, hidden=[64, 32])
         new_agent.load(save_path)
         
         assert new_agent.eps == 0.5

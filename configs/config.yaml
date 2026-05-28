@@ -52,7 +52,7 @@ agent:
   eps_end:      0.03            # Epsilon cuối thấp hơn → khai thác tốt hơn
   eps_decay:    0.997           # Giảm chậm hơn → khám phá lâu hơn
   buffer_cap:   20000           # Buffer vừa đủ (~27 episodes) — tiết kiệm RAM
-  batch_size:   256             # Batch lớn → gradient ổn định hơn với obs_size=547
+  batch_size:   256             # Batch phù hợp cho CPU + analysis projection
   warmup:       1000            # Đợi buffer đầy hơn trước khi học
   n_episodes:   500
   patience:     80              # Kiên nhẫn hơn trước khi early stop
@@ -65,11 +65,11 @@ analysis:
   embed_dim:  2560                          # Chiều embedding từ pipeline
   projection: [1024, 512, 128]              # Giảm chiều từ từ: 2560→1024→512→128
 
-# ── Training Optimization ─────────────────────────────────────────
+# ── Training Optimization — CPU-focused ───────────────────────────
 training:
-  val_every:           5        # Validate mỗi N episodes (giảm 80% thời gian val)
-  learn_every:         4        # Learn mỗi N steps (giảm 75% gradient updates)
-  preload_embeddings:  true     # Pre-load tất cả embeddings vào RAM (zero I/O)
+  val_every:           5        # Validate mỗi 5 episodes
+  learn_every:         4        # Learn mỗi 4 steps (giảm 75% gradient updates)
+  preload_embeddings:  true     # Pre-load ALL embeddings vào RAM (zero I/O)
 
 output:
   model_dir:  "artifacts/weights"

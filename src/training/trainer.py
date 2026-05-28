@@ -22,7 +22,7 @@ from collections import deque
 from tqdm.auto import tqdm
 
 from src.config import Config
-from src.technical.preprocessor import load_csv, time_split, RobustScaler, obs_size_of
+from src.technical.preprocessor import load_csv, time_split, RobustScaler, obs_size_of, FEAT_COLS
 from src.rl.env.trading_env import TradingEnv
 from src.rl.agent.dqn_agent import DQNAgent
 from src.fundamental.cache import EmbeddingCache
@@ -136,15 +136,80 @@ class Trainer:
             self.embedding_cache.validate(min_vectors=1)
             log.debug(f"[EmbeddingCache] {self.embedding_cache.stats}")
 
+        # ── Pre-compute obs arrays per stock/split (avoid recomputation every episode) ──
+        # This caches the expensive _precompute_all_obs() result for each dataset.
+        # RAM cost: ~4 stocks × 3 splits × 1286 rows × 440 floats × 4 bytes ≈ 27 MB
+        self._precomputed_obs_cache: dict[int, np.ndarray] = {}
+        self._precompute_all_datasets()
+
+    def _precompute_all_datasets(self):
+        """Pre-compute windowed obs for all stocks × splits into RAM."""
+        from src.rl.env.trading_env import TradingEnv
+
+        env_cfg = self.cfg.env
+        window = env_cfg["window"]
+
+        all_datasets = []
+        # Index: 0..N-1 = train, N..2N-1 = val, 2N..3N-1 = test
+        for df_norm in self.train_norms:
+            all_datasets.append(df_norm)
+        for df_norm in self.val_norms:
+            all_datasets.append(df_norm)
+        for df_norm in self.test_norms:
+            all_datasets.append(df_norm)
+
+        feat_cols = [c for c in FEAT_COLS if c in self.train_norms[0].columns]
+        n_feats = len(feat_cols)
+
+        for i, df_norm in enumerate(all_datasets):
+            obs_matrix = df_norm[feat_cols].fillna(0.0).values.astype(np.float32)
+            n = len(df_norm)
+            w = window
+            flat_size = w * n_feats
+            result = np.zeros((n, flat_size), dtype=np.float32)
+
+            for row in range(n):
+                start = max(0, row - w + 1)
+                chunk = obs_matrix[start:row + 1]
+                rows = chunk.shape[0]
+                if rows == w:
+                    result[row] = chunk.ravel()
+                else:
+                    result[row, (w - rows) * n_feats:] = chunk.ravel()
+
+            self._precomputed_obs_cache[i] = result
+
+        total_mb = sum(a.nbytes for a in self._precomputed_obs_cache.values()) / 1024 / 1024
+        log.debug(f"[PrecomputeObs] Cached {len(self._precomputed_obs_cache)} datasets, {total_mb:.1f} MB RAM")
+
+    def _get_precomputed_obs(self, stock_idx: int, split: str) -> np.ndarray:
+        """Get cached precomputed obs array for a stock/split combo."""
+        n_stocks = len(self.train_raws)
+        if split == "train":
+            key = stock_idx
+        elif split == "val":
+            key = n_stocks + stock_idx
+        else:  # test
+            key = 2 * n_stocks + stock_idx
+        return self._precomputed_obs_cache[key]
+
     # ─────────────────────────────────────────────────────────────────
     # Episode runners
     # ─────────────────────────────────────────────────────────────────
 
     def _run_episode(self, df_raw, df_norm, train_mode: bool,
-                     episode_num: int = 1, stock_id: str | None = None) -> tuple[dict, list]:
+                     episode_num: int = 1, stock_id: str | None = None,
+                     stock_idx: int = 0, split: str = "train") -> tuple[dict, list]:
         """Run a single episode."""
         env_cfg = self.cfg.env
         learn_every = self.cfg.training.get("learn_every", 4)
+
+        # Get cached precomputed obs (avoids recomputation every episode)
+        precomputed = self._precomputed_obs_cache.get(
+            stock_idx if split == "train"
+            else len(self.train_raws) + stock_idx if split == "val"
+            else 2 * len(self.train_raws) + stock_idx
+        )
 
         try:
             env = TradingEnv(
@@ -166,24 +231,15 @@ class Trainer:
                 stock_id=stock_id,
                 analysis_model=self.analysis_model,
                 embedding_cache=self.embedding_cache,
+                precomputed_obs=precomputed,
             )
 
             obs = env.reset()
             done = False
             step_count = 0
-            total_steps = env.n - env.window
             cum_reward = 0.0
 
-            ep_label = f"Ep{episode_num}"
-            if stock_id:
-                ep_label += f" ({stock_id})"
-            # Inner step progress bar mặc định OFF để tránh nổ output
-            # trong notebook. Bật bằng training.show_step_progress: true.
-            show_step_pb = self.cfg.training.get("show_step_progress", False)
-            step_bar = tqdm(total=total_steps, desc=f"  {ep_label}",
-                            unit="step", leave=False, dynamic_ncols=True,
-                            disable=not show_step_pb)
-
+            # ── Tight inner loop (no tqdm overhead) ───────────────
             while not done:
                 try:
                     analysis_embed = env.get_analysis_embed()
@@ -200,20 +256,14 @@ class Trainer:
 
                     obs = next_obs
                     step_count += 1
-                    step_bar.update(1)
-                    if step_count % 50 == 0:
-                        step_bar.set_postfix_str(f"R={cum_reward:+.1f}")
 
                 except Exception as e:
-                    # exc_info=True ghi full traceback vào logs/train.log
                     log.error(
                         f"Step error at ep {episode_num}, step {step_count}: {e}",
                         exc_info=True,
                     )
                     done = True
                     break
-
-            step_bar.close()
             m = env.metrics()
             m["episode_steps"] = step_count
             return m, env.trades
@@ -312,7 +362,8 @@ class Trainer:
             # ── Train episode ─────────────────────────────────────────
             tr_m, _ = self._run_episode(
                 self.train_raws[stock_idx], self.train_norms[stock_idx],
-                train_mode=True, episode_num=ep, stock_id=stock_id
+                train_mode=True, episode_num=ep, stock_id=stock_id,
+                stock_idx=stock_idx, split="train"
             )
 
             # ── Validation (every N episodes) ─────────────────────────
@@ -390,7 +441,8 @@ class Trainer:
             stock_id = self.stock_ids[idx] if self.analysis_enabled else None
             m, _ = self._run_episode(
                 self.val_raws[idx], self.val_norms[idx],
-                train_mode=False, stock_id=stock_id
+                train_mode=False, stock_id=stock_id,
+                stock_idx=idx, split="val"
             )
             metrics_list.append(m)
 

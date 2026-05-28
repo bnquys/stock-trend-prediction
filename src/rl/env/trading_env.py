@@ -58,6 +58,9 @@ class TradingEnv:
         stock_id:        str | None = None,   # Mã cổ phiếu (VNM, FPT, ...)
         analysis_model:  str | None = None,   # LLM model cho pipeline
         embedding_cache = None,               # EmbeddingCache instance (pre-loaded, zero I/O)
+        # ── Pre-computed data (passed from Trainer to avoid recomputation) ──
+        precomputed_obs: np.ndarray | None = None,  # Shape: (n, window*n_feats)
+        embed_array: np.ndarray | None = None,      # Shape: (n, embed_dim) — direct step index
     ):
         assert len(df_raw) == len(df_norm), "df_raw và df_norm phải cùng length"
         assert len(df_raw) > window + 2, f"Data quá ngắn: {len(df_raw)}"
@@ -82,12 +85,24 @@ class TradingEnv:
         self.n             = len(df_raw)
 
         self._feat_cols = [c for c in FEAT_COLS if c in df_norm.columns]
-        self.obs_size   = window * len(self._feat_cols) + 7  # 7 portfolio state dims
+        self._n_feats = len(self._feat_cols)
+        self.obs_size   = window * self._n_feats + 7  # 7 portfolio state dims
 
         # ── Precompute obs matrix (zero DataFrame overhead per step) ──
         self._obs_matrix = df_norm[self._feat_cols].fillna(0.0).values.astype(np.float32)
         # Precompute raw close prices as numpy array
         self._close_arr = df_raw["close"].values.astype(np.float64)
+
+        # ── Pre-compute ALL windowed observations into RAM ────────────
+        # Shape: (n, window * n_feats) — one contiguous array for O(1) lookup
+        # Accept pre-computed array from Trainer to avoid recomputation every episode
+        if precomputed_obs is not None:
+            self._precomputed_obs = precomputed_obs
+        else:
+            self._precomputed_obs = self._precompute_all_obs()
+
+        # ── Pre-allocate output buffer (zero allocation per step) ─────
+        self._obs_buf = np.zeros(self.obs_size, dtype=np.float32)
 
         # ── Analysis Embedding ─────────────────────────────────
         self.stock_id       = stock_id
@@ -522,50 +537,77 @@ class TradingEnv:
         i = min(self._step, self.n - 1)
         return str(self.df_raw["date"].iloc[i])[:10]
 
-    def _get_obs_fast(self, step: int) -> np.ndarray:
-        """Fast observation: numpy slice from precomputed matrix (zero-copy view)."""
-        start = max(0, step - self.window + 1)
-        mat = self._obs_matrix[start:step + 1]
-        if mat.shape[0] < self.window:
-            pad = np.zeros((self.window - mat.shape[0], mat.shape[1]), dtype=np.float32)
-            mat = np.vstack([pad, mat])
-        return mat.ravel()
+    def _precompute_all_obs(self) -> np.ndarray:
+        """
+        Pre-compute ALL windowed feature observations into a single contiguous array.
+        Shape: (n, window * n_feats). Access per step is O(1) array index.
+        This eliminates per-step slicing, padding, and ravel operations.
+        """
+        n = self.n
+        w = self.window
+        nf = self._n_feats
+        flat_size = w * nf
+        result = np.zeros((n, flat_size), dtype=np.float32)
+
+        for i in range(n):
+            start = max(0, i - w + 1)
+            chunk = self._obs_matrix[start:i + 1]  # shape: (<=w, nf)
+            rows = chunk.shape[0]
+            if rows == w:
+                # Most common case: full window, direct flatten
+                result[i] = chunk.ravel()
+            else:
+                # Padding needed (only first few steps)
+                result[i, (w - rows) * nf:] = chunk.ravel()
+        return result
 
     def _obs(self) -> np.ndarray:
+        """
+        Build observation vector using pre-allocated buffer.
+        Feature part: O(1) memcpy from precomputed array.
+        Portfolio state: 7 scalars written directly into buffer.
+        """
         safe = min(self._step, self.n - 1)
-        feat = self._get_obs_fast(safe)
+        buf = self._obs_buf
+        feat_size = self.window * self._n_feats
 
-        price  = self._price()
-        unreal = (price - self._entry_price) / self._entry_price if self._in_pos else 0.0
-        total_cash = self._cash + sum(item["amount"] for item in self._cash_queue)
-        total  = total_cash + self._shares * price
-        cash_r = total_cash / (total + 1e-9)
-        held   = self._step - self._entry_step if self._in_pos else 0
-        held_r = min(held / self.max_hold, 1.0) if self._in_pos and self.max_hold > 0 else 0.0
+        # Copy precomputed features into buffer (single memcpy)
+        buf[:feat_size] = self._precomputed_obs[safe]
 
-        # T+2 availability: 1.0 nếu hàng đã về, 0.0 nếu chưa
-        t_plus_avail = 1.0 if (self._in_pos and held >= self.t_plus) else 0.0
+        # Portfolio state (written directly, no intermediate array allocation)
+        price = self._price()
+        pending = sum(item["amount"] for item in self._cash_queue)
+        total_cash = self._cash + pending
+        total = total_cash + self._shares * price
 
-        # ATR% hiện tại
-        atr_pct = self._get_atr_pct()
-
-        # Khoảng cách % tới mức SL (âm = đang gần SL)
-        if self._in_pos and self._sl_price > 0:
-            dist_to_sl = (price - self._sl_price) / (price + 1e-9)
-            dist_to_sl = float(np.clip(dist_to_sl, -0.2, 0.2))
+        if self._in_pos:
+            unreal = (price - self._entry_price) / self._entry_price
+            held = self._step - self._entry_step
+            held_r = min(held / self.max_hold, 1.0) if self.max_hold > 0 else 0.0
+            t_plus_avail = 1.0 if held >= self.t_plus else 0.0
+            if self._sl_price > 0:
+                dist_to_sl = (price - self._sl_price) / (price + 1e-9)
+                dist_to_sl = max(-0.2, min(0.2, dist_to_sl))
+            else:
+                dist_to_sl = 0.0
         else:
+            unreal = 0.0
+            held_r = 0.0
+            t_plus_avail = 0.0
             dist_to_sl = 0.0
 
-        port = np.array([
-            float(self._in_pos),                          # 1. Có vị thế?
-            float(np.clip(unreal, -0.3, 0.3)),           # 2. PnL tạm tính
-            float(cash_r),                                # 3. Tỷ lệ tiền mặt
-            float(held_r),                                # 4. % thời gian giữ
-            float(t_plus_avail),                          # 5. T+2 đã về?
-            float(np.clip(atr_pct, 0.0, 0.15)),         # 6. ATR% (clip 0~15%)
-            float(dist_to_sl),                            # 7. Khoảng cách tới SL
-        ], dtype=np.float32)
-        return np.concatenate([feat, port])
+        atr_pct = self._get_atr_pct()
+
+        buf[feat_size]     = float(self._in_pos)
+        buf[feat_size + 1] = max(-0.3, min(0.3, unreal))
+        buf[feat_size + 2] = total_cash / (total + 1e-9)
+        buf[feat_size + 3] = held_r
+        buf[feat_size + 4] = t_plus_avail
+        buf[feat_size + 5] = min(atr_pct, 0.15)
+        buf[feat_size + 6] = dist_to_sl
+
+        # Return a copy (agent stores reference in buffer, must not be mutated)
+        return buf.copy()
 
     # ── Episode metrics ────────────────────────────────────────────
     def metrics(self) -> dict:

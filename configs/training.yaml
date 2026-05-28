@@ -5,10 +5,10 @@ n_episodes:         500
 patience:           80        # Early stop patience
 checkpoint_every:   50
 
-# Performance optimization
-val_every:          5         # Validate mỗi N episodes
-learn_every:        8         # Learn mỗi N steps (8 tối ưu cho CPU, giảm 50% forward passes)
-preload_embeddings: true      # Pre-load embeddings vào RAM
+# Performance optimization — CPU-focused
+val_every:          10        # Validate mỗi 10 episodes (giảm 50% val overhead)
+learn_every:        8         # Learn mỗi 8 steps (giảm 50% gradient updates)
+preload_embeddings: true      # Pre-load ALL embeddings vào RAM (zero I/O)
 
 # Display
 show_step_progress: false     # Inner step progress bar (true để debug từng step)

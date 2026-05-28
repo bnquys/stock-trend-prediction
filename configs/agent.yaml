@@ -11,6 +11,6 @@ tau:          0.005           # Soft target update
 eps_start:    1.0
 eps_end:      0.03
 eps_decay:    0.997
-buffer_cap:   20000
-batch_size:   256
+buffer_cap:   20000           # Buffer vừa đủ (~27 episodes)
+batch_size:   256             # Batch phù hợp cho CPU
 warmup:       1000            # Steps trước khi bắt đầu học
