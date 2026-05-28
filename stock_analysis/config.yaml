@@ -6,7 +6,7 @@ enabled:    true
 
 # ── LLM (phân tích cơ bản/ báo cáo tài chính) ──────────────────────────────────
 llm:
-  model:    "unsloth/Qwen2.5-14B-Instruct-bnb-4bit"
+  model:    "mistral-small-4-119b-2603"
   gradio_url: "https://0cd1a98b5128649e8e.gradio.live/"
 
 # ── Embedding (vector hóa tóm tắt báo cáo tài chính từ LLM) ───────────────────────────

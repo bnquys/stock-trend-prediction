@@ -1,858 +1,749 @@
 {
-    "104492f04c08e9773b88eba504733c115ae291eafc942d72299b4b5750c7f4fb": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "d360129ed7b57ff7d88fbcbf299ce638026e227c3cfef94c227cdaa8454c1383",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\104492f04c08e9773b88eba504733c115ae291eafc942d72299b4b5750c7f4fb.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:04:52.273904",
-        "embed_key": "104492f04c08e9773b88eba504733c115ae291eafc942d72299b4b5750c7f4fb"
-    },
-    "998f32807b1f36ba6c6a0e12686c095aa992258b7cdee79294a054479323290a": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "9b35bbccaf74ac19481626860370bd7730cad0a0b48c268af67f38219565f2c6",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\998f32807b1f36ba6c6a0e12686c095aa992258b7cdee79294a054479323290a.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:06:56.700424",
-        "embed_key": "998f32807b1f36ba6c6a0e12686c095aa992258b7cdee79294a054479323290a"
-    },
-    "db46b56b151c661f936e9ef689fb2fae691f8d0bebc90d35b0b25f9d2a7b4d90": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "9f8eaa48220c3f4bb656727d27604177943440c25aeae6b541f0b0a1dcc2d4ac",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\db46b56b151c661f936e9ef689fb2fae691f8d0bebc90d35b0b25f9d2a7b4d90.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:08:14.715625",
-        "embed_key": "db46b56b151c661f936e9ef689fb2fae691f8d0bebc90d35b0b25f9d2a7b4d90"
-    },
-    "4002cd9b97c5f1bfcf269375ad00fa7b4671b4b7cf488baeede42a9b2af52b0c": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "34dd5206b7cfd50654896f97641bb2bfab7b06820a4862806c825abb037d1d90",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\4002cd9b97c5f1bfcf269375ad00fa7b4671b4b7cf488baeede42a9b2af52b0c.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:10:13.040705",
-        "embed_key": "4002cd9b97c5f1bfcf269375ad00fa7b4671b4b7cf488baeede42a9b2af52b0c"
-    },
-    "d54f6a6ad5c03e1090a37a9563b6f01e5496a3b02d5a87c92356b6ed92cbc23e": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "5685b9fff968b6feed69715816a7ce541193715791237eda341e7b7b6cc350d3",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\d54f6a6ad5c03e1090a37a9563b6f01e5496a3b02d5a87c92356b6ed92cbc23e.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:11:23.806601",
-        "embed_key": "d54f6a6ad5c03e1090a37a9563b6f01e5496a3b02d5a87c92356b6ed92cbc23e"
-    },
-    "808e350e441876d57decb0a4710b59973ae50851c612d8e3e7397613fa59a6cd": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "3a1d1ee0782321e44f319020396ab08035de8d554fe80c2b3dac0437432b513f",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\808e350e441876d57decb0a4710b59973ae50851c612d8e3e7397613fa59a6cd.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:13:11.909465",
-        "embed_key": "808e350e441876d57decb0a4710b59973ae50851c612d8e3e7397613fa59a6cd"
-    },
-    "4b48bd440dd2a47f25eb6b72e39945b284da76ac62b69d491e725bc5534f7c6a": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "45849102cf3837178275d0be35ce8d54a5888b36efce1e3503efbb45e049c4da",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\4b48bd440dd2a47f25eb6b72e39945b284da76ac62b69d491e725bc5534f7c6a.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:14:24.156437",
-        "embed_key": "4b48bd440dd2a47f25eb6b72e39945b284da76ac62b69d491e725bc5534f7c6a"
-    },
-    "dbd6c884d2a5f11854456c4bcc0e67d679f696a13cdaed4a33aeca4f6fc70d62": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "a9ecf1c5e5122b6df8862b2eac02a7a208b2be07c29b1c99cf5f59d33a46dc00",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\dbd6c884d2a5f11854456c4bcc0e67d679f696a13cdaed4a33aeca4f6fc70d62.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:16:30.210128",
-        "embed_key": "dbd6c884d2a5f11854456c4bcc0e67d679f696a13cdaed4a33aeca4f6fc70d62"
-    },
-    "47a651c35416f5014ba9deefbad2e4c8581cfc7e8914785c295ccb75b9983663": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "cae564a01adcf6e06bfd8c7427b6945c1e686328777d5dbabee585cfb29cdf88",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\47a651c35416f5014ba9deefbad2e4c8581cfc7e8914785c295ccb75b9983663.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:17:54.633236",
-        "embed_key": "47a651c35416f5014ba9deefbad2e4c8581cfc7e8914785c295ccb75b9983663"
-    },
-    "c074820434b80d528387d3a91f223c36589f9e5c9f072dd7af1ac2aae16ba09c": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "da0c77750aa392d000ea27efb6bee2f73b4f8dd6ae112bd6b4cccf4792b5d4ff",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\c074820434b80d528387d3a91f223c36589f9e5c9f072dd7af1ac2aae16ba09c.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:19:54.301331",
-        "embed_key": "c074820434b80d528387d3a91f223c36589f9e5c9f072dd7af1ac2aae16ba09c"
-    },
-    "6f43aca779178d6e95dbe048a5395d888e38bd4c724817e380081b1b03490a27": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "d66e094418c1547bff4606be4e82a91c808727fd49e93b16145e13379d16e2e9",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\6f43aca779178d6e95dbe048a5395d888e38bd4c724817e380081b1b03490a27.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:21:14.728838",
-        "embed_key": "6f43aca779178d6e95dbe048a5395d888e38bd4c724817e380081b1b03490a27"
-    },
-    "810f321844b91ee48833dd480d43a120a39d1643f7050fe7c471a406ee15f290": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "1b0aed886fd36fa24297919f718431d5b2fbe7bb87ac6c188cd5d72937080cef",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\810f321844b91ee48833dd480d43a120a39d1643f7050fe7c471a406ee15f290.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:22:41.728983",
-        "embed_key": "810f321844b91ee48833dd480d43a120a39d1643f7050fe7c471a406ee15f290"
-    },
-    "11d478310c87cdfd4c174d2be7ffde9af381126a82784b25709a251753e3bdef": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "ded2f61ccec007f02fe7fc14351674ebd0cbeb9b28eafc31faf8e43bab765de0",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\11d478310c87cdfd4c174d2be7ffde9af381126a82784b25709a251753e3bdef.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:24:21.067606",
-        "embed_key": "11d478310c87cdfd4c174d2be7ffde9af381126a82784b25709a251753e3bdef"
-    },
-    "313b1ec7340eca763acf4654ec460d5854b374f0f13c0848b15dcb7afdbfdfbd": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "a0e2ad8cc30820330e1059d8a47647d23dfd11392fabcc9199dd15ab06fbd617",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\313b1ec7340eca763acf4654ec460d5854b374f0f13c0848b15dcb7afdbfdfbd.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:25:43.639052",
-        "embed_key": "313b1ec7340eca763acf4654ec460d5854b374f0f13c0848b15dcb7afdbfdfbd"
-    },
-    "991de72bbc5f1e83b09334f0950a5c7ed351cdbc51b91c3887ac91ce46394fcd": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "a6c1a1c23a8feb6e43ac92b2a7ff70bd5edd63764485dae6e2367f1cc74a2554",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\991de72bbc5f1e83b09334f0950a5c7ed351cdbc51b91c3887ac91ce46394fcd.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:26:53.106734",
-        "embed_key": "991de72bbc5f1e83b09334f0950a5c7ed351cdbc51b91c3887ac91ce46394fcd"
-    },
-    "dd0c2b986999685be6509e57ac780465bb47db03a8ac98228b415a9bfca14491": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "abb6a114d762a44c4cbdfccf29f5dd92a3aa7c1ef83d16b9da9b86cbe611b900",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\dd0c2b986999685be6509e57ac780465bb47db03a8ac98228b415a9bfca14491.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:28:59.103475",
-        "embed_key": "dd0c2b986999685be6509e57ac780465bb47db03a8ac98228b415a9bfca14491"
-    },
-    "22f31ea03590fa09037a1e87b474b2bd97e7df7a32e9b84000b92eedf5cd828a": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "70267861251d9e2822946d0db43e8d235f2b407f5522d8fad96a27af4a1d512c",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\22f31ea03590fa09037a1e87b474b2bd97e7df7a32e9b84000b92eedf5cd828a.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:30:23.901457",
-        "embed_key": "22f31ea03590fa09037a1e87b474b2bd97e7df7a32e9b84000b92eedf5cd828a"
-    },
-    "1cd039ef7cc3d8ad59fae0002fb0bc42dee7c245fa9a6aabd3f825ce84e6e300": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "2b4c576e1b6c39a8b4c8289d1a24f0abfd777e8e984391ee6156abd1dd53a411",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\1cd039ef7cc3d8ad59fae0002fb0bc42dee7c245fa9a6aabd3f825ce84e6e300.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:33:00.872321",
-        "embed_key": "1cd039ef7cc3d8ad59fae0002fb0bc42dee7c245fa9a6aabd3f825ce84e6e300"
-    },
-    "4c9ac441e9db38b97550198af05daef9640dee53737a9681a452a786a3678dbe": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "79f2b21c12229fd2eb39a876a1ab248c58beab7b94c50e65beef87e5f5faf965",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\4c9ac441e9db38b97550198af05daef9640dee53737a9681a452a786a3678dbe.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:34:19.473624",
-        "embed_key": "4c9ac441e9db38b97550198af05daef9640dee53737a9681a452a786a3678dbe"
-    },
-    "0346c23d5a3341c7c34f16532cbc7e48447bf4989cf6683153aaf352af8a3823": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "cb30903e8b5ef6f8a5ec3cef18b5d4fd2234f726c286c4ade4e85f00c714df24",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\0346c23d5a3341c7c34f16532cbc7e48447bf4989cf6683153aaf352af8a3823.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:35:39.690228",
-        "embed_key": "0346c23d5a3341c7c34f16532cbc7e48447bf4989cf6683153aaf352af8a3823"
-    },
-    "8ed580fceb1d34275c2e88570ed075d410037e60021031806b4f07fe4b83cc11": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "22bc15ed8a8bbecc07a6228ae39a8c89bb9e3bde3a5a4fc9bb177443e26e1d5a",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\8ed580fceb1d34275c2e88570ed075d410037e60021031806b4f07fe4b83cc11.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:37:01.131492",
-        "embed_key": "8ed580fceb1d34275c2e88570ed075d410037e60021031806b4f07fe4b83cc11"
-    },
-    "83ccbf1816118ffd40e8f93c1edc15b9291b9886f74bf900423ccd56b72913d9": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "58693831f325f69127030848db4b1039b6827cafcff8504bf9019f555425a8ae",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\83ccbf1816118ffd40e8f93c1edc15b9291b9886f74bf900423ccd56b72913d9.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:38:23.827291",
-        "embed_key": "83ccbf1816118ffd40e8f93c1edc15b9291b9886f74bf900423ccd56b72913d9"
-    },
-    "db613068a5d41b97776dc12d23dd0ec41ed70279c3c2f4afbb875ad861299a73": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "a0c0754e8d8988379d7bb6155e2739fc6d6e80571917df7a4a77c63387a49b58",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\db613068a5d41b97776dc12d23dd0ec41ed70279c3c2f4afbb875ad861299a73.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:39:39.515204",
-        "embed_key": "db613068a5d41b97776dc12d23dd0ec41ed70279c3c2f4afbb875ad861299a73"
-    },
-    "d814ef3bb5c3a0b2042b31c1c421ec8b17280c76b542d272679976c899c6e238": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "d4c4cabe64101292563344b535b773a93ff9fa79044ced6b12ea9dc29462dd05",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\d814ef3bb5c3a0b2042b31c1c421ec8b17280c76b542d272679976c899c6e238.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:42:23.918752",
-        "embed_key": "d814ef3bb5c3a0b2042b31c1c421ec8b17280c76b542d272679976c899c6e238"
-    },
-    "a5dccc1c02ef17921ab23f9ac3b7ac90d325ca398ecb6a40014ed4518da28adc": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "117e6e32117a302905bd039a60b2a246ed166e7f371dc0c46116e49f25994a7b",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\a5dccc1c02ef17921ab23f9ac3b7ac90d325ca398ecb6a40014ed4518da28adc.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:44:53.196967",
-        "embed_key": "a5dccc1c02ef17921ab23f9ac3b7ac90d325ca398ecb6a40014ed4518da28adc"
-    },
-    "bfe689fc7d557e1963b99a52be74ee2b64887a66660411f239c3a5fd2cc666ff": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "44fe3010d14ab47b50730e8e556aca92f4e415e2082cf3ac119cab642af493cc",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\bfe689fc7d557e1963b99a52be74ee2b64887a66660411f239c3a5fd2cc666ff.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:46:03.152758",
-        "embed_key": "bfe689fc7d557e1963b99a52be74ee2b64887a66660411f239c3a5fd2cc666ff"
-    },
-    "d4cf8e987c211ba9ff708c9408ba8e3e4bb0d09b78faa6b906f084ca70d05a4b": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "66cb2fc17d6fc14b09ebe0c6bb8c88c59919f98d3439d5bf6c29aa37307cfe47",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\d4cf8e987c211ba9ff708c9408ba8e3e4bb0d09b78faa6b906f084ca70d05a4b.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:47:25.564498",
-        "embed_key": "d4cf8e987c211ba9ff708c9408ba8e3e4bb0d09b78faa6b906f084ca70d05a4b"
-    },
-    "8bace906e95ed3a6a0f35f611801a0b28bc56e1174604dfd3d56438e8579785e": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "9bf363659b31cfb324f95e27a38ef87f7da54b4f5f4ecf98c83f1796e022c1ff",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\8bace906e95ed3a6a0f35f611801a0b28bc56e1174604dfd3d56438e8579785e.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:48:37.665892",
-        "embed_key": "8bace906e95ed3a6a0f35f611801a0b28bc56e1174604dfd3d56438e8579785e"
-    },
-    "9ca6b3a147e73a7103c3fb81052569d44f615c24866542213216eca9f3d6fa30": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "8a798f3abcf4fd3eb1946e72593b1a4cb8c391e2da84cadb204fce8887b2f6bf",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\9ca6b3a147e73a7103c3fb81052569d44f615c24866542213216eca9f3d6fa30.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:50:18.909085",
-        "embed_key": "9ca6b3a147e73a7103c3fb81052569d44f615c24866542213216eca9f3d6fa30"
-    },
-    "04f93aab3013ca814a7e4f7709806723305e85c888b982e4117187579c28b73f": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "40b055e3a7f635db5a48f5359e046080efdb457aa22f7dbd0ca9ada8b71654fe",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\04f93aab3013ca814a7e4f7709806723305e85c888b982e4117187579c28b73f.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:52:10.013947",
-        "embed_key": "04f93aab3013ca814a7e4f7709806723305e85c888b982e4117187579c28b73f"
-    },
-    "51196c4eb0245a8dfe7244b35aa7b60e017a1b8bcf6705757b67a0278b896705": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "e6493cb823b9bf011cf0275ac27e6315dc1bd5340c1dbb064c5b991dc1015092",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\51196c4eb0245a8dfe7244b35aa7b60e017a1b8bcf6705757b67a0278b896705.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:54:17.606509",
-        "embed_key": "51196c4eb0245a8dfe7244b35aa7b60e017a1b8bcf6705757b67a0278b896705"
-    },
-    "86dc16a5d05a1fa43175d68f6d7327d1af7b2d02c22ff2d73be0104b18172066": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "0cbb1981fd7e19dce072e943bc262d26679d659cd0ed23d5cb63681899059c94",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\86dc16a5d05a1fa43175d68f6d7327d1af7b2d02c22ff2d73be0104b18172066.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:55:42.744329",
-        "embed_key": "86dc16a5d05a1fa43175d68f6d7327d1af7b2d02c22ff2d73be0104b18172066"
-    },
-    "9cd1d4118a1d2850e805fbc290de0467aa6d2f0f318f0aac1751cf1d0949dbfc": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "8b475176ad14d4f7026f3aeff19d14c55a05cbdd818a26c049f2db8682707504",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\9cd1d4118a1d2850e805fbc290de0467aa6d2f0f318f0aac1751cf1d0949dbfc.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:57:33.004201",
-        "embed_key": "9cd1d4118a1d2850e805fbc290de0467aa6d2f0f318f0aac1751cf1d0949dbfc"
-    },
-    "8a756cedfa32711266a0007eaaf7e0b259b86cc54a76b9443d67b7db21369d38": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "572db2b5263b2262a6d78586d2a46ff9e178d8ea1be1cb9cf2d0fea9c8bb3e1a",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\8a756cedfa32711266a0007eaaf7e0b259b86cc54a76b9443d67b7db21369d38.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T13:59:00.994994",
-        "embed_key": "8a756cedfa32711266a0007eaaf7e0b259b86cc54a76b9443d67b7db21369d38"
-    },
-    "2013cb87c1d143ab72d6bf5803e1732c4108ce6cfe92206717a2011f77ac053a": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "e35f9e3c86549a98beb1918dd0d53501d74b1e77d64fd58ec846a8b5c0bb2f10",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\2013cb87c1d143ab72d6bf5803e1732c4108ce6cfe92206717a2011f77ac053a.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:01:25.617397",
-        "embed_key": "2013cb87c1d143ab72d6bf5803e1732c4108ce6cfe92206717a2011f77ac053a"
-    },
-    "d505bc736e29e2ca3bdc3ab57e367e28ce295f01bd0e37e4a9f3ad61c05332a7": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "36cc95ee525330c88028ea83a0e424314fc83cebcd07c1242c991e6d359f80b6",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\d505bc736e29e2ca3bdc3ab57e367e28ce295f01bd0e37e4a9f3ad61c05332a7.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:02:48.387336",
-        "embed_key": "d505bc736e29e2ca3bdc3ab57e367e28ce295f01bd0e37e4a9f3ad61c05332a7"
-    },
-    "82b6dcfd5f34b5940e0dc0021de39f9806eb276d6fc95c90acb0c893aa44d8d4": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "8b96e540dc8f4858a3c0208e4c8b4ea22f50dba57a29c001aef4306b216ed96c",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\82b6dcfd5f34b5940e0dc0021de39f9806eb276d6fc95c90acb0c893aa44d8d4.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:04:21.645699",
-        "embed_key": "82b6dcfd5f34b5940e0dc0021de39f9806eb276d6fc95c90acb0c893aa44d8d4"
-    },
-    "1cf1b4b606721003ab618d163a4286fd7274ef099fe3ba13f1b344ecc664cbf5": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "8e8142f5ea9162434d7ed6a3c16990b78742bcd9633d60a45b0ae045839d4c97",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\1cf1b4b606721003ab618d163a4286fd7274ef099fe3ba13f1b344ecc664cbf5.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:05:40.795037",
-        "embed_key": "1cf1b4b606721003ab618d163a4286fd7274ef099fe3ba13f1b344ecc664cbf5"
-    },
-    "18a3a3b4beba624d86e50a3ad49554622b229f679b74654ad5e76cb4e5966573": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "7a93da615732e93ca781bfec1f833c3e6433c20bc19a06de7e6e242c3d11a18a",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\18a3a3b4beba624d86e50a3ad49554622b229f679b74654ad5e76cb4e5966573.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:08:00.078407",
-        "embed_key": "18a3a3b4beba624d86e50a3ad49554622b229f679b74654ad5e76cb4e5966573"
-    },
-    "3369fc8ea3b5d28b7aed8a5f7832bf91af059ae3e1c15fa8c0fdb25d939b1120": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "7f25537c7a7fabc8d802582c6b58e8a67c1348ef9e486a9214c81bebb47795a6",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\3369fc8ea3b5d28b7aed8a5f7832bf91af059ae3e1c15fa8c0fdb25d939b1120.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:10:43.663266",
-        "embed_key": "3369fc8ea3b5d28b7aed8a5f7832bf91af059ae3e1c15fa8c0fdb25d939b1120"
-    },
-    "bf39aca216ddf36a1205e0578da357f3e83e2ac036dac53bc511049565d546eb": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "2155acc5faade6ac4da56ddc12eb49780b76d2f75b81c274a11019aa2f9bbfa4",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\bf39aca216ddf36a1205e0578da357f3e83e2ac036dac53bc511049565d546eb.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:12:56.618571",
-        "embed_key": "bf39aca216ddf36a1205e0578da357f3e83e2ac036dac53bc511049565d546eb"
-    },
-    "a99560b5ba45ea50e81bc36b7886d892a419fee2607124376b19e3f21ab50d3a": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "7a5a6df9ca8b95420d8c06b8e2e42d089ea7361acc122fba447a08fd082cf22c",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\a99560b5ba45ea50e81bc36b7886d892a419fee2607124376b19e3f21ab50d3a.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:14:05.041745",
-        "embed_key": "a99560b5ba45ea50e81bc36b7886d892a419fee2607124376b19e3f21ab50d3a"
-    },
-    "b761781dfb0713ec37610295766fcc9d851e131909d15bf5245a971c73503c40": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "85f2dd1aad643afe36ff9f5032569b0de4811fbb8eb91fdc86ba761ce7f86012",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\b761781dfb0713ec37610295766fcc9d851e131909d15bf5245a971c73503c40.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:15:15.255267",
-        "embed_key": "b761781dfb0713ec37610295766fcc9d851e131909d15bf5245a971c73503c40"
-    },
-    "c3e0e058e19caf4db4a23037d95ccff0a09bf9bd97122860955d403d9a735988": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "cd3205093082d838cca5aa935f62a433e6a351a8f01aead2d772e95eff538fd2",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\c3e0e058e19caf4db4a23037d95ccff0a09bf9bd97122860955d403d9a735988.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:16:27.374817",
-        "embed_key": "c3e0e058e19caf4db4a23037d95ccff0a09bf9bd97122860955d403d9a735988"
-    },
-    "cd94ed8f1771e603a9e5a6bd99c9bea990fcfc929669cdbeea35e2f0f5851f2d": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "5f137b560e86f7910f5d70bf6c5812a22982654c555c22044b1b8bbcda949e15",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\cd94ed8f1771e603a9e5a6bd99c9bea990fcfc929669cdbeea35e2f0f5851f2d.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:18:14.346831",
-        "embed_key": "cd94ed8f1771e603a9e5a6bd99c9bea990fcfc929669cdbeea35e2f0f5851f2d"
-    },
-    "f80f70b95a56b19e5f3978473de19ca011c4bf45d5c960d6fa5db84541e8e478": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "31c201f2973613fadb40f9035baafc01f23856d8791661a8954b9dc4d5d69c1f",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\f80f70b95a56b19e5f3978473de19ca011c4bf45d5c960d6fa5db84541e8e478.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:19:57.671215",
-        "embed_key": "f80f70b95a56b19e5f3978473de19ca011c4bf45d5c960d6fa5db84541e8e478"
-    },
-    "bdc78a835c7c8ce264ea4cdd9c8b37e30a2690f828c851c82c32cc8cb5407ac8": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "22f76df4651b01ee4e347c75d49a71a9de85d5752430c1b43c230d7d63b5d656",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\bdc78a835c7c8ce264ea4cdd9c8b37e30a2690f828c851c82c32cc8cb5407ac8.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:21:08.051693",
-        "embed_key": "bdc78a835c7c8ce264ea4cdd9c8b37e30a2690f828c851c82c32cc8cb5407ac8"
-    },
-    "a85760dfddbf3b2ac3390f5c8d0598da3e08a4d18e6ce21ff6ac40a5c8306904": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "8f5463ba6a7e15c76c4c24141cfd204c3223dcc2d9c9bb0606e68c29091635e4",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\a85760dfddbf3b2ac3390f5c8d0598da3e08a4d18e6ce21ff6ac40a5c8306904.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:23:20.427557",
-        "embed_key": "a85760dfddbf3b2ac3390f5c8d0598da3e08a4d18e6ce21ff6ac40a5c8306904"
-    },
-    "cca54ed100a17118e332ed6455751cd367d66a3310a206b67dda8a0fd4833886": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "86b8dc5c0ab51d922eda709c3aba0da1d0c273c65fbad77ba14f45ab4b4c5754",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\cca54ed100a17118e332ed6455751cd367d66a3310a206b67dda8a0fd4833886.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:24:46.902040",
-        "embed_key": "cca54ed100a17118e332ed6455751cd367d66a3310a206b67dda8a0fd4833886"
-    },
-    "4cf579f4953aa33b59d3aa8501c907b1f92becf0716b305c45428b625fdbecfa": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "2c0f435102f429114e18f452f6844e142cc848d61bd0eb7359429c192e6b0d9e",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\4cf579f4953aa33b59d3aa8501c907b1f92becf0716b305c45428b625fdbecfa.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:27:21.786849",
-        "embed_key": "4cf579f4953aa33b59d3aa8501c907b1f92becf0716b305c45428b625fdbecfa"
-    },
-    "5d5f7b1628d2d53828f0271fd8175fd89ff9de21841f4eba5b5a8aa099d3a5a8": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "dfccc6964cf0f98fb00a6a3b67bfac1d959f70d650b1c4e177ad922a50f14ccb",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\5d5f7b1628d2d53828f0271fd8175fd89ff9de21841f4eba5b5a8aa099d3a5a8.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:28:41.230754",
-        "embed_key": "5d5f7b1628d2d53828f0271fd8175fd89ff9de21841f4eba5b5a8aa099d3a5a8"
-    },
-    "ccc553f5124d3b49475badb1048c630e7473b80ff48cc88c47d54f9a7c060f79": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "198cee1a9e3a34d0df9d3bdb0d006a4575c0acdc1476f4eea8c760a704e83b5c",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\ccc553f5124d3b49475badb1048c630e7473b80ff48cc88c47d54f9a7c060f79.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:31:32.778964",
-        "embed_key": "ccc553f5124d3b49475badb1048c630e7473b80ff48cc88c47d54f9a7c060f79"
-    },
-    "03609b84f6a1464020106fe7c1874ffba06ad9e327a92a29f2e26e919c6c7e9b": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "a11a14d23ce8dfec49416b4848330dc12225d7069e5e5f9fcfcbc5d106c5e5d8",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\03609b84f6a1464020106fe7c1874ffba06ad9e327a92a29f2e26e919c6c7e9b.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:34:15.836498",
-        "embed_key": "03609b84f6a1464020106fe7c1874ffba06ad9e327a92a29f2e26e919c6c7e9b"
-    },
-    "42cf83484646cf3770a41b45482e6f8166f05a862250307be4a7bfeaa2119aa5": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "bd65f4dd7b43380d22a9489d77cd76849c1ccf48942430607e27fb75cbcf172e",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\42cf83484646cf3770a41b45482e6f8166f05a862250307be4a7bfeaa2119aa5.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:35:30.882825",
-        "embed_key": "42cf83484646cf3770a41b45482e6f8166f05a862250307be4a7bfeaa2119aa5"
-    },
-    "eb5befa9d81d658e699cab4623ac81904caf14a76757fc99792b90349a16690f": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "c3006e05da6030c87d6dbe97bd6358bbac39c7617f3af8e177d0813b843f58f8",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\eb5befa9d81d658e699cab4623ac81904caf14a76757fc99792b90349a16690f.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:36:47.833355",
-        "embed_key": "eb5befa9d81d658e699cab4623ac81904caf14a76757fc99792b90349a16690f"
-    },
-    "37000a8b1c093098974428f9632d5558ff17cce7ee8c18a0b682f5ec8664be4d": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "8c7fefbdbba5b81638d90011946f977c9b5e91cdc6c16c6850b77f0a6d1a30c8",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\37000a8b1c093098974428f9632d5558ff17cce7ee8c18a0b682f5ec8664be4d.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:38:03.636373",
-        "embed_key": "37000a8b1c093098974428f9632d5558ff17cce7ee8c18a0b682f5ec8664be4d"
-    },
-    "6178d04ca4bfa9f4f264f868025561b8f13785ca7cad890c1b16ea597fca4b61": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "47105b76227bf3e485ce1e94c990026e05ae73d80a5657abceda12135ea5fcad",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\6178d04ca4bfa9f4f264f868025561b8f13785ca7cad890c1b16ea597fca4b61.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:39:54.234744",
-        "embed_key": "6178d04ca4bfa9f4f264f868025561b8f13785ca7cad890c1b16ea597fca4b61"
-    },
-    "90517fa3be07459f82ae1569e92fde11692041f596e95b1fe2a81dc416134629": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "65a467502899a21dea8a8119ed809a65241cee166b200c9de8a9656179327420",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\90517fa3be07459f82ae1569e92fde11692041f596e95b1fe2a81dc416134629.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:41:40.691576",
-        "embed_key": "90517fa3be07459f82ae1569e92fde11692041f596e95b1fe2a81dc416134629"
-    },
-    "cdb9def1f307481223e3043fdce8025f4fde74a4ae0ca8d77e7bd8c44427fd70": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "aa1dec64aae75b48500b8f9e682733d3068a63f1780dc0b307c331f7fb55abb2",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\cdb9def1f307481223e3043fdce8025f4fde74a4ae0ca8d77e7bd8c44427fd70.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:43:30.695175",
-        "embed_key": "cdb9def1f307481223e3043fdce8025f4fde74a4ae0ca8d77e7bd8c44427fd70"
-    },
-    "cdc2ae76e8d8ae2961ada45c8e8956396f078677ab19350033b283bc81b4fba8": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "262ba98a8b52e63ffa394685cdad0b207c00ac1b99dc64b6a66e93ba12e19cca",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\cdc2ae76e8d8ae2961ada45c8e8956396f078677ab19350033b283bc81b4fba8.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:44:52.784544",
-        "embed_key": "cdc2ae76e8d8ae2961ada45c8e8956396f078677ab19350033b283bc81b4fba8"
-    },
-    "7b65746f300a1982665dc3ed15ce585b966cb3b4f19b303f17f8bb8c46d39307": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "1beb28b755e10927066ca030c912dc86373f87968fd16c527e2468d7439bf015",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\7b65746f300a1982665dc3ed15ce585b966cb3b4f19b303f17f8bb8c46d39307.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:46:10.803644",
-        "embed_key": "7b65746f300a1982665dc3ed15ce585b966cb3b4f19b303f17f8bb8c46d39307"
-    },
-    "4511f90ed3e2e5f04323019a8f14cdbc4b662f606ed0ceb5d20dad8c0545ca68": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "38ed5a24e852d6f65e176b6a7cdcc67481820daaca5350ddc1c70f8e8f55c2b4",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\4511f90ed3e2e5f04323019a8f14cdbc4b662f606ed0ceb5d20dad8c0545ca68.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:47:22.131153",
-        "embed_key": "4511f90ed3e2e5f04323019a8f14cdbc4b662f606ed0ceb5d20dad8c0545ca68"
-    },
-    "99f361e8666349cb6d0c202a0db4eb79ed16a65c4aab8e1e76ec76456cf7948f": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "ea7a514e9c9b9085311628b193db98e19cce949a61c28608ae1065bcbde21d70",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\99f361e8666349cb6d0c202a0db4eb79ed16a65c4aab8e1e76ec76456cf7948f.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:48:32.467454",
-        "embed_key": "99f361e8666349cb6d0c202a0db4eb79ed16a65c4aab8e1e76ec76456cf7948f"
-    },
-    "cadd3868abced8ac6562f29982eca22a5b9dfb67951b0970ba16c7c5e3d6aa24": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "50194c860c3b620c0f16b1832e7b79d13a6460c1f2604d165dfc132a328791e8",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\cadd3868abced8ac6562f29982eca22a5b9dfb67951b0970ba16c7c5e3d6aa24.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:49:48.415885",
-        "embed_key": "cadd3868abced8ac6562f29982eca22a5b9dfb67951b0970ba16c7c5e3d6aa24"
-    },
-    "0f64da09ca20fc3cc93015623769f3aa3f6b23e01df3e6e951df3595386dc997": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "6c57340a42bc00c2c8a1201853c430ab9a046698d93979232062b37a45a0923b",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\0f64da09ca20fc3cc93015623769f3aa3f6b23e01df3e6e951df3595386dc997.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:50:58.314588",
-        "embed_key": "0f64da09ca20fc3cc93015623769f3aa3f6b23e01df3e6e951df3595386dc997"
-    },
-    "a3bd2b9f4f5aab542acfaf81ae4dbfe9aaf41cda77eee012792cea7cf046082d": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "2d18b906c579bfb227a6619612aded38f77c3809035f3e8352844c9d6118111c",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\a3bd2b9f4f5aab542acfaf81ae4dbfe9aaf41cda77eee012792cea7cf046082d.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:53:02.836963",
-        "embed_key": "a3bd2b9f4f5aab542acfaf81ae4dbfe9aaf41cda77eee012792cea7cf046082d"
-    },
-    "037e5c0458857fad71a274c829006cdb23c4f301fa7b9284b70115f1d548fe66": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "3ec9e4856cf51b58d24c8e7f178981eab2530f99da04ca38cacfc3e3962737c0",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\037e5c0458857fad71a274c829006cdb23c4f301fa7b9284b70115f1d548fe66.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:55:10.102362",
-        "embed_key": "037e5c0458857fad71a274c829006cdb23c4f301fa7b9284b70115f1d548fe66"
-    },
-    "25ce753bd495e5d7a657aa5a02abf61fdc23374ed2a930dbcecdada0806f8262": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "07df5c9e7b242059209771631164e05c89cc103a5d06cc8c5689f5518403df48",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\25ce753bd495e5d7a657aa5a02abf61fdc23374ed2a930dbcecdada0806f8262.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:56:58.016281",
-        "embed_key": "25ce753bd495e5d7a657aa5a02abf61fdc23374ed2a930dbcecdada0806f8262"
-    },
-    "f559cebe0d8a16701cb8904eef5015956919d1e2a8e1f604928f27c6dc2c2d18": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "c40d93399dc90d2f95cb365939bbed258909e995d74c9128604421d2d37f3a0f",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\f559cebe0d8a16701cb8904eef5015956919d1e2a8e1f604928f27c6dc2c2d18.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T14:59:03.110131",
-        "embed_key": "f559cebe0d8a16701cb8904eef5015956919d1e2a8e1f604928f27c6dc2c2d18"
-    },
-    "7760c96a338de472dae084b9de78f74f721ca2b47177e8791b80e53cc023191c": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "6b9f679c2f6e4d7c44192754b252869fd30fc25909143c7ce54a129b4e3e1943",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\7760c96a338de472dae084b9de78f74f721ca2b47177e8791b80e53cc023191c.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:00:16.040198",
-        "embed_key": "7760c96a338de472dae084b9de78f74f721ca2b47177e8791b80e53cc023191c"
-    },
-    "228da758a587deba32932da6c32c5e5a21beacfda5356c3f1cde4376ff3636e4": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "3936611c7ecc8d4374748e56be7a23b0a68f35bedcaf20973e4735aa1f5314d1",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\228da758a587deba32932da6c32c5e5a21beacfda5356c3f1cde4376ff3636e4.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:01:31.109025",
-        "embed_key": "228da758a587deba32932da6c32c5e5a21beacfda5356c3f1cde4376ff3636e4"
-    },
-    "d0135dd918d26424b4b30538ac02f4ce19770f6acf462a84f08aa8f878129c46": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "eda60a0b1ea58a79bf2a8d3af060349aad20ea348a72f25b8a0ee963deb570df",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\d0135dd918d26424b4b30538ac02f4ce19770f6acf462a84f08aa8f878129c46.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:02:47.731244",
-        "embed_key": "d0135dd918d26424b4b30538ac02f4ce19770f6acf462a84f08aa8f878129c46"
-    },
-    "d77651cc4a2cda52542292dd03bcc8b66a2051cd1f5b02db0f5540a0c5109820": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "a9ebbaae44646ed14e6e700d69d128e8b59e1e23bf50713d4de46fdae711b682",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\d77651cc4a2cda52542292dd03bcc8b66a2051cd1f5b02db0f5540a0c5109820.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:04:02.377674",
-        "embed_key": "d77651cc4a2cda52542292dd03bcc8b66a2051cd1f5b02db0f5540a0c5109820"
-    },
-    "b633a0661dbf38f42d2fc5cf6d455e40683ba42e0d1906184eeba50425a65341": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "358c19bb9543ba2a9dfcc6cc838f917e911a86b4899fac0c8275445e3eb5e3af",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\b633a0661dbf38f42d2fc5cf6d455e40683ba42e0d1906184eeba50425a65341.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:05:13.518397",
-        "embed_key": "b633a0661dbf38f42d2fc5cf6d455e40683ba42e0d1906184eeba50425a65341"
-    },
-    "f3cb6df5b787b5d47cde3dbd82ba27f8776efc8014dc57582c91323167e47206": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "7db7311bd4bf8d55794db84d969e2f06a41e6bb4d2189090c905929e33feb123",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\f3cb6df5b787b5d47cde3dbd82ba27f8776efc8014dc57582c91323167e47206.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:06:28.714624",
-        "embed_key": "f3cb6df5b787b5d47cde3dbd82ba27f8776efc8014dc57582c91323167e47206"
-    },
-    "2c519532a45d0cf40239caf54c3849e7cb67b7d68d7365ab7cefac4c2c450dee": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "ee2cc7c9b79586b59dc3f094c64d07452014c653ffb60836caad73d416a5bdde",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\2c519532a45d0cf40239caf54c3849e7cb67b7d68d7365ab7cefac4c2c450dee.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:09:04.949523",
-        "embed_key": "2c519532a45d0cf40239caf54c3849e7cb67b7d68d7365ab7cefac4c2c450dee"
-    },
-    "debc786649a292dc80ac93bf0201c56588d2f3015a2a5ca72cfd4763dccb2446": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "eb277f5bfa59b1d8d14246d0a28dc74823263420c6b72b820cbe66f1c8d05a41",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\debc786649a292dc80ac93bf0201c56588d2f3015a2a5ca72cfd4763dccb2446.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:11:03.012779",
-        "embed_key": "debc786649a292dc80ac93bf0201c56588d2f3015a2a5ca72cfd4763dccb2446"
-    },
-    "30a2bce939dba765093f215a2ee75e26550cf0c9182118cf78ccb586f17da5b1": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "64f7efc6fdb526e8044aa1e142364e4933058b4e3addddc5510a4eba2666d58b",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\30a2bce939dba765093f215a2ee75e26550cf0c9182118cf78ccb586f17da5b1.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:13:25.982190",
-        "embed_key": "30a2bce939dba765093f215a2ee75e26550cf0c9182118cf78ccb586f17da5b1"
-    },
-    "e7554d53b6e2fc88fe3b3a24c7900207171e6ddf6adbb958b37e9af64a65b270": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "2276e1c25d6d4b2762a5342ef4b0ce205104959b4dd3b56ed82697d0dc3417f8",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\e7554d53b6e2fc88fe3b3a24c7900207171e6ddf6adbb958b37e9af64a65b270.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:15:46.599280",
-        "embed_key": "e7554d53b6e2fc88fe3b3a24c7900207171e6ddf6adbb958b37e9af64a65b270"
-    },
-    "185c7b9b110f09fa6637481c4ea5ac6f75729a021c03e4075c500611ec5e2716": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "77da0ecf1370ae94d9f87a9f661ebe9c44bfb7c7646c507506ad05e2b8979b22",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\185c7b9b110f09fa6637481c4ea5ac6f75729a021c03e4075c500611ec5e2716.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:18:04.609556",
-        "embed_key": "185c7b9b110f09fa6637481c4ea5ac6f75729a021c03e4075c500611ec5e2716"
-    },
-    "df060fdd12c6f8052c0c8b6c69ed5c34510475295f16c072cf11885631543195": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "b2ca8931b1110bf91736d95fb741b1d6311dc51c5463667608832249089c4328",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\df060fdd12c6f8052c0c8b6c69ed5c34510475295f16c072cf11885631543195.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:19:18.147799",
-        "embed_key": "df060fdd12c6f8052c0c8b6c69ed5c34510475295f16c072cf11885631543195"
-    },
-    "a793355d2932518d1ad47981aa5925708044339cca29b77ece1dbfbc4dc3cea5": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "93e485f3a361c613166875b61e64aedbb813fb4af1dde708a40b7989f3a2ac65",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\a793355d2932518d1ad47981aa5925708044339cca29b77ece1dbfbc4dc3cea5.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:20:36.328194",
-        "embed_key": "a793355d2932518d1ad47981aa5925708044339cca29b77ece1dbfbc4dc3cea5"
-    },
-    "8c251f214c9717a9db1a9ccb11f3c0118bea9fa36304a1d1a45db8847feca8d3": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "6cbf89e41b19bad54c5625a219ddd97b7da37c7978cb4409e0e600999d43e789",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\8c251f214c9717a9db1a9ccb11f3c0118bea9fa36304a1d1a45db8847feca8d3.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:21:53.088968",
-        "embed_key": "8c251f214c9717a9db1a9ccb11f3c0118bea9fa36304a1d1a45db8847feca8d3"
-    },
-    "ad4369a6f03561d9c3bab33290787324020bd1c9ec8d874385699ef643d1035d": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "2819a871b3dfed43b83a2a784ae78322db1e1ada46e7b9fcd1007da5d516e2f0",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\ad4369a6f03561d9c3bab33290787324020bd1c9ec8d874385699ef643d1035d.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:23:11.111340",
-        "embed_key": "ad4369a6f03561d9c3bab33290787324020bd1c9ec8d874385699ef643d1035d"
-    },
-    "b7fb7190e36594b40eb8f47b88633d17afade018533114a0f63794c496c01c56": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "7f609e866bd0ffd6201fb00099f6cc075e64da423a887d16241577254cb9fdc9",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\b7fb7190e36594b40eb8f47b88633d17afade018533114a0f63794c496c01c56.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:24:26.244881",
-        "embed_key": "b7fb7190e36594b40eb8f47b88633d17afade018533114a0f63794c496c01c56"
-    },
-    "7bbcc6beb446cb7c9efed41f6f3a49d74db330a48c190fd093857f34e17f7baf": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "140aa7efb820c7bd0fa4865941062915d485b087df199d4338d3c150cae6798a",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\7bbcc6beb446cb7c9efed41f6f3a49d74db330a48c190fd093857f34e17f7baf.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:25:43.787907",
-        "embed_key": "7bbcc6beb446cb7c9efed41f6f3a49d74db330a48c190fd093857f34e17f7baf"
-    },
-    "bf07e144e1527d9f0f64c6647eeea2b723a3a00c979ffc8ff519b58f8d208197": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "fa6fb893684b6b72f63ff47ed5b058e32ecb70bf4630f6d979d661d311c6ac2b",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\bf07e144e1527d9f0f64c6647eeea2b723a3a00c979ffc8ff519b58f8d208197.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:27:03.165926",
-        "embed_key": "bf07e144e1527d9f0f64c6647eeea2b723a3a00c979ffc8ff519b58f8d208197"
-    },
-    "639c6cf9af7caf2892285cd5d0c3a0a26b9b290fc3ce9be23385489ab03ce1b4": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "892bb12ebf31fafec28a2536a90835ed9a9df2da5f10efaf86cac18d2f7a2f74",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\639c6cf9af7caf2892285cd5d0c3a0a26b9b290fc3ce9be23385489ab03ce1b4.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:28:19.389331",
-        "embed_key": "639c6cf9af7caf2892285cd5d0c3a0a26b9b290fc3ce9be23385489ab03ce1b4"
-    },
-    "efc202e9427310c49eb7ab21737016292d59a6d7b81fbdb06f142cff788ebe2f": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "908c58e96144a864b71aa238aafdf760c77ce4555a698deb9ab949c30a948c08",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\efc202e9427310c49eb7ab21737016292d59a6d7b81fbdb06f142cff788ebe2f.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:29:34.284811",
-        "embed_key": "efc202e9427310c49eb7ab21737016292d59a6d7b81fbdb06f142cff788ebe2f"
-    },
-    "89e08cd9ff41bf8881e08c451f4c1c122c943354a15a1bd54e4e5069dc64e97a": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "b4d2d36a053272978940a24a67571cc7ff996dc88db052526fa5d14903270090",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\89e08cd9ff41bf8881e08c451f4c1c122c943354a15a1bd54e4e5069dc64e97a.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:30:50.970940",
-        "embed_key": "89e08cd9ff41bf8881e08c451f4c1c122c943354a15a1bd54e4e5069dc64e97a"
-    },
-    "252be23f80162e0da0f188ec1295977f7cb916dde01a93b31918b2e72223101e": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "36ac0e8efc61a92d9e081bcc35105035c4fae0fd9efd3580ead5c94aa684337c",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\252be23f80162e0da0f188ec1295977f7cb916dde01a93b31918b2e72223101e.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:32:06.586030",
-        "embed_key": "252be23f80162e0da0f188ec1295977f7cb916dde01a93b31918b2e72223101e"
-    },
-    "bff5fdfc8555dd5b682920b6f5171c7fc74345037ae1b54a58f5ef10146ebf0a": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "03c3f4c9c88d2f86383e04105d797cc78e5041a0e2e9afa62344e3795f89cf67",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\bff5fdfc8555dd5b682920b6f5171c7fc74345037ae1b54a58f5ef10146ebf0a.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:33:21.216446",
-        "embed_key": "bff5fdfc8555dd5b682920b6f5171c7fc74345037ae1b54a58f5ef10146ebf0a"
-    },
-    "c1f0dd02ce1ca5a2c60c051ed86105c258b2f8d117997ac8110b22ed416ae9c4": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "17a272406fccb4a92a5f1419b1705d8baee7a4f73216bb1015b200bf0678e6d5",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\c1f0dd02ce1ca5a2c60c051ed86105c258b2f8d117997ac8110b22ed416ae9c4.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:34:36.495149",
-        "embed_key": "c1f0dd02ce1ca5a2c60c051ed86105c258b2f8d117997ac8110b22ed416ae9c4"
-    },
-    "6a9f9b7333a3add2ca8a69a7da9c28801757af900f98aab7a03a8838c539a280": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "9011f1a69605c78b3b2139a6bc850075c218ec93eee8636d1d9a56146d9c3ad7",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\6a9f9b7333a3add2ca8a69a7da9c28801757af900f98aab7a03a8838c539a280.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:35:52.043915",
-        "embed_key": "6a9f9b7333a3add2ca8a69a7da9c28801757af900f98aab7a03a8838c539a280"
-    },
-    "4fa689d291b04e06483271baac2591bd27ccde8a5eccb8990350d3dc6d930d64": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "c43ac95deffc5c049e1606606423e61bfb24740f01b9aeac64535302369bc3c2",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\4fa689d291b04e06483271baac2591bd27ccde8a5eccb8990350d3dc6d930d64.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:37:05.926631",
-        "embed_key": "4fa689d291b04e06483271baac2591bd27ccde8a5eccb8990350d3dc6d930d64"
-    },
-    "f3bd07d4d16d7831c4f28d361d3fecc92732e36fdc136cb9b76d1c1541c120c7": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "1b36665391336a98f4170a46d60c6de01f784ea8f9554a464511acb9d4dc9d6e",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\f3bd07d4d16d7831c4f28d361d3fecc92732e36fdc136cb9b76d1c1541c120c7.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:38:19.867937",
-        "embed_key": "f3bd07d4d16d7831c4f28d361d3fecc92732e36fdc136cb9b76d1c1541c120c7"
-    },
-    "1fb9b4b8f5a4d2633ae8dd0669ea301134d23af3fde7f3f112b127d5adda3a24": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "9756eec98103cd1821a3a963ac54dd312757bf786e7d66f332a919c36fef0ae6",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\1fb9b4b8f5a4d2633ae8dd0669ea301134d23af3fde7f3f112b127d5adda3a24.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:39:35.338162",
-        "embed_key": "1fb9b4b8f5a4d2633ae8dd0669ea301134d23af3fde7f3f112b127d5adda3a24"
-    },
-    "921a4793b806f532922dd5b84a1228d539cc85d37f4edfb9b101762223f73627": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "377fce0d95ad46051d1a09f7694a7127b9c67ce67758ae205e54de6141007b0a",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\921a4793b806f532922dd5b84a1228d539cc85d37f4edfb9b101762223f73627.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:40:51.556512",
-        "embed_key": "921a4793b806f532922dd5b84a1228d539cc85d37f4edfb9b101762223f73627"
-    },
-    "ae12b8e5998c042638c86be21107240b347ce9c0c04064bbb0a4be09ff3f1cb1": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "cce39e88888ca818cfafe404f00ba661b151a8f421989931c80097fca90a11cf",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\ae12b8e5998c042638c86be21107240b347ce9c0c04064bbb0a4be09ff3f1cb1.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:42:06.341645",
-        "embed_key": "ae12b8e5998c042638c86be21107240b347ce9c0c04064bbb0a4be09ff3f1cb1"
-    },
-    "c914b0ec28fe14ada33e03893056bc3356ed9cca40e4c5315bd33223cb580983": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "54ac2e04043dc41e2b270b9cc798546f6a53e7049a3a834942bc4c7b90d53aef",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\c914b0ec28fe14ada33e03893056bc3356ed9cca40e4c5315bd33223cb580983.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:43:22.453933",
-        "embed_key": "c914b0ec28fe14ada33e03893056bc3356ed9cca40e4c5315bd33223cb580983"
-    },
-    "c54e763f728762777e363aa38e965bedf1d6d5b8c5d8868ba08935a4e4a61fbc": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "bcaeb40adb1d08c3386a10733cc54b27716df397fc824e63187fa66e4b8889a0",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\c54e763f728762777e363aa38e965bedf1d6d5b8c5d8868ba08935a4e4a61fbc.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:44:36.069000",
-        "embed_key": "c54e763f728762777e363aa38e965bedf1d6d5b8c5d8868ba08935a4e4a61fbc"
-    },
-    "23623f5c8ffc2b860fcf8bc6968df3eed40de06b752075658273e56b3c67cd06": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "ae24c803369b5defd38530fc4ce8990a0d339b43b00d10172284e8255caa1fc6",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\23623f5c8ffc2b860fcf8bc6968df3eed40de06b752075658273e56b3c67cd06.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:45:50.232427",
-        "embed_key": "23623f5c8ffc2b860fcf8bc6968df3eed40de06b752075658273e56b3c67cd06"
-    },
-    "f9ea23599e24334308c96bb2328e6383baec8f92dfd11cd7bd86685c708d924c": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "40d5dbb7146a2a6eeec5decb43687473dab96d5ecec5403edcde5bb9fb3bc66c",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\f9ea23599e24334308c96bb2328e6383baec8f92dfd11cd7bd86685c708d924c.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:47:04.643141",
-        "embed_key": "f9ea23599e24334308c96bb2328e6383baec8f92dfd11cd7bd86685c708d924c"
-    },
-    "71de6bd194e0bb96edd105823dd50c4c90801465c0fea31a78190f9113fac179": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "161cecca8f788d7cd11d348b53ca0d94b6f203907f48c4098b6f27ce6a6aad24",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\71de6bd194e0bb96edd105823dd50c4c90801465c0fea31a78190f9113fac179.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:48:20.770218",
-        "embed_key": "71de6bd194e0bb96edd105823dd50c4c90801465c0fea31a78190f9113fac179"
-    },
-    "015761667d8da9ac2f67b710df4e5f3442e861d88034e203fef1f9b052271b2f": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "3bd6c8b259f67fc376a20be336a6bc586c12dc62580967aac3df2aad58eee1d9",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\015761667d8da9ac2f67b710df4e5f3442e861d88034e203fef1f9b052271b2f.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:49:36.240154",
-        "embed_key": "015761667d8da9ac2f67b710df4e5f3442e861d88034e203fef1f9b052271b2f"
-    },
-    "cb200da3a885f3a57f2945651a77deaa73782d2faf8f920e31f467ba5e67f1d2": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "1c582bbdf055bd840266e4c698b49d4c3964430db982c9658751e7276b415550",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\cb200da3a885f3a57f2945651a77deaa73782d2faf8f920e31f467ba5e67f1d2.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:50:51.769950",
-        "embed_key": "cb200da3a885f3a57f2945651a77deaa73782d2faf8f920e31f467ba5e67f1d2"
-    },
-    "2974d0b92f45ffd3837569dd754aabe6ed1bda81628348f0cc06b7538354f402": {
-        "model": "unsloth/Qwen2.5-14B-Instruct-bnb-4bit",
-        "report_hash_id": "89219c3329faac7aca8b65a861924a326a3c288e71ff1d142c47fb483eddb0d8",
-        "respond_path": "d:\\bnquys\\Source\\stock-trend-prediction\\stock_analysis\\st_data\\VIC\\responses\\2974d0b92f45ffd3837569dd754aabe6ed1bda81628348f0cc06b7538354f402.md",
-        "respond_status": "success",
-        "created_date": "2026-05-25T15:52:10.025500",
-        "embed_key": "2974d0b92f45ffd3837569dd754aabe6ed1bda81628348f0cc06b7538354f402"
+    "ccf63cdb0222653bdc7ad5e821acce97b19fe27e192c3db87f9d200d8138e252": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "1588ca6d4584092ad385aca8cd194d60a7cebc79dd47d62da039fa9c8f73929a",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\ccf63cdb0222653bdc7ad5e821acce97b19fe27e192c3db87f9d200d8138e252.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:52:23.776409",
+        "embed_key": "ccf63cdb0222653bdc7ad5e821acce97b19fe27e192c3db87f9d200d8138e252"
+    },
+    "e4206278e6bce127ab1f4d1bfd783fb61aafa39cc93148b2cf7d4a653f8edd79": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "495f1642f1d0c77f041101d8b9c559040f37f0465b32c76abb15615ac375c5be",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\e4206278e6bce127ab1f4d1bfd783fb61aafa39cc93148b2cf7d4a653f8edd79.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:52:48.112776",
+        "embed_key": "e4206278e6bce127ab1f4d1bfd783fb61aafa39cc93148b2cf7d4a653f8edd79"
+    },
+    "b39574469f7cc5d0c4195847f24eb46a1e14102a7d73ff3dc049b5af3a8967b8": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "f995697842e0c5a9eddf2f0b3c70b01c851bcd7a28cbd9100685142117fa8ac9",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\b39574469f7cc5d0c4195847f24eb46a1e14102a7d73ff3dc049b5af3a8967b8.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:53:19.253925",
+        "embed_key": "b39574469f7cc5d0c4195847f24eb46a1e14102a7d73ff3dc049b5af3a8967b8"
+    },
+    "d057de6f9dd743653ca18e1ae456cbb5d2d4c6d1ef72be725bc0cd21490916fd": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "44b4cb0b0019e955d4f17f1b2aaa964dab17fece2f214cdab22005a5c6b157af",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\d057de6f9dd743653ca18e1ae456cbb5d2d4c6d1ef72be725bc0cd21490916fd.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:53:48.994989",
+        "embed_key": "d057de6f9dd743653ca18e1ae456cbb5d2d4c6d1ef72be725bc0cd21490916fd"
+    },
+    "33662867c60349829c77e4d7e2bfe02583f4420d2d005235d14aafada048904d": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "e42c1ddbfa8b9e6cf211c2b7faf9a8f33dde1c21668adaa4f82df0809077f66d",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\33662867c60349829c77e4d7e2bfe02583f4420d2d005235d14aafada048904d.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:54:11.435232",
+        "embed_key": "33662867c60349829c77e4d7e2bfe02583f4420d2d005235d14aafada048904d"
+    },
+    "5979c76e694682f0a0d15aee46bd696a97bd37105150924895bfdfa7e939fba2": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "b942e08d1a0856d19b4c8744ea15c81d077ccefc51f89c19dabe2185c7c9d1f3",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\5979c76e694682f0a0d15aee46bd696a97bd37105150924895bfdfa7e939fba2.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:54:36.561948",
+        "embed_key": "5979c76e694682f0a0d15aee46bd696a97bd37105150924895bfdfa7e939fba2"
+    },
+    "9d59cc3678f7619decddf6ea81d4f2c0de595a51fe9bb19d7b187bb50ebb4595": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "e0de0b50b712c081f0256b881976d4c6ff7edde71a67cfe880c30fa4d915dfaf",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\9d59cc3678f7619decddf6ea81d4f2c0de595a51fe9bb19d7b187bb50ebb4595.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:55:10.329784",
+        "embed_key": "9d59cc3678f7619decddf6ea81d4f2c0de595a51fe9bb19d7b187bb50ebb4595"
+    },
+    "8eb20cedbae5d90b235725596c8abcd5642c5111e0157f2eae2685c9aec17648": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "c59847151c6c5558c3459af2c7144e5d6f5a8a9c74f7bb164f6622fed72802d7",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\8eb20cedbae5d90b235725596c8abcd5642c5111e0157f2eae2685c9aec17648.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:55:32.977433",
+        "embed_key": "8eb20cedbae5d90b235725596c8abcd5642c5111e0157f2eae2685c9aec17648"
+    },
+    "658fc762d164389b6805e37cb6f073886abe25ef52b22744ff1af39eb889bcb3": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "6acd58c31ea572ad5da1b1d0486f6a7c5da6adad14f19894a93d7f22c83e973e",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\658fc762d164389b6805e37cb6f073886abe25ef52b22744ff1af39eb889bcb3.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:55:53.497265",
+        "embed_key": "658fc762d164389b6805e37cb6f073886abe25ef52b22744ff1af39eb889bcb3"
+    },
+    "b466690e21b5e84612529222791a9d10e228a2a56073162db86bd7a7b27bcb09": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "aefe3a91742817e95cfada98dca802ab54cb0ab9ef5bade6d22d910e14ddb555",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\b466690e21b5e84612529222791a9d10e228a2a56073162db86bd7a7b27bcb09.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:56:34.658215",
+        "embed_key": "b466690e21b5e84612529222791a9d10e228a2a56073162db86bd7a7b27bcb09"
+    },
+    "c9434667b4fbbc36d74ed70c888866429d74189813ea5308ed22adf7dfdfec50": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "9c8a797c0f7b2a50fbd6d059044c14805a2130d32328943e81e443f5e5c3ae4f",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\c9434667b4fbbc36d74ed70c888866429d74189813ea5308ed22adf7dfdfec50.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:57:08.205358",
+        "embed_key": "c9434667b4fbbc36d74ed70c888866429d74189813ea5308ed22adf7dfdfec50"
+    },
+    "d372f4fac70997800be9e25c597e68156c32c31321107ba7a1009e1904cad4b4": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "760ab98eb9e46c90b38b8642d8128a110bf504a96be653f2df88f7b89be45e4a",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\d372f4fac70997800be9e25c597e68156c32c31321107ba7a1009e1904cad4b4.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:57:26.606613",
+        "embed_key": "d372f4fac70997800be9e25c597e68156c32c31321107ba7a1009e1904cad4b4"
+    },
+    "9050560194ca5651adaa444d27723fd55df63b127958529026fad54c80b39e8b": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "99605977ea6e01c5cef8e8b3f62242e9c93c9b4a81a475ed96c575657c33db89",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\9050560194ca5651adaa444d27723fd55df63b127958529026fad54c80b39e8b.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:57:44.796966",
+        "embed_key": "9050560194ca5651adaa444d27723fd55df63b127958529026fad54c80b39e8b"
+    },
+    "d2770686eebf35d73f7c9781341efb8b4f9817af911fb9bc95743b0a1c23a722": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "5d848b751d32945c8b5bed50f0a57115eaccb8ebab1d87395a8ee017310e65aa",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\d2770686eebf35d73f7c9781341efb8b4f9817af911fb9bc95743b0a1c23a722.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:58:05.557799",
+        "embed_key": "d2770686eebf35d73f7c9781341efb8b4f9817af911fb9bc95743b0a1c23a722"
+    },
+    "e2774a88ce7192a493affe012edd0ad2dda9f81a17f4b23a9010ea178c41dae3": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "861a405f851e41723a82ef8ce27c9ad8557c9d8422600766a807e0480ad6ed5e",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\e2774a88ce7192a493affe012edd0ad2dda9f81a17f4b23a9010ea178c41dae3.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:58:25.172982",
+        "embed_key": "e2774a88ce7192a493affe012edd0ad2dda9f81a17f4b23a9010ea178c41dae3"
+    },
+    "ba42d24a0d2b3e3675a4e683a905c93e936c0b9bc074ea348064b6dec64eb366": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "c8a51316353ac20e5432c90612a40bc70560bfe410e842ac97d330423674ca5f",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\ba42d24a0d2b3e3675a4e683a905c93e936c0b9bc074ea348064b6dec64eb366.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:58:51.753499",
+        "embed_key": "ba42d24a0d2b3e3675a4e683a905c93e936c0b9bc074ea348064b6dec64eb366"
+    },
+    "cb20d437066d7be22fc272eeb7447e11ac61117b68b2d1677d1646f1833e09e2": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "d3e183049b8271d124882ca1db46b329575cfd9e9458c3a7e4ed5b647890f9c0",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\cb20d437066d7be22fc272eeb7447e11ac61117b68b2d1677d1646f1833e09e2.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:59:13.594489",
+        "embed_key": "cb20d437066d7be22fc272eeb7447e11ac61117b68b2d1677d1646f1833e09e2"
+    },
+    "b913337b674edbd8a0c4d6e7f3115e51aaaf144cd8023c7c7aecfebc4c2ed192": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "41ecb165d5bcfaac81713220b83a5913ad7dd0020aa42d83b7e09545e726a22c",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\b913337b674edbd8a0c4d6e7f3115e51aaaf144cd8023c7c7aecfebc4c2ed192.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:59:35.015973",
+        "embed_key": "b913337b674edbd8a0c4d6e7f3115e51aaaf144cd8023c7c7aecfebc4c2ed192"
+    },
+    "8778750f96e12accea2e845efccd932dde329cf04bc78d613bb60840f222d66a": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "e87e611d566dc8c15e2bd1fa54162a7bb7ee4a8326fb9ec7fbd0a8bb9d561e57",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\8778750f96e12accea2e845efccd932dde329cf04bc78d613bb60840f222d66a.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T19:59:54.597609",
+        "embed_key": "8778750f96e12accea2e845efccd932dde329cf04bc78d613bb60840f222d66a"
+    },
+    "e89555e0884eb65fe865ee66d9c21fdfb00634cc31220c7f9fd0d4c422fb986b": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "7254360a39b40231949446bda55447f925d50843702c3149083e97a31bb2cc11",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\e89555e0884eb65fe865ee66d9c21fdfb00634cc31220c7f9fd0d4c422fb986b.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:00:17.297613",
+        "embed_key": "e89555e0884eb65fe865ee66d9c21fdfb00634cc31220c7f9fd0d4c422fb986b"
+    },
+    "acf2f4e27e83dc0ea8e32a7c89c600c04850fb97f365cc40132c63a08b0adac2": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "a97b9756edc5b413a8d16b167984417201ed070f93a2a376f83741c480a95609",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\acf2f4e27e83dc0ea8e32a7c89c600c04850fb97f365cc40132c63a08b0adac2.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:00:51.466505",
+        "embed_key": "acf2f4e27e83dc0ea8e32a7c89c600c04850fb97f365cc40132c63a08b0adac2"
+    },
+    "b398422976c03a8da48082f82ad211bd7acd416d2ef8e255dd628551815e46f3": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "d3815e0b2f22c33720118b50dd732dd97b073a11189132228d009c2d32b86795",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\b398422976c03a8da48082f82ad211bd7acd416d2ef8e255dd628551815e46f3.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:01:22.790962",
+        "embed_key": "b398422976c03a8da48082f82ad211bd7acd416d2ef8e255dd628551815e46f3"
+    },
+    "134330f79cc1995edb32d435b95743019b9e4902e0dc6d32c5f613ec623f2c10": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "1aabd583d440fe4d3fcacbac7764beeff95bfd1e69029e65cd7c5f985df405dd",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\134330f79cc1995edb32d435b95743019b9e4902e0dc6d32c5f613ec623f2c10.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:01:45.595364",
+        "embed_key": "134330f79cc1995edb32d435b95743019b9e4902e0dc6d32c5f613ec623f2c10"
+    },
+    "9834b9e9bddc9b290476898d9962e6f0753e0dad7948a60c080fa4e35a6356d0": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "cacb118469a953559a71221e7b9b01389b6664231ca362b67732eaa4c3545245",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\9834b9e9bddc9b290476898d9962e6f0753e0dad7948a60c080fa4e35a6356d0.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:02:06.677263",
+        "embed_key": "9834b9e9bddc9b290476898d9962e6f0753e0dad7948a60c080fa4e35a6356d0"
+    },
+    "6b613d97905078b80a8ef2b550cd7dc04b16f6ba31a39a6c81f4620f8cf811b7": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "5c5943d1a9327e2d47fcce1d4db1dd2dae75ee85e4ee759688ce4ccc20eccc4c",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\6b613d97905078b80a8ef2b550cd7dc04b16f6ba31a39a6c81f4620f8cf811b7.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:02:29.393302",
+        "embed_key": "6b613d97905078b80a8ef2b550cd7dc04b16f6ba31a39a6c81f4620f8cf811b7"
+    },
+    "c39cc59f4b6967d627891c3f2e30062eef777ffa2959e6beef8c15a5f14031ca": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "97d1c84337a46cab58e667af2334115733e661fe910c514d20995362fcfa68e8",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\c39cc59f4b6967d627891c3f2e30062eef777ffa2959e6beef8c15a5f14031ca.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:02:53.460377",
+        "embed_key": "c39cc59f4b6967d627891c3f2e30062eef777ffa2959e6beef8c15a5f14031ca"
+    },
+    "82d039e8c9ea694098459aa4e22edd0bac2befda951da26106493395282cdc92": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "930ac9a9725f54f91c0e55f911aa961b1facd465256b6a91ed5019aa786c034b",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\82d039e8c9ea694098459aa4e22edd0bac2befda951da26106493395282cdc92.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:03:11.447595",
+        "embed_key": "82d039e8c9ea694098459aa4e22edd0bac2befda951da26106493395282cdc92"
+    },
+    "14c0c96bffdd7698dbecb40e05021c29db100e1779043b60871edde13f18363f": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "5a84e1afaf9eff9eb54740abb72003c9c597c642cc011642fe42bed1a48576ff",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\14c0c96bffdd7698dbecb40e05021c29db100e1779043b60871edde13f18363f.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:03:32.128631",
+        "embed_key": "14c0c96bffdd7698dbecb40e05021c29db100e1779043b60871edde13f18363f"
+    },
+    "bf0c89d7bcf2b445159c237aada9b657e67d40e2da90eec17a8ae743cc148b42": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "f5325de6d08138faf195989159af90d9860620381c5b04399e208a653d622712",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\bf0c89d7bcf2b445159c237aada9b657e67d40e2da90eec17a8ae743cc148b42.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:03:52.834514",
+        "embed_key": "bf0c89d7bcf2b445159c237aada9b657e67d40e2da90eec17a8ae743cc148b42"
+    },
+    "4cae23355b88fdb2fe6963ec7c786e730bbd117f38bb9043364aa895268bf464": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "ee25444c393a654f27c58c71559282785731efe07de953073ed31df32b205986",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\4cae23355b88fdb2fe6963ec7c786e730bbd117f38bb9043364aa895268bf464.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:04:21.057453",
+        "embed_key": "4cae23355b88fdb2fe6963ec7c786e730bbd117f38bb9043364aa895268bf464"
+    },
+    "151768d55cb9341f3c2dfecf23945a53e6cb646b5d73c247edb5626cdf6078ff": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "89e40c3ea195a751e59500c6c747eeec3c26f8917a8bc04099c63b2e423dcb5f",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\151768d55cb9341f3c2dfecf23945a53e6cb646b5d73c247edb5626cdf6078ff.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:04:54.624519",
+        "embed_key": "151768d55cb9341f3c2dfecf23945a53e6cb646b5d73c247edb5626cdf6078ff"
+    },
+    "abfe582e443c78b754fcdd447f0117f924665889e80ebf353f4daab71ac358a0": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "eaad0187d63599ebed6e86aa496aca88972e0a5383a15166e0231866ce96bbbb",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\abfe582e443c78b754fcdd447f0117f924665889e80ebf353f4daab71ac358a0.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:05:28.603520",
+        "embed_key": "abfe582e443c78b754fcdd447f0117f924665889e80ebf353f4daab71ac358a0"
+    },
+    "90ac59500fed585aed1609f56d6271a7ab2a692cb83cfa6e488c0142ad03c354": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "930dce2f7f1983f62cdb8863efe2b19b52d33ce5466caa915829cb5f85651b00",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\90ac59500fed585aed1609f56d6271a7ab2a692cb83cfa6e488c0142ad03c354.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:06:03.238869",
+        "embed_key": "90ac59500fed585aed1609f56d6271a7ab2a692cb83cfa6e488c0142ad03c354"
+    },
+    "8f6332c3d1944d4d67752411d5abca99db682cc0cff4b2c4430d56d28bf03724": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "1593dc65fda572c786108b380ec0ae74f89bd16555306c077c9c4e5665ef15e9",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\8f6332c3d1944d4d67752411d5abca99db682cc0cff4b2c4430d56d28bf03724.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:06:21.406373",
+        "embed_key": "8f6332c3d1944d4d67752411d5abca99db682cc0cff4b2c4430d56d28bf03724"
+    },
+    "6374773361b850011387752cb17d5288acbba3ecebb62ad5439220671574061d": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "59088d9af62d2f1f17dd32a96373dd263c48d66d64e950de6d47c89dc279dd9a",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\6374773361b850011387752cb17d5288acbba3ecebb62ad5439220671574061d.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:06:44.145758",
+        "embed_key": "6374773361b850011387752cb17d5288acbba3ecebb62ad5439220671574061d"
+    },
+    "1b631bdc8c61521659ee0f74e93920e3047cf2654a8bb77ba0d75a89c999bd0d": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "7694fa151b7e1076fd485095d9ba6688661fccd81afe69e8a5a2f854de92fa39",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\1b631bdc8c61521659ee0f74e93920e3047cf2654a8bb77ba0d75a89c999bd0d.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:07:03.522766",
+        "embed_key": "1b631bdc8c61521659ee0f74e93920e3047cf2654a8bb77ba0d75a89c999bd0d"
+    },
+    "212f69f1259f36a5aa048f7cd75ffcb58a9d96974664b4e3cd447679403431b0": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "343d099fc880547c5e6344cfb99177101eb380dc63526439f1b4862e8ad1323c",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\212f69f1259f36a5aa048f7cd75ffcb58a9d96974664b4e3cd447679403431b0.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:07:39.533818",
+        "embed_key": "212f69f1259f36a5aa048f7cd75ffcb58a9d96974664b4e3cd447679403431b0"
+    },
+    "996ea9fa63d72f1cda11277648bdefc3ea462919424570bfaf77897f4578d8f2": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "b512bb979026002fca273a435ae2f95485509ca5089d5ca3314f293d7c023078",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\996ea9fa63d72f1cda11277648bdefc3ea462919424570bfaf77897f4578d8f2.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:07:59.080408",
+        "embed_key": "996ea9fa63d72f1cda11277648bdefc3ea462919424570bfaf77897f4578d8f2"
+    },
+    "915c11664d7dcc0e6dffb516f2754110ba9976a9ebec40dc97deca548ab10046": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "58f3cf0083163e6b4d766d5f7a82b912b3d223a246afb55e3fa1f1efaa348520",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\915c11664d7dcc0e6dffb516f2754110ba9976a9ebec40dc97deca548ab10046.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:08:20.936614",
+        "embed_key": "915c11664d7dcc0e6dffb516f2754110ba9976a9ebec40dc97deca548ab10046"
+    },
+    "172747235dcadff5a473221dedc679eb66f1a9c701b0ea54896579b124dd4c94": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "1316f43ed6cc4bc66ff8c0d5051cfcbf9e0a7ada5c61a5f1d07614c6cc75d8ec",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\172747235dcadff5a473221dedc679eb66f1a9c701b0ea54896579b124dd4c94.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:08:40.050034",
+        "embed_key": "172747235dcadff5a473221dedc679eb66f1a9c701b0ea54896579b124dd4c94"
+    },
+    "897c3beac1af6dbef48b897440119189b3dd429d78c873efa5ce3c8d7684f08d": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "0b170ae3d8a80bd77bb29e14d9f3aab289ed10265a23cda83626c19cfbe79892",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\897c3beac1af6dbef48b897440119189b3dd429d78c873efa5ce3c8d7684f08d.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:09:04.451327",
+        "embed_key": "897c3beac1af6dbef48b897440119189b3dd429d78c873efa5ce3c8d7684f08d"
+    },
+    "576ed344bb6d0f93a4e190ed39031b2d6df2ed9bf4c7506e00727e7399ff89b4": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "1b57565547d3cd281792e3686dff5230b4ded49ee6785e42b517f16c755752b0",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\576ed344bb6d0f93a4e190ed39031b2d6df2ed9bf4c7506e00727e7399ff89b4.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:09:23.334249",
+        "embed_key": "576ed344bb6d0f93a4e190ed39031b2d6df2ed9bf4c7506e00727e7399ff89b4"
+    },
+    "83711596e3fe103706cccf4a15252140600e185f57661102747c0e57c13f732d": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "74de40da0e93ca7fc627baa5a47b7584ee66167d956b1b5242f007f499fddf95",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\83711596e3fe103706cccf4a15252140600e185f57661102747c0e57c13f732d.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:09:48.558576",
+        "embed_key": "83711596e3fe103706cccf4a15252140600e185f57661102747c0e57c13f732d"
+    },
+    "f8797c7a2c8dec0651bc51531c6ec27c9080f257de3c0662064cbb1ccf20261d": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "4b8cb3aa6d688b817b4cdab160c5f95b34845285a47633eaaa9c30ac2ed3ed62",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\f8797c7a2c8dec0651bc51531c6ec27c9080f257de3c0662064cbb1ccf20261d.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:10:10.609245",
+        "embed_key": "f8797c7a2c8dec0651bc51531c6ec27c9080f257de3c0662064cbb1ccf20261d"
+    },
+    "cc9d930ccb8314a7e66e2bfdd0f0ac0cce5247975f60a0fd7622c0718b48aec9": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "358cd1b5ae0523c5299edce03048431b3aef056c2caee0fec38cf4220bd69db9",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\cc9d930ccb8314a7e66e2bfdd0f0ac0cce5247975f60a0fd7622c0718b48aec9.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:10:29.222781",
+        "embed_key": "cc9d930ccb8314a7e66e2bfdd0f0ac0cce5247975f60a0fd7622c0718b48aec9"
+    },
+    "4ecfe4afa3d311bac7b60a7b5ab72d1c7484fdf1d0e6cf2a6a83d6a6d7ff127b": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "e234cdd0dcab9317b6f8f036d014c8118ac5bf31b37fac52d4e52347ee8ebd50",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\4ecfe4afa3d311bac7b60a7b5ab72d1c7484fdf1d0e6cf2a6a83d6a6d7ff127b.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:10:51.936210",
+        "embed_key": "4ecfe4afa3d311bac7b60a7b5ab72d1c7484fdf1d0e6cf2a6a83d6a6d7ff127b"
+    },
+    "4a877c236787fe67a066004317c63adb4a08c2664eced296911d1608f71ae0b1": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "222952cded700980961e110018122eef88be6c2c42dcb7dfc38e23c57c68422a",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\4a877c236787fe67a066004317c63adb4a08c2664eced296911d1608f71ae0b1.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:11:14.218572",
+        "embed_key": "4a877c236787fe67a066004317c63adb4a08c2664eced296911d1608f71ae0b1"
+    },
+    "8156b6809d2131941ac3f4fb1cc24dba5a5aa5de7120be9d6288f36a2fe2c156": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "8e8f365e369a18cce2d8c170fb7bf4ddbed86ea165b2ae164a85733df91c637a",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\8156b6809d2131941ac3f4fb1cc24dba5a5aa5de7120be9d6288f36a2fe2c156.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:11:33.556824",
+        "embed_key": "8156b6809d2131941ac3f4fb1cc24dba5a5aa5de7120be9d6288f36a2fe2c156"
+    },
+    "0c0e51d2b0875fed857f6f6e747295a8352824d8bb72bc5337f08eb05fe7eb65": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "b7e3ea2ac44d13c37ba541ab5fe667da2482b40560210881e4c10fcd77e82aee",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\0c0e51d2b0875fed857f6f6e747295a8352824d8bb72bc5337f08eb05fe7eb65.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:12:00.092418",
+        "embed_key": "0c0e51d2b0875fed857f6f6e747295a8352824d8bb72bc5337f08eb05fe7eb65"
+    },
+    "2c2493c4c8e2cfcffcdd8e55b8cea0be77651491e219e80ab838b5f3fc204563": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "b417e90428d4021c08de8e1fb3efb8f77cc904dbdf75cf95f0f77a140c618d7a",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\2c2493c4c8e2cfcffcdd8e55b8cea0be77651491e219e80ab838b5f3fc204563.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:13:00.837102",
+        "embed_key": "2c2493c4c8e2cfcffcdd8e55b8cea0be77651491e219e80ab838b5f3fc204563"
+    },
+    "a7931f93c97d2a8674623dac844b561152cb30b70e617da3e9eb4f387fd2c1e6": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "3cb7d292a63c36d92847dab09ef44c00ea029afd9f6c1e012880b9db6df4db1b",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\a7931f93c97d2a8674623dac844b561152cb30b70e617da3e9eb4f387fd2c1e6.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:13:24.732618",
+        "embed_key": "a7931f93c97d2a8674623dac844b561152cb30b70e617da3e9eb4f387fd2c1e6"
+    },
+    "cea77364f0915b66f7a081a9a74c71a3fd0dd8967306e42d3f1f2fd67a54b9a3": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "5566da26347fe3817532f7a86d7c9739eadeaef7109569ec6951535d73351695",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\cea77364f0915b66f7a081a9a74c71a3fd0dd8967306e42d3f1f2fd67a54b9a3.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:13:44.733846",
+        "embed_key": "cea77364f0915b66f7a081a9a74c71a3fd0dd8967306e42d3f1f2fd67a54b9a3"
+    },
+    "4c3d63283001990324b88905e5446c324b0e9a2f4a7a8512cd1ff425480123d1": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "97f537ace34e457c15207aa4a420b4ae79c3efb4aa1e20ed16343410f422f82b",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\4c3d63283001990324b88905e5446c324b0e9a2f4a7a8512cd1ff425480123d1.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:14:04.257887",
+        "embed_key": "4c3d63283001990324b88905e5446c324b0e9a2f4a7a8512cd1ff425480123d1"
+    },
+    "f648090d988362ca504a3dd82f1adfdd8ca5f2cd346fdede38e98f445b77feb4": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "57c7086043e5090df5a980a4d68acf7db370520aa47aa25950d256ccfda3b006",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\f648090d988362ca504a3dd82f1adfdd8ca5f2cd346fdede38e98f445b77feb4.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:14:23.779641",
+        "embed_key": "f648090d988362ca504a3dd82f1adfdd8ca5f2cd346fdede38e98f445b77feb4"
+    },
+    "433cd583b2a55d8b8c537233eadaef6f26db1913d84dbbe4fd5836b304c6f446": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "b6bea9d0f2aaa617af7bea681e913f46325456146a1dc04d5e0e2ec0d02ce8e3",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\433cd583b2a55d8b8c537233eadaef6f26db1913d84dbbe4fd5836b304c6f446.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:14:44.815098",
+        "embed_key": "433cd583b2a55d8b8c537233eadaef6f26db1913d84dbbe4fd5836b304c6f446"
+    },
+    "d0ce792253b7ad4ddf24fbca24806c536c89b62366cb1a688298757fb480497b": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "ec8f90b39b9482251cf0f3806ebe20fe58890f556a8815dfb57dae77f313694d",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\d0ce792253b7ad4ddf24fbca24806c536c89b62366cb1a688298757fb480497b.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:15:02.650951",
+        "embed_key": "d0ce792253b7ad4ddf24fbca24806c536c89b62366cb1a688298757fb480497b"
+    },
+    "f75105c7ecbd19e23ed15a5f4ef28dbf452067dce242d78cfe35d2f770ade735": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "cf3f2accebb3530e9f3711643b9097135f24420b6022582b97547fe748c9d5f5",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\f75105c7ecbd19e23ed15a5f4ef28dbf452067dce242d78cfe35d2f770ade735.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:15:23.891809",
+        "embed_key": "f75105c7ecbd19e23ed15a5f4ef28dbf452067dce242d78cfe35d2f770ade735"
+    },
+    "380b37ad3c8031828ef94404c8d5be4d90dce45e14bbe3e3bb88394ca29eee69": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "8fd3da3985e0a99fab3e508b5ab437d6e0d66b0732daf39210c33b3f91a94ccd",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\380b37ad3c8031828ef94404c8d5be4d90dce45e14bbe3e3bb88394ca29eee69.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:15:42.462931",
+        "embed_key": "380b37ad3c8031828ef94404c8d5be4d90dce45e14bbe3e3bb88394ca29eee69"
+    },
+    "d8ccbd7494ba2de3095b175d0cd080cf3b1448b192b788a2921467e3d86412a2": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "20414bdd1b97530a13f00009e64429d1f92dc6c460806508cc6ed8a5c0d4ac33",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\d8ccbd7494ba2de3095b175d0cd080cf3b1448b192b788a2921467e3d86412a2.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:15:58.713325",
+        "embed_key": "d8ccbd7494ba2de3095b175d0cd080cf3b1448b192b788a2921467e3d86412a2"
+    },
+    "597c75858218957fa2ecd9acebbc80e56290ed6da8b20360c98cf98bb6016c50": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "3e7227ee6004a9f156893e2d42654d271793a92813660fc75a0824b0c0cebb52",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\597c75858218957fa2ecd9acebbc80e56290ed6da8b20360c98cf98bb6016c50.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:16:17.832925",
+        "embed_key": "597c75858218957fa2ecd9acebbc80e56290ed6da8b20360c98cf98bb6016c50"
+    },
+    "a87550c993e0adb8ff99f20c0d69fe1d3441c2be1439b11a76f89548b9fda3f8": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "2e38b83185308e0a6f56eca24bc0190d1f60e0ff2937dc3ff4460491b4aa736a",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\a87550c993e0adb8ff99f20c0d69fe1d3441c2be1439b11a76f89548b9fda3f8.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:16:37.252018",
+        "embed_key": "a87550c993e0adb8ff99f20c0d69fe1d3441c2be1439b11a76f89548b9fda3f8"
+    },
+    "5c2cd9079d225c0f1f1608bd5ba41be96595c2c943458f3941afd7bc2bc1757e": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "5eed3e062d99d0f5909bf4224a09e6fd94eb11262b4072bc08624760153477f7",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\5c2cd9079d225c0f1f1608bd5ba41be96595c2c943458f3941afd7bc2bc1757e.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:17:04.011992",
+        "embed_key": "5c2cd9079d225c0f1f1608bd5ba41be96595c2c943458f3941afd7bc2bc1757e"
+    },
+    "7f66b6092b0e733fd479e49bb5c57fb24c596ceedae2909dfbde3446417171ef": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "8f5cd4afd861f6a351bb74612e2af70a40d2d3442355035e71e29cb6d664bb66",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\7f66b6092b0e733fd479e49bb5c57fb24c596ceedae2909dfbde3446417171ef.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:17:24.875637",
+        "embed_key": "7f66b6092b0e733fd479e49bb5c57fb24c596ceedae2909dfbde3446417171ef"
+    },
+    "445337b8def67782047b47bab2b6745a4389169b12ff0d5384222e636f0ec921": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "67c901ccf5e5e90563a6f1284c568e0c32062f322c2a2ef5684e2f251e25780f",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\445337b8def67782047b47bab2b6745a4389169b12ff0d5384222e636f0ec921.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:17:50.764029",
+        "embed_key": "445337b8def67782047b47bab2b6745a4389169b12ff0d5384222e636f0ec921"
+    },
+    "af5a1dc55d1c6e13e5433ed38698be7e75e06a6040e6949ade34bb8088aa4d02": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "98aa34bf11c8633c23d26aa087d758369ced21a761b5ce3aa93b3fabb934761b",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\af5a1dc55d1c6e13e5433ed38698be7e75e06a6040e6949ade34bb8088aa4d02.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:18:05.573306",
+        "embed_key": "af5a1dc55d1c6e13e5433ed38698be7e75e06a6040e6949ade34bb8088aa4d02"
+    },
+    "470d4ea59bf9616c8dcc14e24b9dc9e90803eff0097bc79f6f8eaf8f84dbae89": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "0f67f6322e71eaf755ebfcc4384396603584937be9b3ed44904e55b41487c754",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\470d4ea59bf9616c8dcc14e24b9dc9e90803eff0097bc79f6f8eaf8f84dbae89.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:18:21.328771",
+        "embed_key": "470d4ea59bf9616c8dcc14e24b9dc9e90803eff0097bc79f6f8eaf8f84dbae89"
+    },
+    "9ec71dd8ec74f9de81a5408687de9a9506392f111fe402f136bf16f16a823d88": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "be5369a4e3f4f7a6258f5d288c41f47c0c4e15cac5c24ed25a65cc1dfaab6b02",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\9ec71dd8ec74f9de81a5408687de9a9506392f111fe402f136bf16f16a823d88.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:18:37.461492",
+        "embed_key": "9ec71dd8ec74f9de81a5408687de9a9506392f111fe402f136bf16f16a823d88"
+    },
+    "32cd103235b90f6f63cc777ee29bf8f4d03adf933604941a90230a0f261d85f6": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "e388e62a9ba951518a210c182138f400ee6d42ca7f6befbb612c89231adac578",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\32cd103235b90f6f63cc777ee29bf8f4d03adf933604941a90230a0f261d85f6.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:19:00.291189",
+        "embed_key": "32cd103235b90f6f63cc777ee29bf8f4d03adf933604941a90230a0f261d85f6"
+    },
+    "17fde62e0732085386c17258a2ac1f0241d4d19e0e8466f1beb17070855298b5": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "acd70fa20e99a478aaae2c19755d5948abb8d272e352b9571669b7bcb5793b20",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\17fde62e0732085386c17258a2ac1f0241d4d19e0e8466f1beb17070855298b5.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:19:20.493597",
+        "embed_key": "17fde62e0732085386c17258a2ac1f0241d4d19e0e8466f1beb17070855298b5"
+    },
+    "477adbc9b7a9e8009cf3da49b7a3426775f1acbcc039c5a76b9ceec09b45b344": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "0a9e2674b36a9ce6241d95c29330c2be42e0938e8ceef8158e89be21bb0e5985",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\477adbc9b7a9e8009cf3da49b7a3426775f1acbcc039c5a76b9ceec09b45b344.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:19:37.458705",
+        "embed_key": "477adbc9b7a9e8009cf3da49b7a3426775f1acbcc039c5a76b9ceec09b45b344"
+    },
+    "5f3ec324a71ba312b2ba395a17a0d720d4e3dd459ccb7a9e8e2513045714402f": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "5a8bce1b83492a12ab12542fb70e8d60a671639c896d00eafb53a332654cecdd",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\5f3ec324a71ba312b2ba395a17a0d720d4e3dd459ccb7a9e8e2513045714402f.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:19:59.027250",
+        "embed_key": "5f3ec324a71ba312b2ba395a17a0d720d4e3dd459ccb7a9e8e2513045714402f"
+    },
+    "898e71f552246a60355b1247351d50e2f5ea3bda73d7c252afd2ea71792bf43c": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "ca91c01252c0ab3b0d8da9b669dc3b8872ef98972dfc81053eef4d5780508da3",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\898e71f552246a60355b1247351d50e2f5ea3bda73d7c252afd2ea71792bf43c.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:20:16.150744",
+        "embed_key": "898e71f552246a60355b1247351d50e2f5ea3bda73d7c252afd2ea71792bf43c"
+    },
+    "48228110661a4dbc6dcf30d8aff735c8b93cb92c14c9c19b913577fd17eaf109": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "b26234c239d88869ac4456f0b8c0aab71f09f09e0be73c289e6f4d89073bc5e9",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\48228110661a4dbc6dcf30d8aff735c8b93cb92c14c9c19b913577fd17eaf109.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:20:28.622732",
+        "embed_key": "48228110661a4dbc6dcf30d8aff735c8b93cb92c14c9c19b913577fd17eaf109"
+    },
+    "2c87ac2b59d72c9b4c0421bf6850aa69e7419e15dcb76cc6efa23aad683ff475": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "09bb212b5b0491d570022e5ecb116a139c3d30cd354feeefe235ca5a05b1729b",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\2c87ac2b59d72c9b4c0421bf6850aa69e7419e15dcb76cc6efa23aad683ff475.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:20:49.816650",
+        "embed_key": "2c87ac2b59d72c9b4c0421bf6850aa69e7419e15dcb76cc6efa23aad683ff475"
+    },
+    "6cfc205528dbeb29997569bf2b3b2c7e125b8571221684344c99d82032bde18a": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "2eaca2994558cd7414256bb8b964245b03a3eee9eebe1de763e3b11b6eb843b4",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\6cfc205528dbeb29997569bf2b3b2c7e125b8571221684344c99d82032bde18a.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:21:11.351102",
+        "embed_key": "6cfc205528dbeb29997569bf2b3b2c7e125b8571221684344c99d82032bde18a"
+    },
+    "02010c309d569a34858b2473556e6ff9c517e327377dc5da26de5743ea7d016a": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "acbabbff63794244a395f253eb6e1c78d692568e874c76704d90a210e6b1b28c",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\02010c309d569a34858b2473556e6ff9c517e327377dc5da26de5743ea7d016a.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:21:27.636129",
+        "embed_key": "02010c309d569a34858b2473556e6ff9c517e327377dc5da26de5743ea7d016a"
+    },
+    "6f5d075a63f05a567318bf4f7081f08ae0cf900b0b00158c64a276f7d698403f": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "bf6d6a9c4aa3279accfd7d2637e8308a4443800796fbb3c3de9ec6c33032bdde",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\6f5d075a63f05a567318bf4f7081f08ae0cf900b0b00158c64a276f7d698403f.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:21:48.702951",
+        "embed_key": "6f5d075a63f05a567318bf4f7081f08ae0cf900b0b00158c64a276f7d698403f"
+    },
+    "c1e19c4457c808477112eb31a65037b0de1bc63406d5453a4f0fe892a0f146b6": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "0a3e8cf3248e8abb0300ba4ab9d58aeb031fc998e422bdc70a49616233448552",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\c1e19c4457c808477112eb31a65037b0de1bc63406d5453a4f0fe892a0f146b6.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:22:10.711632",
+        "embed_key": "c1e19c4457c808477112eb31a65037b0de1bc63406d5453a4f0fe892a0f146b6"
+    },
+    "180ed9698f328cd2aed1a961efd7f10fa94156c41be9e59acb4b88b4ce9fb6df": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "93959e5093654b5755e4c655e64b2affffcf11c1d7c9837a51eea9decd6a265c",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\180ed9698f328cd2aed1a961efd7f10fa94156c41be9e59acb4b88b4ce9fb6df.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:22:30.103147",
+        "embed_key": "180ed9698f328cd2aed1a961efd7f10fa94156c41be9e59acb4b88b4ce9fb6df"
+    },
+    "d01fc7a0eb687292e6be88de82d3f1d277c07127f76fc8f743659b0f4c9573d0": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "a0d386493bd537060d8265df3757f116bfdf63a94276e6c566f61cc448b60535",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\d01fc7a0eb687292e6be88de82d3f1d277c07127f76fc8f743659b0f4c9573d0.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:22:48.997540",
+        "embed_key": "d01fc7a0eb687292e6be88de82d3f1d277c07127f76fc8f743659b0f4c9573d0"
+    },
+    "41af133dfead3da5855331db794a45f1d36ee0ecbee0138cb5be2534dd8a9727": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "1b349b17159969e55a75f6da764bad6ba302ad0c9ae86285b7207ca8031d001e",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\41af133dfead3da5855331db794a45f1d36ee0ecbee0138cb5be2534dd8a9727.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:23:11.663945",
+        "embed_key": "41af133dfead3da5855331db794a45f1d36ee0ecbee0138cb5be2534dd8a9727"
+    },
+    "03e977318652064397502795074b7b0a561d9e2b65d46cf5b7f4ed82bc0280ba": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "4b73debc5b2075316e169ef1579319d743f8981be6ac2c5a2393e49cdaab51ad",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\03e977318652064397502795074b7b0a561d9e2b65d46cf5b7f4ed82bc0280ba.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:23:36.173025",
+        "embed_key": "03e977318652064397502795074b7b0a561d9e2b65d46cf5b7f4ed82bc0280ba"
+    },
+    "80548df790d35077e07d883ba8b763cbf443ed55fa279b8064d07dbeaa0f4093": {
+        "model": "mistral-small-4-119b-2603",
+        "backend": "ckey",
+        "report_hash_id": "d28702d5d92ce655f15ae3b1315887b12616bae5e7a9e46be93265211e3a6658",
+        "respond_path": "artifacts\\embeddings\\VIC\\responses\\80548df790d35077e07d883ba8b763cbf443ed55fa279b8064d07dbeaa0f4093.md",
+        "respond_status": "success",
+        "created_date": "2026-05-27T20:23:56.182847",
+        "embed_key": "80548df790d35077e07d883ba8b763cbf443ed55fa279b8064d07dbeaa0f4093"
     }
 }
