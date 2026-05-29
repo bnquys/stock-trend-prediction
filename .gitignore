@@ -11,3 +11,6 @@ wheels/
 .env
 
 artifacts/
+
+*.zip
+.gradio/

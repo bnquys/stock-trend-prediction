@@ -152,12 +152,80 @@ class Trainer:
         log.debug(f"[Agent] obs_size={obs_sz} | window={window} | type={ac.get('type', 'dqn')}")
 
     def _setup_cache(self):
-        """Pre-load embedding cache if enabled."""
+        """Pre-load embedding cache if enabled. Validate completeness before training."""
         self.embedding_cache = None
         training_cfg = self.cfg.training
         if self.analysis_enabled and training_cfg.get("preload_embeddings", True):
             self.embedding_cache = EmbeddingCache(self.stock_ids)
             log.debug(f"[EmbeddingCache] {self.embedding_cache.stats}")
+
+            # ── Validate: phải đủ cache trước khi train ──────────────
+            self._validate_cache_completeness()
+
+    def _validate_cache_completeness(self):
+        """
+        Kiểm tra cache có đủ embeddings cho tất cả date windows (train/val/test).
+        Nếu thiếu bất kỳ window nào → CRITICAL → dừng chương trình.
+        """
+        if self.embedding_cache is None:
+            return
+
+        window = self.cfg.env["window"]
+        total_required = 0
+        total_hits = 0
+        missing_details: list[str] = []
+
+        all_datasets = [
+            ("train", self.train_raws),
+            ("val", self.val_raws),
+            ("test", self.test_raws),
+        ]
+
+        for split_name, raw_list in all_datasets:
+            for stock_idx, df_raw in enumerate(raw_list):
+                stock_id = self.stock_ids[stock_idx]
+                n = len(df_raw)
+                split_miss = 0
+
+                for step in range(window, n):
+                    start_idx = max(0, step - window + 1)
+                    date_end = pd.Timestamp(df_raw["date"].iloc[step])
+                    date_start = pd.Timestamp(df_raw["date"].iloc[start_idx])
+
+                    total_required += 1
+                    vector = self.embedding_cache.get(
+                        stock_id=stock_id,
+                        date_start=date_start.to_pydatetime(),
+                        date_end=date_end.to_pydatetime(),
+                    )
+                    if vector is not None:
+                        total_hits += 1
+                    else:
+                        split_miss += 1
+
+                if split_miss > 0:
+                    missing_details.append(
+                        f"    {stock_id}/{split_name}: {split_miss} missing windows"
+                    )
+
+        coverage = (total_hits / total_required * 100) if total_required > 0 else 0
+
+        if total_hits < total_required:
+            missing_report = "\n".join(missing_details)
+            msg = (
+                f"\n{'='*60}\n"
+                f"CRITICAL: Embedding cache KHÔNG ĐẦY ĐỦ!\n"
+                f"  Coverage: {total_hits}/{total_required} ({coverage:.1f}%)\n"
+                f"  Missing:\n{missing_report}\n\n"
+                f"  → Hãy chạy warmup_cache trước khi train.\n"
+                f"{'='*60}"
+            )
+            log.critical(msg)
+            raise SystemExit(msg)
+        else:
+            log.info(
+                f"[Cache] ✅ Đầy đủ: {total_hits}/{total_required} embeddings (100%)"
+            )
 
     # ─────────────────────────────────────────────────────────────────
     # Episode runners
