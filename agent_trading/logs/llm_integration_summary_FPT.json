@@ -2,15 +2,15 @@
     "report_date": "2025-12-31",
     "ticker": "FPT",
     "latest_close_price": 95.8,
-    "rl_recommendation": "BÁN (SELL)",
+    "rl_recommendation": "NẮM GIỮ / ĐỨNG NGOÀI (HOLD)",
     "technical_context": {
-        "rsi": 0.0,
-        "macd": 0.0,
+        "rsi": 49.24,
+        "macd": 0.236,
         "sma_20_trend": "GIẢM"
     },
     "rl_performance_history": {
-        "win_rate_pct": 53.3,
-        "sharpe_ratio": -1.903,
-        "profit_factor": 0.59
+        "win_rate_pct": 37.5,
+        "sharpe_ratio": -1.5893,
+        "profit_factor": 0.72
     }
 }

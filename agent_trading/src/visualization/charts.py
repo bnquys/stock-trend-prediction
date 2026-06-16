@@ -135,20 +135,29 @@ def plot_price_signals(df, out_path=None, symbol="VNM"):
 
     # MACD
     ax2 = axes[1]
-    if "macd_histogram" in df.columns:
-        hist = df["macd_histogram"].fillna(0).values
+    macd_col = "macd_diff" if "macd_diff" in df.columns else ("macd_histogram" if "macd_histogram" in df.columns else None)
+    if macd_col:
+        hist = df[macd_col].fillna(0).values
         ax2.bar(x, hist, color=np.where(hist>=0,C["buy"],C["sell"]), alpha=0.75, width=1)
         ax2.fill_between(x, hist, 0, where=(hist>0), alpha=0.1, color=C["buy"])
         ax2.fill_between(x, hist, 0, where=(hist<0), alpha=0.1, color=C["sell"])
+        
+        # Plot MACD lines if available
+        if "macd" in df.columns and "macd_signal" in df.columns:
+            ax2.plot(x, df["macd"].fillna(0).values, color=C["blue"], lw=1.2, label="MACD")
+            ax2.plot(x, df["macd_signal"].fillna(0).values, color=C["orange"], lw=1.2, label="Signal")
+            ax2.legend(loc="upper left", fontsize=8)
+            
         ax2.axhline(0, color=C["muted"], lw=0.8, ls="--")
-    _ax(ax2, "MACD Histogram", "Dương (xanh) = xu thế tăng  |  Âm (đỏ) = xu thế giảm")
+    _ax(ax2, "MACD", "Dương (xanh) = xu thế tăng  |  Âm (đỏ) = xu thế giảm")
     _xt(ax2, df["date"])
 
     # RSI
     ax3 = axes[2]
-    if "rsi_14" in df.columns:
-        rsi = df["rsi_14"].fillna(50).values
-        ax3.plot(x, rsi, color=C["purple"], lw=1.3, label="RSI 14")
+    rsi_col = "rsi" if "rsi" in df.columns else ("rsi_14" if "rsi_14" in df.columns else None)
+    if rsi_col:
+        rsi = df[rsi_col].fillna(50).values
+        ax3.plot(x, rsi, color=C["purple"], lw=1.3, label="RSI")
         ax3.axhline(70, color=C["sell"], lw=1.0, ls="--", alpha=0.8, label="Quá mua (70)")
         ax3.axhline(30, color=C["buy"],  lw=1.0, ls="--", alpha=0.8, label="Quá bán (30)")
         ax3.fill_between(x, rsi, 70, where=(rsi>70), alpha=0.15, color=C["sell"])
@@ -420,17 +429,26 @@ def plot_dashboard(df, metrics, history, trades, initial_cap=100000000, out_path
 
     # Row 2L: MACD
     ax3=fig.add_subplot(gs[2,0])
-    if "macd_histogram" in df.columns:
-        hist=df["macd_histogram"].fillna(0).values
+    macd_col = "macd_diff" if "macd_diff" in df.columns else ("macd_histogram" if "macd_histogram" in df.columns else None)
+    if macd_col:
+        hist=df[macd_col].fillna(0).values
         ax3.bar(x,hist,color=np.where(hist>=0,C["buy"],C["sell"]),alpha=0.75,width=1)
+        
+        # Plot MACD lines if available
+        if "macd" in df.columns and "macd_signal" in df.columns:
+            ax3.plot(x, df["macd"].fillna(0).values, color=C["blue"], lw=1.0, label="MACD")
+            ax3.plot(x, df["macd_signal"].fillna(0).values, color=C["orange"], lw=1.0, label="Signal")
+            ax3.legend(loc="upper left", fontsize=7)
+            
         ax3.axhline(0,color=C["muted"],lw=0.7,ls="--")
     _ax(ax3,"MACD Histogram","Dương=tăng  |  Âm=giảm"); _xt(ax3,dates)
 
     # Row 2R: RSI
     ax4=fig.add_subplot(gs[2,1])
-    if "rsi_14" in df.columns:
-        rsi=df["rsi_14"].fillna(50).values
-        ax4.plot(x,rsi,color=C["purple"],lw=1.3)
+    rsi_col = "rsi" if "rsi" in df.columns else ("rsi_14" if "rsi_14" in df.columns else None)
+    if rsi_col:
+        rsi=df[rsi_col].fillna(50).values
+        ax4.plot(x,rsi,color=C["purple"],lw=1.3,label="RSI")
         ax4.axhline(70,color=C["sell"],lw=0.9,ls="--",label="Quá mua (70)")
         ax4.axhline(30,color=C["buy"],lw=0.9,ls="--",label="Quá bán (30)")
         ax4.fill_between(x,rsi,70,where=(rsi>70),alpha=0.15,color=C["sell"])

@@ -4,13 +4,13 @@
     "latest_close_price": 25.92,
     "rl_recommendation": "NẮM GIỮ / ĐỨNG NGOÀI (HOLD)",
     "technical_context": {
-        "rsi": 0.0,
-        "macd": 0.0,
+        "rsi": 48.03,
+        "macd": 0.0113,
         "sma_20_trend": "GIẢM"
     },
     "rl_performance_history": {
-        "win_rate_pct": 55.6,
-        "sharpe_ratio": -1.3075,
-        "profit_factor": 1.02
+        "win_rate_pct": 63.6,
+        "sharpe_ratio": -1.3768,
+        "profit_factor": 0.86
     }
 }

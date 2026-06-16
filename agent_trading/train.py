@@ -33,7 +33,7 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 sys.path.insert(0, os.path.dirname(__file__))
 
-from src.features.preprocessor import load_csv, time_split, RobustScaler, obs_size_of
+from src.features.preprocessor import load_csv, time_split, RobustScaler, obs_size_of, PORTFOLIO_STATE_SIZE
 from src.rl.env.trading_env import TradingEnv
 from src.rl.agent.dqn_agent import DQNAgent
 
@@ -52,7 +52,9 @@ def run_episode(agent: DQNAgent,
                 df_norm: pd.DataFrame,
                 env_cfg: dict,
                 train_mode: bool,
-                episode_num: int = 1) -> tuple[dict, list]:
+                episode_num: int = 1,
+                ticker_index: int = 0,
+                n_tickers: int = 4) -> tuple[dict, list]:
     """
     Chạy 1 episode hoàn chỉnh với error handling.
     Đảm bảo:
@@ -79,22 +81,32 @@ def run_episode(agent: DQNAgent,
             t_plus       = env_cfg.get("t_plus", 2),
             lot_size     = env_cfg.get("lot_size", 100),
             price_limit  = env_cfg.get("price_limit", 0.07),
+            trailing_stop_profit = env_cfg.get("trailing_stop_profit", 0.03),
+            drawdown_penalty = env_cfg.get("drawdown_penalty", 0.05),
+            inactivity_penalty = env_cfg.get("inactivity_penalty", 0.003),
+            buy_quality_gate = env_cfg.get("buy_quality_gate", 0.30),
+            buy_quality_target = env_cfg.get("buy_quality_target", 0.55),
+            min_expected_edge = env_cfg.get("min_expected_edge", 0.012),
+            ticker_index = ticker_index,
+            n_tickers = n_tickers,
         )
 
         obs  = env.reset()
         done = False
         step_count = 0
+        valid_acts = env.valid_actions()
 
         while not done:
             try:
-                action = agent.act(obs, valid_actions=env.valid_actions(), greedy=not train_mode)
+                action = agent.act(obs, valid_actions=valid_acts, greedy=not train_mode)
                 next_obs, reward, done, info = env.step(action)
+                next_valid_acts = info.get("valid_actions", [env.HOLD])
 
                 if train_mode:
-                    agent.store(obs, action, reward, next_obs, done)
-                    agent.learn()   # learn() nội bộ đã có warmup guard
-
+                    agent.store(obs, action, reward, next_obs, done, valid_acts, next_valid_acts)
+                    agent.learn()  
                 obs = next_obs
+                valid_acts = next_valid_acts
                 step_count += 1
 
             except Exception as e:
@@ -124,28 +136,64 @@ def run_episode(agent: DQNAgent,
 def normalize_score(metrics: dict) -> float:
     """
     Chuẩn hoá metrics về [0,1] rồi tính weighted score.
-    Thay thế công thức cũ dùng magic numbers.
+    Tập trung vào Return (50%), Sharpe (30%), Win Rate (20%).
     """
+    trades = metrics.get("n_trades", 0)
+    if trades == 0:
+        return 0.0
+
     # Normalize mỗi metric về khoảng [0, 1]
     ret = metrics.get("return_pct", 0.0)
-    return_norm = np.clip((ret + 10) / 30, 0, 1)     # Range: -10% to +20%
+    return_norm = np.clip((ret + 5) / 15, 0, 1)     # Range: -5% to +10%
 
     sharpe = metrics.get("sharpe", 0.0)
-    sharpe_norm = np.clip((sharpe + 1) / 4, 0, 1)     # Range: -1 to 3
-
-    trades = metrics.get("n_trades", 0)
-    trades_norm = np.clip(trades / 50, 0, 1)           # Range: 0-50 trades
+    sharpe_norm = np.clip((sharpe + 0.5) / 2.5, 0, 1)  # Range: -0.5 to 2.0
 
     wr = metrics.get("win_rate", 0.0)
     wr_norm = np.clip(wr / 100, 0, 1)                  # Range: 0-100%
 
-    # Weighted combination
-    score = (return_norm * 0.35
-             + sharpe_norm * 0.30
-             + trades_norm * 0.15
-             + wr_norm     * 0.20)
+    max_dd = abs(metrics.get("max_dd_pct", 0.0))
+    dd_penalty = np.clip(max_dd / 15.0, 0, 1)
+
+    pf = metrics.get("pf", 0.0)
+    pf_norm = np.clip((pf - 0.8) / 1.7, 0, 1)  # 0 at PF<=0.8, 1 at PF>=2.5
+
+    trade_penalty = 0.0
+    if trades < 3:
+        trade_penalty = 0.20
+    elif trades > 35:
+        trade_penalty = min(0.20, (trades - 35) / 100)
+
+    # Weighted risk-adjusted score. Drawdown/trade penalties stop the saver
+    # from preferring noisy policies with high win rate but poor expectancy.
+    score = (return_norm * 0.40
+             + sharpe_norm * 0.25
+             + wr_norm     * 0.15
+             + pf_norm     * 0.20
+             - dd_penalty  * 0.20
+             - trade_penalty)
 
     return float(score)
+
+
+def balanced_validation_score(avg_metrics: dict, per_stock_metrics: list[dict]) -> float:
+    """Score validation while penalizing policies that ignore individual stocks."""
+    avg_score = normalize_score(avg_metrics)
+    if not per_stock_metrics:
+        return avg_score
+
+    stock_scores = [normalize_score(m) for m in per_stock_metrics]
+    coverage = np.mean([1.0 if m.get("n_trades", 0) > 0 else 0.0 for m in per_stock_metrics])
+    returns = np.array([m.get("return_pct", 0.0) for m in per_stock_metrics], dtype=float)
+    dispersion_penalty = min(0.18, float(np.std(returns)) / 25.0)
+    no_trade_penalty = (1.0 - coverage) * 0.25
+
+    return float(
+        0.55 * avg_score
+        + 0.45 * float(np.mean(stock_scores))
+        - dispersion_penalty
+        - no_trade_penalty
+    )
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -160,7 +208,7 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
     np.random.seed(cfg["project"].get("seed", 42))
 
     log.info("=" * 65)
-    log.info("  VNM RL Trading v6.0 — Double DQN (HOSE compliant)")
+    log.info("  VNM RL Trading — Double DQN (HOSE compliant)")
     log.info("  T+2 | Lot 100cp | Thuế 0.1% | ±7% price limit")
     log.info("=" * 65)
 
@@ -193,7 +241,7 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
 
     # ── 3. Agent setup ────────────────────────────────────────────────
     window  = cfg["env"]["window"]
-    obs_sz  = obs_size_of(train_norms[0], window)
+    obs_sz  = obs_size_of(train_norms[0], window, n_tickers=len(paths))
     ac      = cfg["agent"]
     env_cfg = cfg["env"]
 
@@ -222,6 +270,10 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
         buffer_cap = ac["buffer_cap"],
         batch_size = ac["batch_size"],
         warmup     = ac["warmup"],
+        window     = window,
+        port_size  = PORTFOLIO_STATE_SIZE + len(paths),
+        learn_every= ac.get("learn_every", 4),
+        weight_decay= ac.get("weight_decay", 1e-5),
     )
     log.info(f"[Agent] Network: {obs_sz} → {ac['hidden']} → Q(3)")
     log.info(f"[Agent] Warmup={ac['warmup']} steps before learning starts")
@@ -246,6 +298,8 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
     start_t   = time.time()
     learned_at_least_once = False
     val_history: deque = deque(maxlen=10)  # Validation smoothing
+    collapse_count = 0  # Đếm số ep liên tiếp val_trades=0 (anti-collapse)
+    stock_val_returns: dict = {i: 0.0 for i in range(len(paths))}  # Per-stock performance tracking
 
     log.info(f"\n{'─'*65}")
     log.info(f"Training: {n_ep} episodes | patience={patience}")
@@ -253,35 +307,35 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
     log.info(f"{'─'*65}")
 
     for ep in range(start_ep, n_ep + 1):
-        # ── 4.1 Curriculum Learning: Chọn cổ phiếu theo tiến độ ──────
-        # Quy tắc: 
-        # - 0-20% episodes: Chỉ VNM (Stable)
-        # - 20-40% episodes: VNM + FPT
-        # - 40-60% episodes: VNM + FPT + HPG
-        # - 60-80% episodes: Toàn bộ (VNM, FPT, HPG, VIC)
-        # - 80-100% episodes: Random hoàn toàn
+        # ── 4.1 Performance-Weighted Stock Sampling ──────────────
+        # Giai đoạn đầu: curriculum nhẹ (2 stock đầu tiên)
+        # Giai đoạn sau: ưu tiên train stock yếu nhất
         
         progress = ep / n_ep
-        if progress < 0.2:
-            # Chỉ mã đầu tiên (giả định là VNM)
-            stock_idx = 0
-        elif progress < 0.4:
+        if progress < 0.1:
+            # Warmup: chỉ 2 mã đầu tiên
             stock_idx = np.random.randint(min(len(train_raws), 2))
-        elif progress < 0.6:
-            stock_idx = np.random.randint(min(len(train_raws), 3))
-        elif progress < 0.8:
-            stock_idx = np.random.randint(len(train_raws))
+        elif ep > 10 and any(v != 0.0 for v in stock_val_returns.values()):
+            # Performance-weighted: ưu tiên stock có val_return thấp nhất
+            weights = []
+            for i in range(len(train_raws)):
+                ret = stock_val_returns.get(i, 0.0)
+                # Trọng số cao hơn cho stock yếu hơn (tối thiểu 0.1)
+                w = max(0.1, 1.0 - ret / 10.0)  # ret=10% → w=0, ret=-5% → w=1.5
+                weights.append(w)
+            weights = np.array(weights)
+            weights = weights / weights.sum()
+            stock_idx = int(np.random.choice(len(train_raws), p=weights))
         else:
-            # Tập trung vào những mã Agent còn yếu hoặc random đều
             stock_idx = np.random.randint(len(train_raws))
         
         # ── Train episode ───────────────────────────────────────────
-        tr_m, _  = run_episode(agent, train_raws[stock_idx], train_norms[stock_idx], env_cfg, train_mode=True, episode_num=ep)
+        tr_m, _  = run_episode(agent, train_raws[stock_idx], train_norms[stock_idx], env_cfg, train_mode=True, episode_num=ep, ticker_index=stock_idx, n_tickers=len(paths))
         
         # ── Val episode (no learning) trên tất cả cổ phiếu ──────────
         vl_metrics_list = []
-        for v_raw, v_norm in zip(val_raws, va_norms):
-            vl_m, _ = run_episode(agent, v_raw, v_norm, env_cfg, train_mode=False)
+        for v_idx, (v_raw, v_norm) in enumerate(zip(val_raws, va_norms)):
+            vl_m, _ = run_episode(agent, v_raw, v_norm, env_cfg, train_mode=False, ticker_index=v_idx, n_tickers=len(paths))
             vl_metrics_list.append(vl_m)
             
         vl_m = {
@@ -290,8 +344,15 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
             "max_dd_pct": np.mean([m["max_dd_pct"] for m in vl_metrics_list]),
             "n_trades": int(np.mean([m["n_trades"] for m in vl_metrics_list])),
             "win_rate": np.mean([m.get("win_rate", 0) for m in vl_metrics_list]),
+            "pf": np.mean([m.get("pf", 0) for m in vl_metrics_list]),
             "episode_steps": int(np.mean([m.get("episode_steps", 0) for m in vl_metrics_list])),
         }
+
+        # Cập nhật per-stock val performance (cho weighted sampling)
+        for v_idx, vm in enumerate(vl_metrics_list):
+            # Exponential moving average
+            old = stock_val_returns.get(v_idx, 0.0)
+            stock_val_returns[v_idx] = 0.9 * old + 0.1 * vm["return_pct"]
 
         # ── Decay epsilon + LR sau mỗi episode ────────────────────
         agent.decay_epsilon()
@@ -348,24 +409,39 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
         smoothed_val = {
             "return_pct": float(np.mean([v["return_pct"] for v in val_history])),
             "sharpe":     float(np.mean([v["sharpe"] for v in val_history])),
+            "max_dd_pct": float(np.mean([v.get("max_dd_pct", 0) for v in val_history])),
             "n_trades":   int(np.mean([v["n_trades"] for v in val_history])),
             "win_rate":   float(np.mean([v.get("win_rate", 0) for v in val_history])),
+            "pf":         float(np.mean([v.get("pf", 0) for v in val_history])),
         }
+
+        # ── Anti-collapse detection ─────────────────────────────
+        if vl_m["n_trades"] == 0:
+            collapse_count += 1
+            if collapse_count >= 10:
+                old_eps = agent.eps
+                agent.eps = max(agent.eps, 0.3)  # Reset exploration
+                log.warning(f"  ⚠ Policy collapse detected! {collapse_count} ep no trades. "
+                           f"Reset ε: {old_eps:.4f} → {agent.eps:.3f}")
+                collapse_count = 0
+        else:
+            collapse_count = max(0, collapse_count - 1)  # Giảm dần nếu đã hồi phục
 
         # ── Checkpoint: chỉ lưu khi đã học (có loss) ───────────────
         if learned_at_least_once:
             # QUAN TRỌNG: Không lưu model không giao dịch (policy collapse)
             if smoothed_val["n_trades"] > 0:
-                # Normalized score (thay thế magic numbers cũ)
-                score = normalize_score(smoothed_val)
+                score = balanced_validation_score(smoothed_val, vl_metrics_list)
                 if score > best_val:
                     best_val = score
                     best_ep  = ep
                     pat_cnt  = 0
                     agent.save(f"{model_dir}/best_model.pkl")
+                    coverage = np.mean([m.get("n_trades", 0) > 0 for m in vl_metrics_list])
                     log.info(f"  → New best (score={score:.4f}): val_return={vl_m['return_pct']:+.2f}% "
                              f"sharpe={vl_m['sharpe']:.3f} trades={vl_m['n_trades']} "
-                             f"WR={vl_m.get('win_rate',0):.0f}% lr={agent.current_lr:.6f} (ep {ep})")
+                             f"WR={vl_m.get('win_rate',0):.0f}% coverage={coverage:.2f} "
+                             f"lr={agent.current_lr:.6f} (ep {ep})")
                 else:
                     pat_cnt += 1
             else:
@@ -428,6 +504,14 @@ def train(cfg: dict, n_ep_override: int | None = None, resume_from: str | None =
             t_plus       = env_cfg.get("t_plus", 2),
             lot_size     = env_cfg.get("lot_size", 100),
             price_limit  = env_cfg.get("price_limit", 0.07),
+            trailing_stop_profit = env_cfg.get("trailing_stop_profit", 0.03),
+            drawdown_penalty = env_cfg.get("drawdown_penalty", 0.05),
+            inactivity_penalty = env_cfg.get("inactivity_penalty", 0.003),
+            buy_quality_gate = env_cfg.get("buy_quality_gate", 0.30),
+            buy_quality_target = env_cfg.get("buy_quality_target", 0.55),
+            min_expected_edge = env_cfg.get("min_expected_edge", 0.012),
+            ticker_index = stock_idx,
+            n_tickers = len(paths),
         )
         obs = test_env.reset(); done = False
         acts: list[int] = []; eqs: list[float] = []
@@ -586,8 +670,8 @@ def _export_llm_integration_report(res: dict, cfg: dict, symbol: str = "VNM"):
         rl_rec = "NẮM GIỮ / ĐỨNG NGOÀI (HOLD)"
         
     # Technical Indicators
-    rsi = last_row.get("rsi_14", 0)
-    macd = last_row.get("macd_histogram", 0)
+    rsi = last_row.get("rsi", 0)
+    macd = last_row.get("macd_diff", 0)
     sma20 = last_row.get("sma_20", 0)
     trend_sma20 = "TĂNG" if sma20 > prev_row.get("sma_20", 0) else "GIẢM"
     

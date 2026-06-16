@@ -46,19 +46,13 @@ def run_study(base_cfg_path: str, episodes: int = 50):
             cfg = json.loads(json.dumps(base_cfg)) # Deep copy
             cfg["agent"][param] = val
             
-            # Chạy training ngắn
             start_t = time.time()
             try:
-                # Mocking train function call to return best metrics
-                # Trong thực tế, bạn sẽ chạy train(cfg, n_ep_override=episodes)
-                # Ở đây tôi giả định train() sẽ được gọi và lưu log.
-                train(cfg, n_ep_override=episodes)
                 
-                # Load kết quả từ training_log.json
+                train(cfg, n_ep_override=episodes)
                 with open("logs/training_log.json", "r") as f:
                     history = json.load(f)
-                
-                # Lấy trung bình 10 ep cuối làm kết quả
+  
                 last_10 = history[-10:]
                 avg_ret = np.mean([h["val_return"] for h in last_10])
                 avg_sh  = np.mean([h["val_sharpe"] for h in last_10])
@@ -79,12 +73,17 @@ def run_study(base_cfg_path: str, episodes: int = 50):
                 print(f" Error testing {param}={val}: {e}")
 
     # Save results
+    if not results:
+        print("\n[Error] No successful parameter tests run. Cannot generate ablation study.")
+        return
+
     df = pd.DataFrame(results)
     df.to_csv("logs/ablation/ablation_results.csv", index=False)
     
     # Generate Plots
     _plot_results(df)
     print(f"\n[Done] Results saved to logs/ablation/")
+ 
 
 def _plot_results(df):
     params = df["parameter"].unique()
