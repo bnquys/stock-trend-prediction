@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>AI Trading Simulator - HOSE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.goo gleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            "colors": {
+                "primary-fixed": "#dbe1ff",
+                "error": "#ba1a1a",
+                "warning-gold": "#D4A72C",
+                "tertiary-container": "#bc4800",
+                "on-secondary-fixed": "#25005a",
+                "primary-container": "#2563eb",
+                "on-primary-container": "#eeefff",
+                "surface-container-lowest": "#ffffff",
+                "on-error-container": "#93000a",
+                "surface-dim": "#d2d9f4",
+                "ai-gradient": "linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)",
+                "primary-fixed-dim": "#b4c5ff",
+                "outline-variant": "#c3c6d7",
+                "tertiary-fixed": "#ffdbcd",
+                "success-bg": "#E7F7EE",
+                "on-secondary": "#ffffff",
+                "primary": "#004ac6",
+                "surface-container": "#eaedff",
+                "inverse-on-surface": "#eef0ff",
+                "outline": "#737686",
+                "background": "#faf8ff",
+                "secondary-fixed": "#eaddff",
+                "background-secondary": "#F7F9FC",
+                "on-surface": "#131b2e",
+                "on-tertiary": "#ffffff",
+                "on-background": "#131b2e",
+                "text-secondary": "#6B7385",
+                "surface-container-low": "#f2f3ff",
+                "on-surface-variant": "#434655",
+                "surface-variant": "#dae2fc",
+                "success-green": "#16A34A",
+                "danger-bg": "#FDECEC",
+                "secondary-container": "#8a4cfc",
+                "on-error": "#ffffff",
+                "inverse-surface": "#283044",
+                "on-tertiary-fixed": "#360f00",
+                "danger-red": "#DC2626",
+                "tertiary": "#943700",
+                "error-container": "#ffdad6",
+                "tertiary-fixed-dim": "#ffb596",
+                "surface": "#faf8ff",
+                "surface-container-highest": "#dae2fc",
+                "surface-container-high": "#e1e7ff",
+                "on-secondary-fixed-variant": "#5a00c6",
+                "border-subtle": "#E4E8F0",
+                "on-primary-fixed-variant": "#003ea8",
+                "secondary-fixed-dim": "#d2bbff",
+                "on-primary": "#ffffff",
+                "secondary": "#712ae2",
+                "inverse-primary": "#b4c5ff",
+                "on-primary-fixed": "#00174b",
+                "surface-tint": "#0053db",
+                "background-primary": "#FFFFFF",
+                "on-tertiary-container": "#ffede6",
+                "surface-bright": "#faf8ff",
+                "on-secondary-container": "#fffbff",
+                "on-tertiary-fixed-variant": "#7d2d00"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "margin-desktop": "32px",
+                "unit-xs": "4px",
+                "margin-mobile": "16px",
+                "unit-xl": "32px",
+                "container-max": "1280px",
+                "gutter": "24px",
+                "unit-md": "16px",
+                "unit-lg": "24px",
+                "unit-sm": "8px"
+            },
+            "fontFamily": {
+                "headline-md": ["beVietnamPro"],
+                "body-md": ["inter"],
+                "display-lg": ["beVietnamPro"],
+                "headline-sm": ["beVietnamPro"],
+                "body-lg": ["inter"],
+                "data-mono": ["inter"],
+                "body-sm": ["inter"],
+                "headline-lg": ["beVietnamPro"],
+                "label-md": ["inter"]
+            },
+            "fontSize": {
+                "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+            }
+        },
+    },
+}
+</script>
+<style>
+.ai-gradient-border { position: relative; }
+.ai-gradient-border::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 2px;
+    background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+}
+.loading-spinner {
+    display: inline-block; width: 16px; height: 16px;
+    border: 2px solid #e0e0e0; border-top-color: #2563eb;
+    border-radius: 50%; animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.markdown-table table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.markdown-table th, .markdown-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #E4E8F0; }
+.markdown-table th { background: #F7F9FC; font-weight: 600; color: #6B7385; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+.markdown-content h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+.markdown-content h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.markdown-content h4 { font-size: 14px; font-weight: 500; margin-bottom: 4px; color: #6B7385; }
+.markdown-content p { margin-bottom: 4px; }
+.markdown-content strong { font-weight: 600; }
+.markdown-content ul { list-style: disc; padding-left: 20px; margin-bottom: 8px; }
+.markdown-content li { margin-bottom: 2px; }
+.connection-error { background: #FDECEC; border: 1px solid #DC2626; }
+</style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col" style="background-color: rgb(240, 247, 255);">
+
+<!-- Simple Header -->
+<header class="sticky top-0 z-50 flex flex-col md:flex-row items-start md:items-center justify-between w-full px-margin-desktop py-3 bg-background-primary shadow-sm border-b border-border-subtle gap-3" style="background-color: rgb(255, 255, 255);">
+    <div class="flex items-center gap-3 flex-wrap w-full md:w-auto">
+        <a href="#" class="font-headline-md text-headline-md font-bold text-primary flex items-center gap-2 whitespace-nowrap">
+            <img src="https://lh3.googleusercontent.com/aida/AP1WRLvrUXV7Gcrh18LEvGRJ7knCrJ-St4nofU6ATUba5pQWgyLvam7VXhqCiZZVLOeWD_56fSmx8xqJIbYqyqbYrW1PNtgUslGxPu3dYQDFEwjDsPVVzk2WiJ_QUUs2J2OA3RkXhbQwXQWowVbyTX996lpbhVMRY6fzROycg2YMXV0zeN5q7JGO45cKJ3_Pms9HsAXbFywK3Rp6qyvfpIUtWJxB-10URTNSho5x49f8l8_K6XYcS1uyYJxGk8c" alt="TenacoreX Logo" class="h-8 w-auto"> TenacoreX
+        </a>
+        <div class="flex items-center gap-2 flex-1 min-w-0">
+            <label class="text-label-md font-label-md text-text-secondary whitespace-nowrap">Gradio API URL:</label>
+            <input id="gradio-url" type="url" value="http://localhost:7860" class="flex-1 px-3 py-1.5 bg-surface-container-low border border-border-subtle rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-body-sm text-on-surface font-data-mono min-w-[200px]">
+            <button id="btn-connect" class="px-3 py-1.5 bg-primary-container text-white rounded-lg text-body-sm font-medium hover:bg-primary transition-colors flex items-center gap-1 shadow-sm whitespace-nowrap">
+                <span class="material-symbols-outlined text-[16px]">link</span> Kết nối
+            </button>
+        </div>
+    </div>
+    <div class="flex items-center gap-1 w-full md:w-auto">
+        <span id="connection-status" class="text-label-md font-label-md text-text-secondary flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-gray-300 inline-block" id="status-dot"></span>
+            <span id="status-text">Chưa kết nối</span>
+        </span>
+        <span id="api-version-badge" class="text-label-md font-label-md px-1.5 py-0.5 rounded bg-surface-container-low text-text-secondary ml-1 hidden"></span>
+    </div>
+</header>
+
+<div class="flex flex-1 overflow-hidden">
+<main class="flex-1 overflow-y-auto p-margin-desktop bg-background" style="background-color: rgb(240, 247, 255);">
+<div class="max-w-container-max mx-auto space-y-unit-xl">
+
+    <!-- Page Header -->
+    <div>
+        <h1 class="text-headline-lg font-headline-lg text-on-surface">Mô phỏng giao dịch</h1>
+        <p class="text-body-md font-body-md text-text-secondary mt-1">Mô phỏng giao dịch thời gian thực trên test-set với DQN Agent. Bấm <strong>Ngày tiếp theo ▶</strong> để tiến từng ngày.</p>
+    </div>
+
+    <!-- Model Selector -->
+    <div class="bg-surface-container-lowest p-4 rounded-xl border border-border-subtle shadow-sm">
+        <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
+            <div class="flex-1 w-full">
+                <label class="text-label-md font-label-md text-text-secondary mb-1 block">🧠 Chọn Model (chỉ hiện các run đã train hoàn chỉnh)</label>
+                <select id="model-select" class="w-full px-3 py-2 bg-surface-container-low border border-border-subtle rounded-lg text-body-sm text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none">
+                    <option value="">Đang tải danh sách model...</option>
+                </select>
+            </div>
+            <button id="btn-load-model" class="px-6 py-2 bg-primary-container text-white rounded-lg text-body-sm font-medium hover:bg-primary transition-colors flex items-center gap-2 shadow-sm whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
+                <span class="material-symbols-outlined text-[18px]">refresh</span> Load Model
+            </button>
+        </div>
+        <div id="model-info" class="mt-3 text-body-sm text-text-secondary markdown-content hidden"></div>
+    </div>
+
+    <!-- Stock Tabs -->
+    <div class="flex space-x-2 bg-surface-container-low p-1 rounded-lg border border-border-subtle" id="stock-tabs">
+        <button data-stock="VNM" class="stock-tab px-4 py-1.5 rounded-md text-label-md font-label-md bg-primary-container text-white shadow-sm transition-all">VNM</button>
+        <button data-stock="FPT" class="stock-tab px-4 py-1.5 rounded-md text-label-md font-label-md text-on-surface-variant hover:bg-surface-container transition-all">FPT</button>
+        <button data-stock="VIC" class="stock-tab px-4 py-1.5 rounded-md text-label-md font-label-md text-on-surface-variant hover:bg-surface-container transition-all">VIC</button>
+        <button data-stock="HPG" class="stock-tab px-4 py-1.5 rounded-md text-label-md font-label-md text-on-surface-variant hover:bg-surface-container transition-all">HPG</button>
+    </div>
+
+    <!-- Chart Area -->
+    <div class="bg-surface-container-lowest rounded-xl border border-border-subtle shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-border-subtle flex justify-between items-center bg-background-secondary">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-outline">candlestick_chart</span>
+                <h3 class="text-headline-sm font-headline-sm text-on-surface" id="chart-title">VNM — Biểu đồ Nến & Tín hiệu</h3>
+            </div>
+            <div class="flex items-center gap-4 text-label-md font-label-md text-text-secondary">
+                <div class="flex items-center gap-1"><span class="w-3 h-3 bg-success-green block rounded-sm"></span> OHLC</div>
+                <div class="flex items-center gap-1"><span class="w-3 h-1 bg-outline block"></span> SMA20</div>
+                <div class="flex items-center gap-1"><span class="material-symbols-outlined text-success-green text-[16px]">arrow_drop_up</span> MUA</div>
+                <div class="flex items-center gap-1"><span class="material-symbols-outlined text-danger-red text-[16px]">arrow_drop_down</span> BÁN</div>
+            </div>
+        </div>
+        <div id="chart-container" class="p-2 w-full bg-white" style="height: 420px; overflow: hidden;">
+            <div class="w-full h-full flex items-center justify-center text-text-secondary">
+                <span class="material-symbols-outlined text-4xl mr-2">candlestick_chart</span>
+                <span>Chờ dữ liệu biểu đồ...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls & Stats Strip -->
+    <div class="flex flex-col lg:flex-row gap-gutter">
+
+        <!-- Left: Current Day Stats -->
+        <div class="lg:w-1/3 flex flex-col gap-4">
+            <div class="bg-surface-container-lowest p-6 rounded-xl border border-border-subtle shadow-sm flex flex-col justify-between h-full">
+                <div>
+                    <div id="action-badge" class="mb-4">
+                        <h3 class="text-headline-md font-headline-md text-on-surface">Ngày: --</h3>
+                        <div class="flex items-center gap-2 mt-2">
+                            <span class="text-body-md font-body-md text-text-secondary">Hành động hôm nay:</span>
+                            <span class="px-2 py-0.5 rounded text-label-md font-label-md bg-surface-container-low text-text-secondary border border-border-subtle">--</span>
+                        </div>
+                    </div>
+                    <div id="current-stats" class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <tbody class="text-body-sm font-body-sm">
+                                <tr class="border-b border-border-subtle bg-background-secondary">
+                                    <td class="py-2 px-3 text-text-secondary font-medium">Giá đóng cửa</td>
+                                    <td class="py-2 px-3 font-data-mono text-on-surface">--</td>
+                                </tr>
+                                <tr class="border-b border-border-subtle">
+                                    <td class="py-2 px-3 text-text-secondary font-medium">Tài sản ròng</td>
+                                    <td class="py-2 px-3 font-data-mono text-on-surface">--</td>
+                                </tr>
+                                <tr class="border-b border-border-subtle bg-background-secondary">
+                                    <td class="py-2 px-3 text-text-secondary font-medium">Lợi nhuận/Lỗ</td>
+                                    <td class="py-2 px-3 font-data-mono text-on-surface">--</td>
+                                </tr>
+                                <tr class="border-b border-border-subtle">
+                                    <td class="py-2 px-3 text-text-secondary font-medium">Trạng thái vị thế</td>
+                                    <td class="py-2 px-3 text-on-surface">--</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-3 text-text-secondary font-medium">Tiến độ</td>
+                                    <td class="py-2 px-3 font-data-mono text-on-surface">--</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Prediction & Portfolio -->
+        <div class="lg:w-2/3 flex flex-col gap-4">
+
+            <!-- Action Bar -->
+            <div class="flex justify-end gap-3">
+                <button id="btn-reset" class="px-6 py-2 bg-white border border-border-subtle text-on-surface rounded-lg text-body-sm font-medium hover:bg-surface-container-low transition-colors flex items-center gap-2 shadow-sm">
+                    <span class="material-symbols-outlined text-[18px]">refresh</span> Làm mới
+                </button>
+                <button id="btn-next-day" class="px-8 py-2 bg-primary-container text-white rounded-lg text-body-sm font-medium hover:bg-primary transition-colors flex items-center gap-2 shadow-sm">
+                    Ngày tiếp theo <span class="material-symbols-outlined text-[18px]">play_arrow</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter h-full">
+
+                <!-- Prediction Card -->
+                <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm ai-gradient-border flex flex-col h-full">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="material-symbols-outlined text-secondary">psychology</span>
+                        <h3 class="text-headline-sm font-headline-sm text-on-surface">Dự báo của AI</h3>
+                    </div>
+                    <div id="prediction-content" class="flex-1 markdown-content text-body-sm text-text-secondary">
+                        <p>Chưa có dữ liệu. Bấm <strong>Ngày tiếp theo ▶</strong> để bắt đầu.</p>
+                    </div>
+                </div>
+
+                <!-- Portfolio Stats -->
+                <div class="bg-surface-container-lowest p-5 rounded-xl border border-border-subtle shadow-sm flex flex-col h-full">
+                    <div class="flex items-center gap-2 mb-3 border-b border-border-subtle pb-3">
+                        <span class="material-symbols-outlined text-outline">account_balance_wallet</span>
+                        <h3 class="text-headline-sm font-headline-sm text-on-surface">Danh mục</h3>
+                    </div>
+                    <div id="portfolio-content" class="flex-1 overflow-y-auto markdown-content text-body-sm text-text-secondary">
+                        <p>Chưa bắt đầu giao dịch.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fundamental Analysis -->
+    <div class="bg-surface-container-lowest p-6 rounded-xl border border-border-subtle shadow-sm">
+        <h3 class="text-headline-sm font-headline-sm text-on-surface mb-4 border-b border-border-subtle pb-4">Phân tích cơ bản (LLM Response)</h3>
+        <div id="fundamental-content" class="markdown-content text-body-sm text-text-secondary">
+            <p>Chưa có dữ liệu phân tích. Bấm <strong>Ngày tiếp theo ▶</strong> để bắt đầu.</p>
+        </div>
+    </div>
+
+</div>
+</main>
+</div>
+
+<!-- ================================================================================== -->
+<!-- JAVASCRIPT: Gradio API Client (v4/v5 compatible) -->
+<!-- ================================================================================== -->
+<script>
+(function() {
+    'use strict';
+
+    // ─── Configuration ─────────────────────────────────────────────────
+    const STOCKS = ['VNM', 'FPT', 'VIC', 'HPG'];
+
+    // API names are auto-generated by Gradio from the function/method name.
+    // In app.py, build_tab() is called in a loop for 4 stocks, so the
+    // click() callbacks generate sequential API names:
+    //   on_next_day, on_next_day_1, on_next_day_2, on_next_day_3
+    //   on_reset,    on_reset_1,    on_reset_2,    on_reset_3
+    const API_NAMES = {
+        LOAD_MODEL: 'on_load_model',
+        NEXT_DAY: ['on_next_day', 'on_next_day_1', 'on_next_day_2', 'on_next_day_3'],
+        RESET:    ['on_reset',    'on_reset_1',    'on_reset_2',    'on_reset_3'],
+    };
+
+    const MODEL_CHOICES = [
+        'output_20260529_084342 | Sharpe=-1.89 | Return=-7.8% | WR=50% | γ=0.97 | w=20',
+        'output_20260529_082326 | Sharpe=-0.31 | Return=+1.8% | WR=52% | γ=0.97 | w=20',
+        'output_20260529_080641 | Sharpe=-0.90 | Return=-1.9% | WR=57% | γ=0.97 | w=20',
+        'output_20260529_073155 | Sharpe=-0.83 | Return=-3.5% | WR=59% | γ=0.97 | w=20',
+        'output_20260529_065815 | Sharpe=-1.54 | Return=-7.5% | WR=56% | γ=0.97 | w=20',
+        'output_20260529_062442 | Sharpe=-1.06 | Return=-3.8% | WR=59% | γ=0.97 | w=20',
+        'output_20260529_055047 | Sharpe=-1.24 | Return=-4.7% | WR=55% | γ=0.97 | w=20',
+        'output_20260529_051718 | Sharpe=-0.61 | Return=-0.9% | WR=60% | γ=0.97 | w=20',
+        'output_20260529_045129 | Sharpe=0.23 | Return=+3.1% | WR=60% | γ=0.97 | w=20',
+        'output_20260529_044549 | Sharpe=-0.79 | Return=-2.2% | WR=55% | γ=0.97 | w=20',
+        'output_20260529_041215 | Sharpe=-3.14 | Return=-2.4% | WR=44% | γ=0.97 | w=20',
+        'output_20260529_035726 | Sharpe=-1.36 | Return=-5.6% | WR=50% | γ=0.97 | w=20',
+        'output_20260529_033841 | Sharpe=-0.37 | Return=+0.1% | WR=66% | γ=0.97 | w=20',
+        'output_20260529_031725 | Sharpe=-0.35 | Return=-0.8% | WR=54% | γ=0.97 | w=20',
+        'output_20260529_030515 | Sharpe=-0.13 | Return=+1.4% | WR=61% | γ=0.97 | w=20',
+        'output_20260529_024924 | Sharpe=-4.11 | Return=-6.0% | WR=43% | γ=0.97 | w=20',
+        'output_20260529_024548 | Sharpe=-0.22 | Return=+0.5% | WR=68% | γ=0.97 | w=20',
+        'output_20260529_021225 | Sharpe=-1.28 | Return=-5.0% | WR=52% | γ=0.97 | w=20',
+        'output_20260529_021133 | Sharpe=-1.09 | Return=-3.4% | WR=53% | γ=0.97 | w=20',
+        'output_20260529_013135 | Sharpe=0.60 | Return=+6.0% | WR=60% | γ=0.97 | w=20',
+        'output_20260529_012025 | Sharpe=-0.62 | Return=-3.7% | WR=62% | γ=0.97 | w=20',
+        'output_20260529_005309 | Sharpe=-0.60 | Return=-1.9% | WR=55% | γ=0.97 | w=20',
+        'output_20260529_003822 | Sharpe=0.39 | Return=+2.0% | WR=65% | γ=0.97 | w=20',
+        'output_20260529_002849 | Sharpe=0.01 | Return=+2.0% | WR=60% | γ=0.97 | w=20',
+        'output_20260529_001338 | Sharpe=-0.21 | Return=-0.5% | WR=66% | γ=0.97 | w=20',
+        'output_20260528_235925 | Sharpe=0.21 | Return=+2.5% | WR=61% | γ=0.99 | w=20',
+        'output_20260528_235504 | Sharpe=-0.56 | Return=-1.5% | WR=56% | γ=0.97 | w=20',
+        'output_20260528_234158 | Sharpe=-0.64 | Return=-1.7% | WR=65% | γ=0.97 | w=20',
+        'output_20260528_233313 | Sharpe=-1.63 | Return=-5.5% | WR=47% | γ=0.97 | w=20',
+        'output_20260528_232147 | Sharpe=-1.02 | Return=-3.4% | WR=60% | γ=0.97 | w=20',
+        'output_20260528_231129 | Sharpe=0.49 | Return=+2.7% | WR=70% | γ=0.97 | w=20',
+        'output_20260528_225105 | Sharpe=-0.08 | Return=+1.1% | WR=61% | γ=0.97 | w=20',
+        'output_20260528_224742 | Sharpe=-0.68 | Return=-2.4% | WR=57% | γ=0.95 | w=20',
+        'output_20260528_221742 | Sharpe=-0.18 | Return=+1.5% | WR=56% | γ=0.9 | w=20',
+    ];
+
+    // ─── State ─────────────────────────────────────────────────────────
+    let currentStock = 'VNM';
+    let baseUrl = 'http://localhost:7860';
+    let isConnected = false;
+    let isLoading = false;
+    let sessionHash = crypto.randomUUID();
+    /** API path prefix: '/gradio_api' (v5+) or '' (v4) */
+    let apiPrefix = '/gradio_api';
+    /** Version string for display */
+    let gradioVersion = '';
+
+    // ─── DOM References ────────────────────────────────────────────────
+    const $ = (id) => document.getElementById(id);
+    const dom = {
+        urlInput: $('gradio-url'),
+        btnConnect: $('btn-connect'),
+        statusDot: $('status-dot'),
+        statusText: $('status-text'),
+        apiBadge: $('api-version-badge'),
+        modelSelect: $('model-select'),
+        btnLoadModel: $('btn-load-model'),
+        modelInfo: $('model-info'),
+        stockTabs: document.querySelectorAll('.stock-tab'),
+        chartTitle: $('chart-title'),
+        chartContainer: $('chart-container'),
+        actionBadge: $('action-badge'),
+        currentStats: $('current-stats'),
+        predictionContent: $('prediction-content'),
+        portfolioContent: $('portfolio-content'),
+        fundamentalContent: $('fundamental-content'),
+        btnNextDay: $('btn-next-day'),
+        btnReset: $('btn-reset'),
+    };
+
+    // ─── Normalize URL ─────────────────────────────────────────────────
+    function normalizeUrl(url) {
+        url = url.trim();
+        if (!url) url = 'http://localhost:7860';
+        if (url.endsWith('/')) url = url.slice(0, -1);
+        return url;
+    }
+
+    function getApiUrl() {
+        return normalizeUrl(dom.urlInput.value.trim());
+    }
+
+    // ─── Gradio API Version Detection ──────────────────────────────────
+    /**
+     * Detect the Gradio API prefix by probing known endpoints.
+     * Gradio 5+ uses /gradio_api/info, Gradio 4 uses /info or /api_info.
+     * Sets this.apiPrefix and this.gradioVersion.
+     */
+    async function detectApiVersion(url) {
+        const base = normalizeUrl(url);
+
+        // Try v5 path first: /gradio_api/info
+        try {
+            const resp = await fetch(base + '/gradio_api/info', {
+                method: 'GET',
+                signal: AbortSignal.timeout(3000),
+            });
+            if (resp.ok) {
+                const info = await resp.json();
+                apiPrefix = '/gradio_api';
+                gradioVersion = info.version || '5.x';
+                return { prefix: '/gradio_api', version: '5.x' };
+            }
+        } catch (_) { /* ignore */ }
+
+        // Try v4 path: /info
+        try {
+            const resp = await fetch(base + '/info', {
+                method: 'GET',
+                signal: AbortSignal.timeout(3000),
+            });
+            if (resp.ok) {
+                const info = await resp.json();
+                apiPrefix = '';
+                gradioVersion = info.version || '4.x';
+                return { prefix: '', version: '4.x' };
+            }
+        } catch (_) { /* ignore */ }
+
+        // Try v4 legacy path: /api_info
+        try {
+            const resp = await fetch(base + '/api_info', {
+                method: 'GET',
+                signal: AbortSignal.timeout(3000),
+            });
+            if (resp.ok) {
+                apiPrefix = '';
+                gradioVersion = '4.x (legacy)';
+                return { prefix: '', version: '4.x' };
+            }
+        } catch (_) { /* ignore */ }
+
+        throw new Error('Cannot detect Gradio API version. Is the server running?');
+    }
+
+    // ─── Gradio API Client ─────────────────────────────────────────────
+    /**
+     * Call a Gradio endpoint using api_name.
+     * Compatible with Gradio v4+ (no prefix) and v5+ (/gradio_api prefix).
+     *
+     * @param {string} apiName - e.g. 'on_next_day'
+     * @param {Array} data - array of input values
+     * @returns {Promise<Array>} - output data array
+     */
+    /**
+     * Cache of available API endpoints retrieved from /gradio_api/info
+     */
+    let apiEndpointCache = null;
+
+    async function fetchApiInfo() {
+        try {
+            const url = getApiUrl() + apiPrefix + '/info';
+            const resp = await fetch(url, { signal: AbortSignal.timeout(5000) });
+            if (resp.ok) {
+                const info = await resp.json();
+                console.log('[Gradio Info] APIs available:', Object.keys(info.named_endpoints || {}));
+                apiEndpointCache = info;
+                return info;
+            }
+        } catch (e) {
+            console.warn('[Gradio Info] Could not fetch /info:', e.message);
+        }
+        apiEndpointCache = null;
+        return null;
+    }
+
+    /**
+     * Call a non-streaming Gradio API endpoint.
+     * Gradio v5 exposes these at /gradio_api/api/{api_name}/ (trailing slash required).
+     * The body should contain only { data: [...] }; session_hash is not required
+     * for non-streaming endpoints and can cause "too many/few input values"
+     * when the API signature does not include the hidden state.
+     */
+    async function callNonStreamApi(apiName, data) {
+        const url = getApiUrl() + apiPrefix + '/api/' + apiName + '/';
+        const body = {
+            data: data || [],
+            session_hash: sessionHash,
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        });
+
+        if (!response.ok) {
+            const text = await response.text().catch(() => '');
+            if (response.status === 405) {
+                // Method Not Allowed — the API exists but does not accept POST this way
+                throw new Error('NON_STREAM_NOT_ALLOWED');
+            }
+            throw new Error(`API ${response.status}: ${apiName}${text ? ' - ' + text.slice(0, 300) : ''}`);
+        }
+
+        const json = await response.json();
+        console.debug('[Gradio NonStream] response:', json);
+        return json.data || json;
+    }
+
+    /**
+     * Call a Gradio endpoint via SSE streaming (POST /gradio_api/call/{api_name}).
+     * Works for Gradio v4+ and v5+.
+     */
+    async function callStreamApi(apiName, data) {
+        const url = getApiUrl() + apiPrefix + '/call/' + apiName;
+        const body = {
+            data: data || [],
+            session_hash: sessionHash,
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        });
+
+        if (!response.ok) {
+            const text = await response.text().catch(() => '');
+            if (response.status === 405) {
+                throw new Error('STREAM_NOT_ALLOWED');
+            }
+            throw new Error(`API ${response.status} ${
+                response.status === 404 ? 'Not Found' : response.statusText
+            }: ${apiName}${text ? ' - ' + text.slice(0, 200) : ''}`);
+        }
+
+        // Parse SSE stream
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        /** Track the last valid data payload for fallback */
+        let lastDataPayload = null;
+
+        function extractOutputData(payload) {
+            if (!payload || !payload.data) return null;
+            if (Array.isArray(payload.data)) return payload.data;
+            if (typeof payload.data === 'object' && payload.data !== null) {
+                if (Array.isArray(payload.data.data)) return payload.data.data;
+                if (payload.data.value !== undefined) return [payload.data.value];
+            }
+            return null;
+        }
+
+        return new Promise((resolve, reject) => {
+            function processChunk(result) {
+                if (result.done) {
+                    if (lastDataPayload) {
+                        const output = extractOutputData(lastDataPayload);
+                        if (output) { resolve(output); return; }
+                    }
+                    if (buffer.trim()) {
+                        const lines = buffer.split('\n').filter(l => l.startsWith('data: '));
+                        for (const line of lines.reverse()) {
+                            try {
+                                const payload = JSON.parse(line.slice(6));
+                                const output = extractOutputData(payload);
+                                if (output) { resolve(output); return; }
+                            } catch (_) { /* skip */ }
+                        }
+                    }
+                    reject(new Error('Stream ended without process_completed event'));
+                    return;
+                }
+
+                buffer += decoder.decode(result.value, { stream: true });
+                const lines = buffer.split('\n');
+                buffer = lines.pop() || '';
+
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        try {
+                            const payload = JSON.parse(line.slice(6));
+                            const event = payload.event || '';
+                            console.debug('[Gradio SSE]', event, JSON.stringify(payload).slice(0, 200));
+                            if (payload.data) lastDataPayload = payload;
+                            const doneEvents = ['process_completed', 'complete', 'completed'];
+                            if (doneEvents.includes(event)) {
+                                const output = extractOutputData(payload);
+                                if (output) { resolve(output); return; }
+                            }
+                        } catch (e) { /* skip */ }
+                    }
+                }
+                reader.read().then(processChunk).catch(reject);
+            }
+            reader.read().then(processChunk).catch(reject);
+
+            setTimeout(() => {
+                if (lastDataPayload) {
+                    const output = extractOutputData(lastDataPayload);
+                    if (output) {
+                        console.warn('[Gradio] Timed out but using last data payload');
+                        resolve(output);
+                        return;
+                    }
+                }
+                reject(new Error('API call timed out after 30s'));
+            }, 30000);
+        });
+    }
+
+    /**
+     * Unified Gradio API caller.
+     * Tries stream API first, falls back to non-stream API.
+     */
+    async function callGradioApi(apiName, data) {
+            // Strategy 1: Try stream API (works for most Gradio v4/v5 event handlers)
+        try {
+            return await callStreamApi(apiName, data);
+        } catch (err) {
+            if (err.message === 'STREAM_NOT_ALLOWED' || err.message.includes('404')) {
+                console.log(`[Gradio] Stream API not available for "${apiName}", trying non-stream...`);
+                // Strategy 2: Try non-stream API
+                return await callNonStreamApi(apiName, data);
+            }
+            throw err;
+        }
+    }
+
+    /**
+     * Extract output data from a Gradio SSE payload.
+     */
+    function extractOutputData(payload) {
+        if (!payload || !payload.data) return null;
+        if (Array.isArray(payload.data)) return payload.data;
+        if (typeof payload.data === 'object' && payload.data !== null) {
+            if (Array.isArray(payload.data.data)) return payload.data.data;
+            if (payload.data.value !== undefined) return [payload.data.value];
+        }
+        return null;
+    }
+
+    /**
+     * Parse a ReadableStream as SSE and return the first completed output.
+     */
+    async function parseSSE(body) {
+        const reader = body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let lastDataPayload = null;
+
+        return new Promise((resolve, reject) => {
+            function processChunk(result) {
+                if (result.done) {
+                    if (lastDataPayload) {
+                        const output = extractOutputData(lastDataPayload);
+                        if (output) { resolve(output); return; }
+                    }
+                    if (buffer.trim()) {
+                        const lines = buffer.split('\n').filter(l => l.startsWith('data: '));
+                        for (const line of lines.reverse()) {
+                            try {
+                                const payload = JSON.parse(line.slice(6));
+                                const output = extractOutputData(payload);
+                                if (output) { resolve(output); return; }
+                            } catch (_) { /* skip */ }
+                        }
+                    }
+                    reject(new Error('Stream ended without process_completed event'));
+                    return;
+                }
+
+                buffer += decoder.decode(result.value, { stream: true });
+                const lines = buffer.split('\n');
+                buffer = lines.pop() || '';
+
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        try {
+                            const payload = JSON.parse(line.slice(6));
+                            const event = payload.event || '';
+                            console.debug('[GradioV5 SSE]', event, JSON.stringify(payload).slice(0, 200));
+                            if (payload.data) lastDataPayload = payload;
+                            const doneEvents = ['process_completed', 'complete', 'completed'];
+                            if (doneEvents.includes(event)) {
+                                const output = extractOutputData(payload);
+                                if (output) { resolve(output); return; }
+                            }
+                        } catch (e) { /* skip */ }
+                    }
+                }
+                reader.read().then(processChunk).catch(reject);
+            }
+            reader.read().then(processChunk).catch(reject);
+
+            setTimeout(() => {
+                if (lastDataPayload) {
+                    const output = extractOutputData(lastDataPayload);
+                    if (output) {
+                        console.warn('[GradioV5] Timed out but using last data payload');
+                        resolve(output);
+                        return;
+                    }
+                }
+                reject(new Error('API call timed out after 30s'));
+            }, 30000);
+        });
+    }
+
+    /**
+     * Gradio v5 two-step streaming call:
+     * 1. POST /gradio_api/call/{api_name} → returns {"event_id": "xxx"}
+     * 2. GET  /gradio_api/call/{api_name}/{event_id} → SSE stream with results
+     */
+    async function callGradioApiV5(apiName, data) {
+        const baseUrl = getApiUrl() + apiPrefix;
+
+        // Step 1: POST to create event
+        const url1 = baseUrl + '/call/' + apiName;
+        const body = { data: data || [], session_hash: sessionHash };
+
+        const resp1 = await fetch(url1, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'text/event-stream',
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (!resp1.ok) {
+            const text = await resp1.text().catch(() => '');
+            throw new Error(`Step 1 POST ${resp1.status}: ${text.slice(0, 300)}`);
+        }
+
+        // If the response itself is a complete SSE stream (some Gradio versions behave this way),
+        // parse it directly.
+        const ct = resp1.headers.get('content-type') || '';
+        if (ct.includes('text/event-stream') || ct.includes('octet-stream')) {
+            return await parseSSE(resp1.body);
+        }
+
+        // Otherwise, try to read as JSON and fetch the event_id
+        let eventId;
+        const text = await resp1.text();
+        try {
+            const json = JSON.parse(text);
+            eventId = json.event_id || json;
+        } catch (_) {
+            // Some versions return the event_id as plain text
+            eventId = text.trim();
+        }
+
+        if (!eventId) throw new Error('No event_id received from server');
+
+        console.log(`[GradioV5] event_id=${eventId} for api="${apiName}"`);
+
+        // Step 2: GET SSE stream with event_id
+        const url2 = baseUrl + '/call/' + apiName + '/' + eventId;
+        const resp2 = await fetch(url2, {
+            method: 'GET',
+            headers: { 'Accept': 'text/event-stream' },
+        });
+
+        if (!resp2.ok) {
+            const text = await resp2.text().catch(() => '');
+            throw new Error(`Step 2 GET ${resp2.status}: ${text.slice(0, 300)}`);
+        }
+
+        // Parse SSE stream from resp2
+        return await parseSSE(resp2.body);
+    }
+
+    /**
+     * Unified Gradio API caller.
+     * Selects strategy based on API version and endpoint needs.
+     * Strategies tried (in order):
+     *   1. Gradio v5 streaming: POST /call/{api_name} → event_id → GET SSE
+     *      (preferred for stateful endpoints like on_next_day / on_reset,
+     *       because session_hash is used to persist gr.State)
+     *   2. Gradio v5 non-streaming: POST /api/{api_name}/ → JSON response
+     *      (fallback for stateless endpoints like on_load_model)
+     *   3. Gradio v4 streaming: POST /call/{api_name} → SSE stream
+     *   4. Gradio v4 non-streaming: POST /api/{api_name}/ → JSON response
+     */
+    async function callGradioApi(apiName, data) {
+        console.log(`[Gradio] Calling "${apiName}" (version=${gradioVersion}, prefix=${apiPrefix})`);
+
+        // Strategy 1: Gradio v5 two-step streaming (preferred to keep gr.State)
+        if (gradioVersion.startsWith('5')) {
+            try {
+                const result = await callGradioApiV5(apiName, data);
+                console.log(`[Gradio] V5 stream OK for "${apiName}"`);
+                return result;
+            } catch (err) {
+                console.warn(`[Gradio] V5 stream failed for "${apiName}": ${err.message}`);
+            }
+
+            // Strategy 2: Gradio v5 non-streaming fallback
+            try {
+                const result = await callNonStreamApi(apiName, data);
+                console.log(`[Gradio] Non-stream API OK for "${apiName}"`);
+                return result;
+            } catch (err) {
+                if (err.message === 'NON_STREAM_NOT_ALLOWED') {
+                    console.warn(`[Gradio] Non-stream API not allowed for "${apiName}"`);
+                } else {
+                    console.warn(`[Gradio] Non-stream API failed for "${apiName}": ${err.message}`);
+                }
+            }
+        }
+
+        // Strategy 3: Direct SSE stream (Gradio v4 style)
+        try {
+            const result = await callStreamApi(apiName, data);
+            console.log(`[Gradio] Stream API OK for "${apiName}"`);
+            return result;
+        } catch (err) {
+            if (err.message === 'STREAM_NOT_ALLOWED') {
+                console.warn(`[Gradio] Stream API not allowed for "${apiName}"`);
+            } else {
+                console.warn(`[Gradio] Stream API failed for "${apiName}": ${err.message}`);
+            }
+        }
+
+        // Strategy 4: Non-stream API (v4 style)
+        const result = await callNonStreamApi(apiName, data);
+        console.log(`[Gradio] Non-stream API OK for "${apiName}"`);
+        return result;
+    }
+
+    // ─── Helper: parse Markdown to HTML ────────────────────────────────
+    function mdToHtml(md) {
+        if (!md) return '';
+        let html = md;
+        html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+        html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+        html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+        html = html.replace(/`(.+?)`/g, '<code class="bg-surface-container-low px-1 rounded text-primary">$1</code>');
+        html = html.replace(/\n\|(.+)\|(\n\|[-:| ]+\|)?/g, function(match) {
+            const rows = match.trim().split('\n').filter(r => r.trim());
+            let table = '<table class="w-full border-collapse"><tbody>';
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i].trim();
+                if (row.match(/^[\| :-]+$/)) continue;
+                const cells = row.split('|').filter(c => c.trim());
+                if (cells.length === 0) continue;
+                const tag = i === 0 ? 'th' : 'td';
+                table += '<tr>';
+                for (const cell of cells) {
+                    const isSelected = cell.includes('←');
+                    const cellClass = isSelected ? 'font-semibold text-primary' : '';
+                    const cleanCell = cell.replace(/←/g, '').trim();
+                    if (cleanCell) {
+                        table += `<${tag} class="py-2 px-3 text-left text-body-sm ${cellClass} border-b border-border-subtle">${cleanCell}</${tag}>`;
+                    }
+                }
+                table += '</tr>';
+            }
+            table += '</tbody></table>';
+            return '\n' + table;
+        });
+        html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+        html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul class="list-disc list-inside space-y-1">$&</ul>');
+        html = html.replace(/\n\n/g, '</p><p class="mb-2">');
+        html = html.replace(/\n/g, '<br>');
+        if (!html.startsWith('<')) html = '<p>' + html + '</p>';
+        return html;
+    }
+
+    // ─── UI Updates ────────────────────────────────────────────────────
+
+    function setStatus(connected, message) {
+        isConnected = connected;
+        dom.statusDot.className = `w-2 h-2 rounded-full inline-block ${connected ? 'bg-success-green' : 'bg-gray-300'}`;
+        dom.statusText.textContent = message;
+        dom.btnConnect.disabled = false;
+
+        dom.apiBadge.classList.toggle('hidden', !connected);
+        if (connected) {
+            dom.apiBadge.textContent = `API v${gradioVersion || '?'}`;
+            dom.apiBadge.className = 'text-label-md font-label-md px-1.5 py-0.5 rounded bg-surface-container-low text-text-secondary ml-1';
+        }
+
+        const icon = connected ? 'check_circle' : 'link';
+        const label = connected ? 'Đã kết nối' : 'Kết nối';
+        dom.btnConnect.innerHTML = `<span class="material-symbols-outlined text-[16px]">${icon}</span> ${label}`;
+        dom.btnConnect.className = connected
+            ? 'px-3 py-1.5 bg-success-green text-white rounded-lg text-body-sm font-medium flex items-center gap-1 shadow-sm whitespace-nowrap'
+            : 'px-3 py-1.5 bg-primary-container text-white rounded-lg text-body-sm font-medium hover:bg-primary transition-colors flex items-center gap-1 shadow-sm whitespace-nowrap';
+    }
+
+    function setLoading(loading) {
+        isLoading = loading;
+        for (const id of ['btn-next-day', 'btn-reset', 'btn-load-model']) {
+            const btn = document.getElementById(id);
+            if (btn) {
+                btn.disabled = loading;
+                btn.classList.toggle('disabled:opacity-50', loading);
+                btn.classList.toggle('disabled:cursor-not-allowed', loading);
+            }
+        }
+    }
+
+    function renderChart(plotlyData) {
+        const container = dom.chartContainer;
+        container.innerHTML = '';
+
+        console.log('[renderChart] input:', plotlyData);
+
+        if (!plotlyData) {
+            container.innerHTML = '<div class="w-full h-full flex items-center justify-center text-text-secondary">Không có dữ liệu biểu đồ</div>';
+            return;
+        }
+
+        let data, layout;
+        try {
+            if (Array.isArray(plotlyData)) {
+                data = plotlyData;
+                layout = {};
+            } else if (plotlyData.data) {
+                data = plotlyData.data;
+                layout = plotlyData.layout || {};
+            } else if (plotlyData.type === 'plotly' && plotlyData.plot) {
+                const parsed = typeof plotlyData.plot === 'string' ? JSON.parse(plotlyData.plot) : plotlyData.plot;
+                console.log('[renderChart] parsed plotly object:', parsed);
+                data = parsed.data || parsed;
+                layout = parsed.layout || {};
+            } else {
+                container.innerHTML = '<div class="w-full h-full flex items-center justify-center text-text-secondary">Dữ liệu biểu đồ không hợp lệ</div>';
+                return;
+            }
+        } catch (e) {
+            console.error('[renderChart] parse error:', e);
+            container.innerHTML = '<div class="w-full h-full flex items-center justify-center text-text-secondary">Lỗi parse biểu đồ</div>';
+            return;
+        }
+
+        data = Array.isArray(data) ? data : [data];
+
+        layout = {
+            ...layout,
+            autosize: true,
+            height: 380,
+            margin: layout.margin || { l: 50, r: 20, t: 30, b: 40 },
+            xaxis: layout.xaxis || {},
+            template: 'plotly_white',
+        };
+
+        console.log('[renderChart] Plotly.newPlot with data count:', data.length);
+
+        try {
+            Plotly.newPlot(container, data, layout, {
+                responsive: true,
+                displayModeBar: false,
+            });
+            console.log('[renderChart] Plotly.newPlot completed');
+        } catch (e) {
+            console.error('[renderChart] Plotly error:', e);
+            container.innerHTML = '<div class="w-full h-full flex items-center justify-center text-text-secondary">Lỗi render biểu đồ</div>';
+        }
+    }
+
+    function updateStats(actionMarkdown) {
+        console.log('[updateStats] input:', actionMarkdown.slice(0, 100));
+        if (!actionMarkdown || actionMarkdown.includes('để bắt đầu')) {
+            // Reset to placeholder
+            const badge = dom.actionBadge;
+            badge.innerHTML = `
+                <h3 class="text-headline-md font-headline-md text-on-surface">Ngày: --</h3>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-body-md font-body-md text-text-secondary">Hành động hôm nay:</span>
+                    <span class="px-2 py-0.5 rounded text-label-md font-label-md bg-surface-container-low text-text-secondary border border-border-subtle">--</span>
+                </div>
+            `;
+            dom.currentStats.querySelector('tbody').innerHTML = `
+                <tr class="border-b border-border-subtle bg-background-secondary"><td class="py-2 px-3 text-text-secondary font-medium">Giá đóng cửa</td><td class="py-2 px-3 font-data-mono text-on-surface">--</td></tr>
+                <tr class="border-b border-border-subtle"><td class="py-2 px-3 text-text-secondary font-medium">Tài sản ròng</td><td class="py-2 px-3 font-data-mono text-on-surface">--</td></tr>
+                <tr class="border-b border-border-subtle bg-background-secondary"><td class="py-2 px-3 text-text-secondary font-medium">Lợi nhuận/Lỗ</td><td class="py-2 px-3 font-data-mono text-on-surface">--</td></tr>
+                <tr class="border-b border-border-subtle"><td class="py-2 px-3 text-text-secondary font-medium">Trạng thái vị thế</td><td class="py-2 px-3 text-on-surface">--</td></tr>
+                <tr><td class="py-2 px-3 text-text-secondary font-medium">Tiến độ</td><td class="py-2 px-3 font-data-mono text-on-surface">--</td></tr>
+            `;
+            return;
+        }
+
+        // Render action badge as HTML
+        dom.actionBadge.innerHTML = mdToHtml(actionMarkdown);
+
+        // Also extract stats for the left table
+        const lines = actionMarkdown.split('\n');
+        const statsMap = {};
+        for (const line of lines) {
+            const match = line.match(/^\| (.+?) \| (.+?) \|$/);
+            if (match) {
+                const key = match[1].trim().toLowerCase();
+                const val = match[2].trim();
+                if (key.includes('giá close') || key.includes('close')) statsMap.price = val;
+                else if (key.includes('equity') || key.includes('tài sản')) statsMap.equity = val;
+                else if (key.includes('pnl') || key.includes('lợi nhuận') || key.includes('lỗ')) statsMap.pnl = val;
+                else if (key.includes('vị thế')) statsMap.position = val;
+                else if (key.includes('tiến độ')) statsMap.progress = val;
+            }
+        }
+
+        // Determine PnL color class
+        let pnlClass = 'text-on-surface';
+        if (statsMap.pnl) {
+            const pnlStr = statsMap.pnl.replace(/[^0-9.\-+%]/g, '');
+            if (pnlStr.startsWith('-') || pnlStr.includes('-')) pnlClass = 'text-danger-red';
+            else if (pnlStr.startsWith('+') || (parseFloat(pnlStr) > 0 && !pnlStr.includes('0.0'))) pnlClass = 'text-success-green';
+        }
+
+        dom.currentStats.querySelector('tbody').innerHTML = `
+            <tr class="border-b border-border-subtle bg-background-secondary">
+                <td class="py-2 px-3 text-text-secondary font-medium">Giá đóng cửa</td>
+                <td class="py-2 px-3 font-data-mono text-on-surface">${statsMap.price || '--'}</td>
+            </tr>
+            <tr class="border-b border-border-subtle">
+                <td class="py-2 px-3 text-text-secondary font-medium">Tài sản ròng</td>
+                <td class="py-2 px-3 font-data-mono text-on-surface">${statsMap.equity || '--'}</td>
+            </tr>
+            <tr class="border-b border-border-subtle bg-background-secondary">
+                <td class="py-2 px-3 text-text-secondary font-medium">Lợi nhuận/Lỗ</td>
+                <td class="py-2 px-3 font-data-mono ${pnlClass}">${statsMap.pnl || '--'}</td>
+            </tr>
+            <tr class="border-b border-border-subtle">
+                <td class="py-2 px-3 text-text-secondary font-medium">Trạng thái vị thế</td>
+                <td class="py-2 px-3 text-on-surface">${statsMap.position || '--'}</td>
+            </tr>
+            <tr>
+                <td class="py-2 px-3 text-text-secondary font-medium">Tiến độ</td>
+                <td class="py-2 px-3 font-data-mono text-on-surface">${statsMap.progress || '--'}</td>
+            </tr>
+        `;
+    }
+
+    function updatePrediction(md) {
+        console.log('[updatePrediction] input:', md ? md.slice(0, 100) : null);
+        if (!md || md === 'Chưa có prediction.') {
+            dom.predictionContent.innerHTML = '<p>Chưa có dữ liệu. Bấm <strong>Ngày tiếp theo ▶</strong> để bắt đầu.</p>';
+            return;
+        }
+        dom.predictionContent.innerHTML = mdToHtml(md);
+    }
+
+    function updatePortfolio(md) {
+        console.log('[updatePortfolio] input:', md ? md.slice(0, 100) : null);
+        if (!md || md === 'Chưa bắt đầu giao dịch.') {
+            dom.portfolioContent.innerHTML = '<p>Chưa bắt đầu giao dịch.</p>';
+            return;
+        }
+        dom.portfolioContent.innerHTML = mdToHtml(md);
+    }
+
+    function updateFundamental(md) {
+        console.log('[updateFundamental] input:', md ? md.slice(0, 100) : null);
+        if (!md || md === 'Chưa có dữ liệu phân tích.') {
+            dom.fundamentalContent.innerHTML = '<p>Chưa có dữ liệu phân tích.</p>';
+            return;
+        }
+        dom.fundamentalContent.innerHTML = mdToHtml(md);
+    }
+
+    function updateChartTitle(stock) {
+        dom.chartTitle.textContent = `${stock} — Biểu đồ Nến & Tín hiệu`;
+    }
+
+    // ─── Main Actions ──────────────────────────────────────────────────
+
+    function getStockIndex(stock) {
+        const idx = STOCKS.indexOf(stock);
+        return idx >= 0 ? idx : 0;
+    }
+
+    async function onNextDay() {
+        if (isLoading || !isConnected) return;
+        setLoading(true);
+        console.log('[NextDay] clicked, stock=', currentStock);
+
+        try {
+            const idx = getStockIndex(currentStock);
+            const apiName = API_NAMES.NEXT_DAY[idx];
+            console.log('[NextDay] Calling API:', apiName);
+
+            const result = await callGradioApi(apiName, [null]);
+            console.log('[NextDay] raw result:', result);
+
+            if (!Array.isArray(result) || result.length < 5) {
+                console.warn('[NextDay] Unexpected result shape:', result);
+                dom.predictionContent.innerHTML = '<p class="text-warning-gold">⚠️ API trả về không đúng định dạng.</p>';
+                return;
+            }
+
+            console.log('[NextDay] result[0] type:', typeof result[0], Array.isArray(result[0]) ? 'array' : '');
+            console.log('[NextDay] result[1] (action):', result[1]);
+            console.log('[NextDay] result[2] (prediction):', result[2]);
+            console.log('[NextDay] result[3] (fundamental):', result[3]);
+            console.log('[NextDay] result[4] (portfolio):', result[4]);
+
+            console.log('[NextDay] Updating chart, stats, prediction, fundamental, portfolio...');
+            renderChart(result[0]);
+            updateStats(result[1]);
+            updatePrediction(result[2]);
+            updateFundamental(result[3]);
+            updatePortfolio(result[4]);
+            console.log('[NextDay] UI updated successfully');
+        } catch (err) {
+            console.error('Next Day error:', err);
+            dom.predictionContent.innerHTML = `<p class="text-danger-red">❌ Lỗi: ${err.message}</p>`;
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function onReset() {
+        if (isLoading || !isConnected) return;
+        setLoading(true);
+
+        try {
+            const idx = getStockIndex(currentStock);
+            const apiName = API_NAMES.RESET[idx];
+            // Gradio event handlers still expect a state argument even if the
+            // auto-generated API docs claim 0 params. Pass null as a placeholder.
+            const result = await callGradioApi(apiName, [null]);
+
+            if (Array.isArray(result) && result.length >= 5) {
+                renderChart(result[0]);
+                updateStats(result[1]);
+                updatePrediction(result[2]);
+                updateFundamental(result[3]);
+                updatePortfolio(result[4]);
+            }
+        } catch (err) {
+            console.error('Reset error:', err);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    function populateModelDropdown() {
+        dom.modelSelect.innerHTML = '';
+        if (MODEL_CHOICES.length === 0) {
+            dom.modelSelect.innerHTML = '<option value="">Không có model nào</option>';
+            return;
+        }
+        for (const choice of MODEL_CHOICES) {
+            const opt = document.createElement('option');
+            opt.value = choice;
+            opt.textContent = choice;
+            dom.modelSelect.appendChild(opt);
+        }
+    }
+
+    /**
+     * Alternative: Call Gradio API using the non-streaming /api/{api_name} endpoint (Gradio v4)
+     * or the direct POST to /gradio_api/call/{api_name} as a plain JSON call.
+     */
+    async function callGradioApiSimple(apiName, data) {
+        // Strategy 1: Try the SSE-based callGradioApi first
+        // Strategy 2: Fallback to POST and capture SSE fully
+
+        const url = getApiUrl() + apiPrefix + '/call/' + apiName;
+        const body = {
+            data: data || [],
+            session_hash: sessionHash,
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        });
+
+        if (!response.ok) {
+            const text = await response.text().catch(() => '');
+            throw new Error(`API ${response.status}: ${apiName}${text ? ' - ' + text.slice(0, 300) : ''}`);
+        }
+
+        // Read the entire SSE response as text
+        const rawText = await response.text();
+        console.debug('[Gradio SSE Raw]', rawText.slice(0, 2000));
+
+        // Parse SSE lines: look for the last 'data: {...}' line with process_completed
+        const lines = rawText.split('\n').filter(l => l.startsWith('data: '));
+        for (const line of lines.reverse()) {
+            try {
+                const payload = JSON.parse(line.slice(6));
+                const event = payload.event || '';
+                const output = extractOutputData(payload);
+                if (output) return output;
+            } catch (_) {}
+        }
+
+        throw new Error('No valid data payload found in SSE response');
+    }
+
+    async function onLoadModel() {
+        console.log('[LoadModel] Button clicked!');
+        console.log('[LoadModel] isConnected=', isConnected, 'isLoading=', isLoading);
+        console.log('[LoadModel] apiPrefix=', apiPrefix, 'sessionHash=', sessionHash);
+
+        if (isLoading || !isConnected) {
+            if (!isConnected) alert('⚠️ Chưa kết nối đến Gradio server. Nhấn "Kết nối" trước.');
+            return;
+        }
+
+        const selectedModel = dom.modelSelect.value;
+        console.log('[LoadModel] selectedModel=', selectedModel);
+
+        if (!selectedModel) {
+            dom.modelInfo.classList.remove('hidden');
+            dom.modelInfo.innerHTML = '<p class="text-warning-gold">⚠️ Vui lòng chọn model.</p>';
+            return;
+        }
+
+        setLoading(true);
+        dom.modelInfo.classList.remove('hidden');
+        dom.modelInfo.innerHTML = '<p><span class="loading-spinner"></span> Đang load model...</p>';
+
+        try {
+            console.log('[LoadModel] Calling API:', API_NAMES.LOAD_MODEL, 'with data:', [selectedModel]);
+            const result = await callGradioApi(API_NAMES.LOAD_MODEL, [selectedModel]);
+            console.log('[LoadModel] API result:', result);
+
+            if (Array.isArray(result) && result.length > 0) {
+                const html = mdToHtml(result[0]);
+                console.log('[LoadModel] HTML output (first 200 chars):', html.slice(0, 200));
+                dom.modelInfo.innerHTML = html;
+            } else {
+                dom.modelInfo.innerHTML = '<p class="text-danger-red">❌ Không có phản hồi từ server.</p>';
+            }
+        } catch (err) {
+            console.error('[LoadModel] Error:', err);
+            dom.modelInfo.innerHTML = `<p class="text-danger-red">❌ Lỗi: ${err.message}</p>`;
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    // ─── Connection ────────────────────────────────────────────────────
+
+    async function connect() {
+        const url = getApiUrl();
+        dom.btnConnect.disabled = true;
+        dom.btnConnect.innerHTML = '<span class="loading-spinner"></span> Đang kết nối...';
+        setStatus(false, 'Đang kết nối...');
+
+        try {
+            // Step 1: Detect API version (also validates server is reachable)
+            const detected = await detectApiVersion(url);
+            baseUrl = url;
+
+            // Step 2: Generate fresh session
+            sessionHash = crypto.randomUUID();
+
+            // Step 3: Update UI
+            setStatus(true, `Đã kết nối (${baseUrl})`);
+
+            // Step 4: Populate model list & load initial state
+            populateModelDropdown();
+            await onReset();
+        } catch (err) {
+            console.error('Connection error:', err);
+            setStatus(false, `Lỗi: ${err.message}`);
+            dom.btnConnect.disabled = false;
+            dom.btnConnect.innerHTML = '<span class="material-symbols-outlined text-[16px]">link</span> Kết nối';
+        }
+    }
+
+    // ─── Stock Switching ───────────────────────────────────────────────
+
+    function switchStock(stock) {
+        if (stock === currentStock) return;
+
+        currentStock = stock;
+        updateChartTitle(stock);
+
+        dom.stockTabs.forEach(tab => {
+            const s = tab.getAttribute('data-stock');
+            tab.className = s === stock
+                ? 'stock-tab px-4 py-1.5 rounded-md text-label-md font-label-md bg-primary-container text-white shadow-sm transition-all'
+                : 'stock-tab px-4 py-1.5 rounded-md text-label-md font-label-md text-on-surface-variant hover:bg-surface-container transition-all';
+        });
+
+        // Reset display
+        dom.chartContainer.innerHTML = '<div class="w-full h-full flex items-center justify-center text-text-secondary"><span class="material-symbols-outlined text-4xl mr-2">candlestick_chart</span><span>Chờ dữ liệu...</span></div>';
+        updateStats(null);
+        updatePrediction(null);
+        updatePortfolio(null);
+        updateFundamental(null);
+
+        if (isConnected) onReset();
+    }
+
+    // ─── Event Binding ─────────────────────────────────────────────────
+
+    dom.btnConnect.addEventListener('click', connect);
+    dom.btnNextDay.addEventListener('click', onNextDay);
+    dom.btnReset.addEventListener('click', onReset);
+    dom.btnLoadModel.addEventListener('click', onLoadModel);
+
+    dom.stockTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            switchStock(this.getAttribute('data-stock'));
+        });
+    });
+
+    dom.urlInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') connect();
+    });
+
+    // ─── Auto-connect on page load ────────────────────────────────────
+    // Use a longer delay to allow page to fully render
+    setTimeout(connect, 500);
+
+    // Expose for debugging
+    window.__tradingClient = {
+        connect, onNextDay, onReset, onLoadModel, switchStock,
+        getState: () => ({ currentStock, baseUrl, sessionHash, isConnected, isLoading, apiPrefix, gradioVersion }),
+    };
+
+    console.log('🤖 AI Trading Simulator loaded. Stock:', currentStock, 'Session:', sessionHash);
+})();
+</script>
+
+</body>
+</html>
