@@ -25,6 +25,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from src.news_scraper import (
+    CAFEF_NEWS_URL,
+    CafeFError,
+    crawl_cafef_news_list,
+)
+
 log = logging.getLogger("uvicorn.error")
 
 # ── Paths ────────────────────────────────────────────────────────────
@@ -82,6 +88,24 @@ class StockRow(BaseModel):
     low: float
     avg: float
     volume_thousand: float
+
+
+class NewsItem(BaseModel):
+    id: Optional[str] = None
+    title: str
+    url: str
+    image_url: Optional[str] = None
+    published_at: Optional[str] = None
+    description: Optional[str] = None
+    source: str = "CafeF"
+
+
+class NewsResponse(BaseModel):
+    source: str
+    source_url: str
+    fetched_at: str
+    count: int
+    items: List[NewsItem]
 
 
 # ── FastAPI app ──────────────────────────────────────────────────────
@@ -181,3 +205,23 @@ def stocks():
             )
         )
     return rows
+
+
+@app.get("/api/news", response_model=NewsResponse)
+def news(refresh: bool = False):
+    """Return the latest market-news list; article bodies stay on CafeF."""
+    try:
+        result = crawl_cafef_news_list(refresh=refresh)
+    except CafeFError as exc:
+        from fastapi import HTTPException
+
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    items = [NewsItem(**item.to_dict()) for item in result.items]
+    return NewsResponse(
+        source=result.source,
+        source_url=result.source_url or CAFEF_NEWS_URL,
+        fetched_at=result.fetched_at,
+        count=len(items),
+        items=items,
+    )
