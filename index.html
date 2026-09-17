@@ -169,8 +169,55 @@ tailwind.config = {
     </div>
 </header>
 
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] flex flex-col py-6 border-r border-border-subtle bg-white w-64 z-40">
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-surface-container-low text-primary font-bold border-r-4 border-primary rounded-lg transition-all" href="index.html">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="thi-truong.html">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">query_stats</span>
+<span class="font-label-md text-label-md">Thị trường</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">analytics</span>
+<span class="font-label-md text-label-md">Chi tiết mã</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">psychology_alt</span>
+<span class="font-label-md text-label-md">AI Simulator</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">newspaper</span>
+<span class="font-label-md text-label-md">Tin tức</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">pie_chart</span>
+<span class="font-label-md text-label-md">Danh mục</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">insights</span>
+<span class="font-label-md text-label-md">Hiệu suất AI</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">settings</span>
+<span class="font-label-md text-label-md">Cài đặt</span>
+</a>
+</nav>
+<div class="px-6 py-4">
+<div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">TX</div>
+<div>
+<p class="text-label-md font-bold text-on-surface leading-tight">Vương Nguyễn</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-semibold">Pro Member</p>
+</div>
+</div>
+</div>
+</aside>
+
 <div class="flex flex-1 overflow-hidden">
-<main class="flex-1 overflow-y-auto p-margin-desktop bg-background" style="background-color: rgb(240, 247, 255);">
+<main class="ml-64 flex-1 overflow-y-auto p-margin-desktop bg-background" style="background-color: rgb(240, 247, 255);">
 <div class="max-w-container-max mx-auto space-y-unit-xl">
 
     <!-- Page Header -->
@@ -320,6 +367,23 @@ tailwind.config = {
 </div>
 </main>
 </div>
+
+<!-- Footer -->
+<footer class="ml-64 bg-white border-t border-border-subtle px-12 py-8 flex flex-col md:flex-row justify-between items-center gap-6">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<img alt="TenacoreX Logo" class="h-5 w-auto" src="https://lh3.googleusercontent.com/aida/AP1WRLuzDliI8_vvO9amiBfr9B1qkrFhzZ8TwyhfgAC_oyo2kHUvKJEAv401nv82Ebxfs3sqelgjS9-ZL7HEIP4nwoaUUQBGs_xkkcB-vvbT0RQ4helzsD68oORRy6K6kIH3fzHOSs9qpvgbZTVuu-vqvhM1X6WrCgFyaGFyUNSuILd7md7wwb3eKt7K3SgALvhBGKq4Syy-y0-HdWQBF5G9e0Qdd8sHZ4vrngc4SQHFIRCK78jwlaHazj89gKw">
+<span class="font-bold text-primary">TenacoreX</span>
+</div>
+<p class="text-body-sm text-text-secondary">© 2024 TenacoreX Investment. Nền tảng phân tích chứng khoán AI chuyên sâu.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-body-sm text-text-secondary hover:text-primary transition-colors" href="#">Điều khoản</a>
+<a class="text-body-sm text-text-secondary hover:text-primary transition-colors" href="#">Bảo mật</a>
+<a class="text-body-sm text-text-secondary hover:text-primary transition-colors" href="#">Liên hệ</a>
+<a class="text-body-sm text-text-secondary hover:text-primary transition-colors" href="#">Hỗ trợ</a>
+</div>
+</footer>
 
 <!-- ================================================================================== -->
 <!-- JAVASCRIPT: Gradio API Client (v4/v5 compatible) -->
