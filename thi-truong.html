@@ -1,0 +1,334 @@
+<!DOCTYPE html><html class="light" lang="vi" style=""><head></head><body class="text-on-surface overflow-x-hidden"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Thị trường | TenacoreX</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#131b2e",
+                        "background-secondary": "#F7F9FC",
+                        "surface-container": "#eaedff",
+                        "on-surface-variant": "#434655",
+                        "danger-red": "#DC2626",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-secondary-fixed": "#25005a",
+                        "ai-gradient": "linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)",
+                        "on-background": "#131b2e",
+                        "on-primary-fixed": "#00174b",
+                        "surface": "#faf8ff",
+                        "surface-dim": "#d2d9f4",
+                        "secondary": "#712ae2",
+                        "tertiary-container": "#bc4800",
+                        "inverse-on-surface": "#eef0ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#fffbff",
+                        "success-bg": "#E7F7EE",
+                        "border-subtle": "#E4E8F0",
+                        "success-green": "#16A34A",
+                        "on-tertiary-container": "#ffede6",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#ffdbcd",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#283044",
+                        "surface-bright": "#faf8ff",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "background": "#F0F7FF",
+                        "secondary-container": "#8a4cfc",
+                        "surface-tint": "#0053db",
+                        "surface-container-low": "#f2f3ff",
+                        "on-secondary-fixed-variant": "#5a00c6",
+                        "secondary-fixed": "#eaddff",
+                        "background-primary": "#FFFFFF",
+                        "primary-fixed": "#dbe1ff",
+                        "primary": "#004ac6",
+                        "danger-bg": "#FDECEC",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#b4c5ff",
+                        "warning-gold": "#D4A72C",
+                        "outline-variant": "#c3c6d7",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary": "#943700",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "surface-container-highest": "#dae2fc",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "outline": "#737686",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#2563eb",
+                        "on-primary-container": "#eeefff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#e1e7ff",
+                        "text-secondary": "#6B7385"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "unit-xs": "4px",
+                        "container-max": "1280px",
+                        "unit-md": "16px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px",
+                        "unit-xl": "32px",
+                        "unit-sm": "8px",
+                        "unit-lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Be Vietnam Pro"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "data-mono": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #F0F7FF; }
+        .font-headline { font-family: 'Be Vietnam Pro', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .ai-glow-border { position: relative; }
+        .ai-glow-border::after { content: ''; position: absolute; inset: -1px; background: linear-gradient(135deg, #2563EB, #7C3AED); border-radius: inherit; z-index: -1; opacity: 0.3; }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(228, 232, 240, 0.5); }
+    </style>
+
+
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex justify-between items-center w-full px-8 bg-background-primary border-b border-border-subtle h-16">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<img alt="TenacoreX Logo" class="h-8 w-auto" src="https://lh3.googleusercontent.com/aida/AP1WRLuzDliI8_vvO9amiBfr9B1qkrFhzZ8TwyhfgAC_oyo2kHUvKJEAv401nv82Ebxfs3sqelgjS9-ZL7HEIP4nwoaUUQBGs_xkkcB-vvbT0RQ4helzsD68oORRy6K6kIH3fzHOSs9qpvgbZTVuu-vqvhM1X6WrCgFyaGFyUNSuILd7md7wwb3eKt7K3SgALvhBGKq4Syy-y0-HdWQBF5G9e0Qdd8sHZ4vrngc4SQHFIRCK78jwlaHazj89gKw">
+<span class="text-headline-md font-headline-md font-bold text-primary">TenacoreX</span>
+</div>
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="pl-10 pr-4 py-2 bg-background-secondary border-none rounded-lg text-body-sm w-96 focus:ring-2 focus:ring-primary/20" placeholder="Tìm kiếm mã chứng khoán, tin tức..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors relative">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-danger-red rounded-full"></span>
+</button>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] flex flex-col py-6 border-r border-border-subtle bg-white w-64 z-40">
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-surface-container-low text-primary font-bold border-r-4 border-primary rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">query_stats</span>
+<span class="font-label-md text-label-md">Thị trường</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">analytics</span>
+<span class="font-label-md text-label-md">Chi tiết mã</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">psychology_alt</span>
+<span class="font-label-md text-label-md">AI Simulator</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">newspaper</span>
+<span class="font-label-md text-label-md">Tin tức</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">pie_chart</span>
+<span class="font-label-md text-label-md">Danh mục</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">insights</span>
+<span class="font-label-md text-label-md">Hiệu suất AI</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-background-secondary rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary">settings</span>
+<span class="font-label-md text-label-md">Cài đặt</span>
+</a>
+</nav>
+<div class="px-6 py-4">
+<div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">TX</div>
+<div>
+<p class="text-label-md font-bold text-on-surface leading-tight">Vương Nguyễn</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-semibold">Pro Member</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 mt-0 p-8 min-h-[calc(100vh-64px)]">
+<div class="max-w-[1400px] mx-auto space-y-gutter space-y-10">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Tổng quan Thị trường</h1>
+<p class="font-body-md text-body-md text-text-secondary">Dữ liệu từ artifacts/data/ · Cập nhật theo CSV</p>
+</div>
+<div class="flex items-center gap-3 text-label-md font-medium text-text-secondary">
+<span id="market-status-text" class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-success-green animate-pulse"></span> Đang tải trạng thái...</span>
+<span class="text-outline">|</span>
+<span id="market-time">Cập nhật: --</span>
+</div>
+</div>
+<!-- Market Indices Overview -->
+<div class="grid grid-cols-1 md:grid-cols-1 gap-6 mb-10">
+  <div id="index-vn-index" class="bg-white p-4 rounded-lg border border-border-subtle shadow-sm"><div class="flex justify-between items-start"><div class="space-y-1"><p class="text-[11px] text-text-secondary font-bold uppercase tracking-widest">VN-INDEX</p><h2 class="index-value text-headline-md font-bold">—</h2><div class="flex items-center gap-2"><span class="index-change font-bold text-sm">—</span><span class="index-pct text-xs font-medium">—</span></div></div><div class="w-32 h-16"><svg class="w-full h-full" viewBox="0 0 100 40"><path class="index-spark" d="M0,20 L100,20" fill="none" stroke="#16A34A" stroke-width="2"></path></svg></div></div><div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-border-subtle text-[10px]"><div><p class="text-text-secondary">Mở cửa</p><p class="index-open font-bold">—</p></div><div><p class="text-text-secondary">Cao nhất</p><p class="index-high font-bold">—</p></div><div><p class="text-text-secondary">Thấp nhất</p><p class="index-low font-bold">—</p></div></div></div>
+</div>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Main Table Section -->
+<div class="col-span-12 space-y-6"><div class="bg-white rounded-lg border border-surface-dim shadow-sm overflow-hidden">
+  <!-- Header Row: Title -->
+  <div class="p-4 border-b border-border-subtle flex flex-wrap items-center justify-between gap-4">
+    <h3 class="font-bold text-body-md text-on-surface">Danh sách cổ phiếu</h3>
+    <p class="text-[12px] text-text-secondary">Nguồn: artifacts/data/{FPT,HPG,VIC,VNM}.csv</p>
+  </div>
+  
+  <!-- Table Section -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-background-secondary text-on-surface-variant font-label-md text-[10px] uppercase tracking-widest border-b border-border-subtle">
+          <th class="px-4 py-3 font-bold">Mã</th>
+          <th class="px-4 py-3 font-bold text-right">Giá</th>
+          <th class="px-4 py-3 font-bold text-right">+/-</th>
+          <th class="px-4 py-3 font-bold text-right">%</th>
+          <th class="px-4 py-3 font-bold text-right">Mở</th>
+          <th class="px-4 py-3 font-bold text-right">Cao</th>
+          <th class="px-4 py-3 font-bold text-right">Thấp</th>
+          <th class="px-4 py-3 font-bold text-right">TB</th>
+          <th class="px-4 py-3 font-bold text-right">KL (1000)</th>
+        </tr>
+      </thead>
+      <tbody id="stocks-body" class="divide-y divide-border-subtle font-data-mono text-[13px]"><tr><td colspan="9" class="px-4 py-8 text-center text-text-secondary">Đang tải dữ liệu...</td></tr></tbody>
+    </table>
+  </div>
+  
+  <!-- Footer count -->
+  <div class="p-5 flex items-center justify-end border-t border-border-subtle">
+    <p class="text-body-sm text-text-secondary"><span id="stocks-count">Đang tải danh sách mã...</span></p>
+  </div>
+</div></div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="ml-64 bg-white border-t border-border-subtle px-12 py-8 flex flex-col md:flex-row justify-between items-center gap-6">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<img alt="TenacoreX Logo" class="h-5 w-auto" src="https://lh3.googleusercontent.com/aida/AP1WRLuzDliI8_vvO9amiBfr9B1qkrFhzZ8TwyhfgAC_oyo2kHUvKJEAv401nv82Ebxfs3sqelgjS9-ZL7HEIP4nwoaUUQBGs_xkkcB-vvbT0RQ4helzsD68oORRy6K6kIH3fzHOSs9qpvgbZTVuu-vqvhM1X6WrCgFyaGFyUNSuILd7md7wwb3eKt7K3SgALvhBGKq4Syy-y0-HdWQBF5G9e0Qdd8sHZ4vrngc4SQHFIRCK78jwlaHazj89gKw">
+<span class="font-bold text-primary">TenacoreX</span>
+</div>
+<p class="text-body-sm text-text-secondary">© 2024 TenacoreX Investment. Nền tảng phân tích chứng khoán AI chuyên sâu.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-body-sm text-text-secondary hover:text-primary transition-colors" href="#">Điều khoản</a>
+<a class="text-body-sm text-text-secondary hover:text-primary transition-colors" href="#">Bảo mật</a>
+<a class="text-body-sm text-text-secondary hover:text-primary transition-colors" href="#">Liên hệ</a>
+<a class="text-body-sm text-text-secondary hover:text-primary transition-colors" href="#">Hỗ trợ</a>
+</div>
+</footer>
+<script>
+const API = location.protocol === "file:" ? "http://localhost:8000/api" : "/api";
+const $ = (s) => document.querySelector(s);
+const esc = (v) => String(v ?? "—").replace(/[&<>"']/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"}[c]));
+const fmt = (v, d = 2) => v == null ? "—" : Number(v).toLocaleString("vi-VN", { minimumFractionDigits: d, maximumFractionDigits: d });
+const signed = (v, d = 2) => v == null ? "—" : (Number(v) >= 0 ? "+" : "") + fmt(v, d);
+const cls = (v) => Number(v) > 0 ? "text-success-green" : Number(v) < 0 ? "text-danger-red" : "text-text-secondary";
+
+async function getJSON(path) {
+    const r = await fetch(API + path);
+    if (!r.ok) throw Error(r.status + " " + path);
+    return r.json();
+}
+
+function renderIndexes(a) {
+    a.forEach((x) => {
+        const c = $("#index-" + x.code.toLowerCase());
+        if (!c) return;
+        c.querySelector(".index-value").textContent = x.available ? fmt(x.value) : "—";
+        const chg = c.querySelector(".index-change");
+        if (chg) chg.textContent = x.available ? signed(x.change) : "—";
+        const pct = c.querySelector(".index-pct");
+        if (pct) pct.textContent = x.available ? "(" + signed(x.change_pct) + "%)" : "—";
+        ["open", "high", "low"].forEach((k) => {
+            const el = c.querySelector(".index-" + k);
+            if (el) el.textContent = x.available ? fmt(x[k]) : "—";
+        });
+        const s = c.querySelector(".index-spark");
+        const p = x.series_sparkline || [];
+        if (s && p.length > 1) {
+            const lo = Math.min(...p);
+            const r = Math.max(...p) - lo || 1;
+            s.setAttribute("d", p.map((v, i) => (i ? "L" : "M") + (i * 100 / (p.length - 1)) + "," + (36 - (v - lo) / r * 30)).join(" "));
+        }
+    });
+}
+
+function renderStatus(x) {
+    $("#market-status-text").innerHTML =
+        '<span class="w-2 h-2 rounded-full ' + (x.is_open ? "bg-success-green animate-pulse" : "bg-text-secondary") + '"></span> ' + esc(x.status_text);
+    $("#market-time").textContent = "Cập nhật: " + new Date(x.server_time_vn.replace(" ", "T")).toLocaleTimeString("vi-VN");
+}
+
+function renderStocks(a) {
+    $("#stocks-count").textContent = `Hiển thị ${a.length} mã`;
+    $("#stocks-body").innerHTML = a.length ? a.map((x) => `
+        <tr class="hover:bg-surface-container-low/50 transition-colors">
+            <td class="px-4 py-4 font-bold text-primary">${esc(x.symbol)}</td>
+            <td class="px-4 py-4 font-bold text-right">${fmt(x.last)}</td>
+            <td class="px-4 py-4 ${cls(x.change)} text-right">${signed(x.change)}</td>
+            <td class="px-4 py-4 ${cls(x.change_pct)} text-right">${signed(x.change_pct)}%</td>
+            <td class="px-4 py-4 text-right">${fmt(x.open)}</td>
+            <td class="px-4 py-4 text-right">${fmt(x.high)}</td>
+            <td class="px-4 py-4 text-right">${fmt(x.low)}</td>
+            <td class="px-4 py-4 text-right">${fmt(x.avg)}</td>
+            <td class="px-4 py-4 text-right">${fmt(x.volume_thousand, 1)}</td>
+        </tr>`).join("") :
+        '<tr><td colspan="9" class="px-4 py-8 text-center text-text-secondary">Không có dữ liệu.</td></tr>';
+}
+
+async function refresh() {
+    try {
+        const [s, i, st] = await Promise.all([
+            getJSON("/market/status"),
+            getJSON("/market/indexes"),
+            getJSON("/stocks"),
+        ]);
+        renderStatus(s);
+        renderIndexes(i);
+        renderStocks(st);
+    } catch (e) {
+        console.error(e);
+        $("#market-time").textContent = "Không thể kết nối API";
+    }
+}
+
+// Load 1 lần - dữ liệu tĩnh trong CSV (không auto-refresh)
+refresh();
+</script>
+
+
+</body></html>
