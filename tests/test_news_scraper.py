@@ -7,6 +7,7 @@ import pytest
 from src.news_scraper import (
     CAFEF_NEWS_URL,
     CafeFError,
+    parse_cafef_article,
     parse_news_list,
 )
 
@@ -52,3 +53,36 @@ def test_parse_news_list_rejects_missing_container():
 
 def test_default_source_url_is_cafef():
     assert CAFEF_NEWS_URL == "https://cafef.vn/thi-truong-chung-khoan.chn"
+
+
+def test_parse_cafef_article_removes_nested_unwanted_nodes_without_crashing():
+    html = """
+    <html>
+      <body>
+        <h1>VN-Index tăng điểm</h1>
+        <div id="ContentDetail">
+          <p>Đoạn nội dung chính cần giữ lại.</p>
+          <aside class="related-box">
+            <div class="related-item"><p>Nội dung liên quan cần bỏ.</p></div>
+          </aside>
+          <div class="social-share">
+            <span class="share-button">Chia sẻ</span>
+          </div>
+          <figure><img src="chart.png"><figcaption>Biểu đồ</figcaption></figure>
+          <p>Đoạn nội dung thứ hai cần giữ lại.</p>
+        </div>
+      </body>
+    </html>
+    """
+
+    article = parse_cafef_article(
+        html,
+        "https://cafef.vn/vn-index-tang-diem.chn",
+    )
+
+    assert article.content == (
+        "Đoạn nội dung chính cần giữ lại.\n\n"
+        "Đoạn nội dung thứ hai cần giữ lại."
+    )
+    assert "Nội dung liên quan cần bỏ." not in article.content
+    assert "Chia sẻ" not in article.content

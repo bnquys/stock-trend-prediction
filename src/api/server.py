@@ -1,13 +1,15 @@
 """
-src/api/server.py — TenacoreX Market API (CSV-only, no AI)
+src/api/server.py — TenacoreX Market API
 ═══════════════════════════════════════════════════════════════════════════
-Phục vụ duy nhất cho thi-truong.html: đọc artifacts/data/*.csv và trả JSON.
+Phục vụ dữ liệu thị trường cho thi-truong.html và tin tức/summary cho tin-tuc.html.
 
 Endpoints:
     GET /healthz                  → kiểm tra server
     GET /api/market/status        → {is_open, status_text, server_time_vn}
     GET /api/market/indexes       → 3 chỉ số (chỉ VN-INDEX có dữ liệu)
     GET /api/stocks               → 4 mã từ artifacts/data/*.csv
+    GET /api/news                 → danh sách tin CafeF
+    POST /api/news/summary        → summary không stream từ tin hôm nay
 
 Chạy:
     uv run python thi-truong-api.py
@@ -21,14 +23,20 @@ from pathlib import Path
 from typing import List, Optional
 
 import pandas as pd
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+from src.ai.news_summary import simulate_ai_summary
 
 from src.news_scraper import (
     CAFEF_NEWS_URL,
     CafeFError,
+    CafeFArticle,
+    crawl_cafef_article,
     crawl_cafef_news_list,
+    news_published_today,
+    VIETNAM_TZ,
 )
 
 log = logging.getLogger("uvicorn.error")
@@ -105,7 +113,23 @@ class NewsResponse(BaseModel):
     source_url: str
     fetched_at: str
     count: int
+    today_count: int
     items: List[NewsItem]
+
+
+class NewsSummaryRequest(BaseModel):
+    prompt: str = Field(..., min_length=1, max_length=1000)
+    refresh: bool = False
+
+
+class NewsSummaryResponse(BaseModel):
+    source: str
+    date: str
+    article_count: int
+    summary: str
+    prompt: str
+    generated_at: str
+    simulated_delay_seconds: float
 
 
 # ── FastAPI app ──────────────────────────────────────────────────────
@@ -113,7 +137,7 @@ app = FastAPI(title="TenacoreX Market API", version="1.0-csv-only")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
@@ -213,15 +237,66 @@ def news(refresh: bool = False):
     try:
         result = crawl_cafef_news_list(refresh=refresh)
     except CafeFError as exc:
-        from fastapi import HTTPException
-
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
     items = [NewsItem(**item.to_dict()) for item in result.items]
+    today = datetime.now(VIETNAM_TZ).date()
+    today_count = sum(news_published_today(item, today=today) for item in result.items)
     return NewsResponse(
         source=result.source,
         source_url=result.source_url or CAFEF_NEWS_URL,
         fetched_at=result.fetched_at,
         count=len(items),
+        today_count=today_count,
         items=items,
+    )
+
+
+@app.post("/api/news/summary", response_model=NewsSummaryResponse)
+def news_summary(request: NewsSummaryRequest):
+    """Summarize the readable CafeF articles published today.
+
+    The endpoint intentionally returns one complete response after the mock
+    model delay. It is a drop-in boundary for a real non-streaming LLM later.
+    """
+    try:
+        result = crawl_cafef_news_list(refresh=request.refresh)
+    except CafeFError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    today = datetime.now(VIETNAM_TZ).date()
+    today_items = [item for item in result.items if news_published_today(item, today=today)]
+    if not today_items:
+        raise HTTPException(status_code=404, detail="Chưa có bài viết hôm nay để tóm tắt.")
+
+    articles: list[CafeFArticle] = []
+    failed_articles = 0
+    for item in today_items:
+        try:
+            articles.append(crawl_cafef_article(item, refresh=request.refresh))
+        except (CafeFError, ValueError) as exc:
+            failed_articles += 1
+            log.warning("Bỏ qua bài CafeF không thể đọc để tóm tắt (%s): %s", item.url, exc)
+
+    if not articles:
+        raise HTTPException(
+            status_code=502,
+            detail="Không thể đọc nội dung các bài viết hôm nay để tóm tắt.",
+        )
+
+    try:
+        summary = simulate_ai_summary(articles, request.prompt)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    if failed_articles:
+        log.info("Summary hoàn tất với %d bài bị bỏ qua", failed_articles)
+    return NewsSummaryResponse(
+        source="CafeF",
+        date=today.isoformat(),
+        article_count=summary.article_count,
+        summary=summary.summary,
+        prompt=summary.prompt,
+        generated_at=summary.generated_at,
+        simulated_delay_seconds=summary.simulated_delay_seconds,
     )

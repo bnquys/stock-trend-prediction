@@ -6,6 +6,7 @@ from dataclasses import asdict, dataclass
 from datetime import date, datetime, timedelta, timezone
 from typing import Any
 from urllib.parse import urljoin, urlparse
+from zoneinfo import ZoneInfo
 
 import requests
 from bs4 import BeautifulSoup, Tag
@@ -29,6 +30,7 @@ ARTICLE_CONTENT_SELECTORS = (
 )
 REQUEST_TIMEOUT_SECONDS = 10
 CACHE_TTL = timedelta(minutes=5)
+VIETNAM_TZ = ZoneInfo("Asia/Ho_Chi_Minh")
 
 HEADERS = {
     "User-Agent": (
@@ -157,14 +159,30 @@ def _clean_article_content(container: Tag) -> str:
         "social",
         "tag-list",
     )
-    for node in container.select("script, style, iframe, noscript, figure, aside"):
-        node.decompose()
+    nodes_to_remove: list[Tag] = list(
+        container.select("script, style, iframe, noscript, figure, aside")
+    )
     for node in container.find_all(True):
+        attrs = node.attrs or {}
         marker = " ".join(
-            filter(None, [node.get("id"), " ".join(node.get("class", []))])
+            filter(None, [attrs.get("id"), " ".join(attrs.get("class", []))])
         ).lower()
         if any(token in marker for token in unwanted_tokens):
-            node.decompose()
+            nodes_to_remove.append(node)
+
+    # Decompose only after collecting all candidates. Decomposing a parent
+    # while iterating over its descendants can clear the descendants' attrs,
+    # causing BeautifulSoup's Tag.get() to fail with attrs=None.
+    for node in nodes_to_remove:
+        if node.parent is None:
+            continue
+        if any(
+            parent is candidate
+            for parent in node.parents
+            for candidate in nodes_to_remove
+        ):
+            continue
+        node.decompose()
 
     paragraphs: list[str] = []
     seen: set[str] = set()
