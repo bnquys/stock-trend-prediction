@@ -10,6 +10,7 @@
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
 <link href="https://fonts.goo gleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
 <script id="tailwind-config">
 tailwind.config = {
     darkMode: "class",
@@ -141,6 +142,15 @@ tailwind.config = {
 .markdown-content strong { font-weight: 600; }
 .markdown-content ul { list-style: disc; padding-left: 20px; margin-bottom: 8px; }
 .markdown-content li { margin-bottom: 2px; }
+/* === marked.js output - bổ sung style cho table/ol/hr (phần còn lại đã có sẵn) === */
+.markdown-content table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 8px 0; }
+.markdown-content thead { background: #F7F9FC; }
+.markdown-content th { background: #F7F9FC; font-weight: 600; color: #6B7385; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 12px; text-align: left; border-bottom: 1px solid #E4E8F0; }
+.markdown-content td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #E4E8F0; vertical-align: top; }
+.markdown-content tr:last-child td { border-bottom: none; }
+.markdown-content ol { list-style: decimal; padding-left: 24px; margin-bottom: 8px; }
+.markdown-content ol li { margin-bottom: 2px; }
+.markdown-content hr { border: none; border-top: 1px solid #E4E8F0; margin: 12px 0; }
 .connection-error { background: #FDECEC; border: 1px solid #DC2626; }
 </style>
 </head>
@@ -909,45 +919,54 @@ tailwind.config = {
         return result;
     }
 
-    // ─── Helper: parse Markdown to HTML ────────────────────────────────
+    // ─── Helper: parse Markdown to HTML (using marked.js) ─────────────
+    if (typeof marked !== 'undefined') {
+        marked.setOptions({
+            gfm: true,        // GitHub Flavored Markdown: tables, strikethrough, task lists
+            breaks: true,      // Soft line breaks -> <br>
+            pedantic: false,
+            mangle: false,
+            headerIds: false,
+        });
+
+        // Custom renderer: xử lý marker "←" trong table cells (action badge)
+        // đồng thời giữ styling nhất quán với class .markdown-content.
+        const renderer = new marked.Renderer();
+        const baseCellClass = 'py-2 px-3 text-left text-body-sm border-b border-border-subtle';
+        renderer.table = function(header, body) {
+            return '<table class="w-full border-collapse">\n'
+                 + '<thead>\n' + header + '</thead>\n'
+                 + '<tbody>\n' + (body || '') + '</tbody>\n'
+                 + '</table>\n';
+        };
+        renderer.tablerow = function(content) {
+            return '<tr>\n' + content + '</tr>\n';
+        };
+        renderer.tablecell = function(content, flags) {
+            const tag = flags.header ? 'th' : 'td';
+            const text = typeof content === 'string' ? content : String(content || '');
+            const hasMarker = text.indexOf('←') !== -1;
+            const cleanContent = hasMarker ? text.replace(/←/g, '').trim() : text;
+            if (tag === 'th') {
+                return '<th class="bg-background-secondary text-text-secondary font-semibold '
+                     + 'text-label-md uppercase tracking-wider border-b border-border-subtle '
+                     + 'py-2 px-3 text-left">' + cleanContent + '</th>\n';
+            }
+            const extraClass = hasMarker ? ' font-semibold text-primary' : '';
+            return '<' + tag + ' class="' + baseCellClass + extraClass + '">' + cleanContent + '</' + tag + '>\n';
+        };
+        marked.use({ renderer });
+    }
+
     function mdToHtml(md) {
         if (!md) return '';
-        let html = md;
-        html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-        html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-        html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-        html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-        html = html.replace(/`(.+?)`/g, '<code class="bg-surface-container-low px-1 rounded text-primary">$1</code>');
-        html = html.replace(/\n\|(.+)\|(\n\|[-:| ]+\|)?/g, function(match) {
-            const rows = match.trim().split('\n').filter(r => r.trim());
-            let table = '<table class="w-full border-collapse"><tbody>';
-            for (let i = 0; i < rows.length; i++) {
-                let row = rows[i].trim();
-                if (row.match(/^[\| :-]+$/)) continue;
-                const cells = row.split('|').filter(c => c.trim());
-                if (cells.length === 0) continue;
-                const tag = i === 0 ? 'th' : 'td';
-                table += '<tr>';
-                for (const cell of cells) {
-                    const isSelected = cell.includes('←');
-                    const cellClass = isSelected ? 'font-semibold text-primary' : '';
-                    const cleanCell = cell.replace(/←/g, '').trim();
-                    if (cleanCell) {
-                        table += `<${tag} class="py-2 px-3 text-left text-body-sm ${cellClass} border-b border-border-subtle">${cleanCell}</${tag}>`;
-                    }
-                }
-                table += '</tr>';
-            }
-            table += '</tbody></table>';
-            return '\n' + table;
-        });
-        html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
-        html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul class="list-disc list-inside space-y-1">$&</ul>');
-        html = html.replace(/\n\n/g, '</p><p class="mb-2">');
-        html = html.replace(/\n/g, '<br>');
-        if (!html.startsWith('<')) html = '<p>' + html + '</p>';
-        return html;
+        if (typeof marked === 'undefined') {
+            // Fallback khi CDN marked.js load fail - giữ text thuần, escape cơ bản
+            console.warn('[mdToHtml] marked.js chưa load được, dùng fallback');
+            const safe = String(md).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return '<p>' + safe.replace(/\n/g, '<br>') + '</p>';
+        }
+        return marked.parse(md);
     }
 
     // ─── UI Updates ────────────────────────────────────────────────────
